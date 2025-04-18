@@ -1,0 +1,39 @@
+  <div class="top">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-3">
+          <a routerLink="/dashboard"><img src="/assets/img/logo.png" class="logo"></a>
+        </div>
+        <div class="col-lg-6 text-center">
+            <nav class="menu">
+                <a routerLink="/dashboard">Home</a>
+                <a routerLink="/settings">Nuova spedizione</a>
+                <a routerLink="/settings">Stato invii</a>
+                <a routerLink="/settings">Archivio</a>
+                <a routerLink="/settings">Report</a>
+                <a routerLink="/settings">Utility</a>
+                <a (click)="logout()" href="#">logout</a>
+            </nav>
+        </div>
+        <div class="col-lg-3"></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <main class="margin-top-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6">
+          <img src="/assets/img/logo-footer.png"> <span>© 2018-2025 / All Rights Reserved.</span>
+        </div>
+        <div class="col-lg-6 text-right">
+          <p>Easysender è un prodotto sviluppato da <label> EASYWAY TECHNOLOGY</label></p>
+        </div>
+      </div>
+    </div>
+  </footer>

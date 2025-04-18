@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center mt-5 mb-5">
+            <img src="/assets/img/logo-login.svg" class="logo mt-5 mb-2">
+        </div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12 text-center mt-4">
+                    <h1>Accedi ad EasySender</h1>
+                    <p>Inserisci il tuo indirizzo email e la password<br>per accedere al tuo account.</p>
+                </div>
+                <div class="col-lg-12">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="forms">
+                        <label>
+                            <input type="email" formControlName="email" placeholder="Email">
+                        </label>
+                        <div *ngIf="form.controls.email.invalid && form.controls.email.touched" class="error">
+                            Email non valida
+                        </div>
+                    
+                        <label>
+                            <input type="password" formControlName="password" placeholder="Password">
+                        </label>
+                        <div *ngIf="form.controls.password.invalid && form.controls.password.touched" class="error">
+                            Password obbligatoria
+                        </div>
+                        <label>
+                           <button type="submit" [disabled]="form.invalid">Accedi</button>
+                        </label>
+                        <div *ngIf="errorMessage" class="error">
+                            {{ errorMessage }}
+                        </div>
+                        <label class="text-center mt-3"><a routerLink="/passwordRecovery">Hai dimenticato la password?</a></label>
+                        <label class="text-center last-label">Sei un POE e non sei registrato? <a routerLink="/registration">Clicca qui</a></label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

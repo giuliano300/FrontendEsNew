@@ -1,0 +1,21 @@
+@use '../../../variables' as *;
+
+h1{
+    font-family: $font-stack;
+    color: $primary-color;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+p{
+    margin-bottom: 20px;
+}
+
+.logo{
+    width: 250px;
+}
+
+.last-label{
+    margin-top: -10px;
+}

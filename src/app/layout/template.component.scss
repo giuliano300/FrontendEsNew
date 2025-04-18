@@ -1,0 +1,58 @@
+@use '../../variables' as *;
+
+
+.top{
+    position: fixed;
+    background: $white-color;
+    width: 100%;
+    padding: 15px 20px;
+    border-bottom: solid 1px #DFDFDF;
+    top: 0;
+
+    .logo{
+        width: 60px;
+    }
+
+    .menu{
+        margin-top: 5px;
+
+        a{
+            color: $secondary-color;
+            margin: 0 25px;
+
+            &:hover{
+                color: $primary-color;
+            }
+        }
+
+    }
+}
+
+.margin-top-main{
+    margin-top: 70px;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    background-color: $white-color;
+    width: 100%;
+    padding: 15px 20px;
+    box-shadow: -5px 0 10px #eee;
+    color: $secondary-color;
+    font-size: 13px;
+    font-weight: 400;
+
+    span{
+        margin-left: 15px;
+    }
+
+    p{
+        margin: 10px 0 0;
+
+        label{
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+}

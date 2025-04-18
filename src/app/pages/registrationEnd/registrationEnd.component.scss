@@ -1,0 +1,25 @@
+@use '../../../variables' as *;
+
+.logo{
+    width: 250px;
+}
+
+.img-ok{
+    width: 350px;
+}
+
+h1{
+    font-size: 34px;
+    font-weight: 600;
+    color: $primary-color;
+    padding: 40px 0 10px;
+}
+
+a{
+    font-weight: 600;
+    color: $secondary-color;
+
+    &:hover{
+        color: $primary-color;
+    }
+}

@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center mt-3 mb-3">
+            <img src="/assets/img/logo-login.svg" class="logo mt-5 mb-2">
+        </div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12 text-center mt-4">
+                    <h1>Reistrati su EasySender</h1>
+                </div>
+                <div class="col-lg-12">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="forms">
+                        <label class="relative">
+                            <input type="text" formControlName="vatNumber" 
+                                placeholder="Partita iva" (blur)="checkVatNumber()" maxlength="11"
+                                pattern="\d*"
+                                (keypress)="allowOnlyNumbers($event)">
+                            <div class="loader-absolute" *ngIf="ctrlVat">
+                                <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                            </div>
+                        </label>
+                        <div *ngIf="form.controls.vatNumber.invalid && form.controls.vatNumber.touched" class="error">
+                            Partita iva non valida o non esistente.
+                        </div>
+                        <div *ngIf="errorMessageExistVatNumber" class="error">
+                            {{ errorMessageExistVatNumber }}
+                        </div>
+                        <div *ngIf="checkVatNumberValid" class="valid">
+                            {{ checkVatNumberValid }}
+                        </div>
+                        <label>
+                            <input type="email" formControlName="email" placeholder="Email">
+                        </label>
+                        <div *ngIf="form.controls.email.invalid && form.controls.email.touched" class="error">
+                            Email non valida
+                        </div>
+                    
+                        <label>
+                            <input type="password" formControlName="password" placeholder="Password" [(ngModel)]="password">
+                        </label>
+                        <div *ngIf="form.controls.password.invalid && form.controls.password.touched" class="error">
+                            Password obbligatoria
+                        </div>
+                        <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
+                            Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>
+                        </div>
+
+                        <label>
+                            <h2>Accessi poste italiane</h2>
+                        </label>
+                        <label class="relative">
+                            <input type="text" formControlName="usernamePoste" placeholder="Username poste" (blur)="checkPosteAccesses()"
+                            [ngClass]="{
+                                'is-valid': accessValid,
+                                'is-invalid': accessNotValid
+                              }">
+                            <div class="loader-absolute" *ngIf="ctrlPosteaccesses">
+                                <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                            </div>
+                        </label>
+                        <div *ngIf="form.controls.usernamePoste.invalid && form.controls.usernamePoste.touched" class="error">
+                            Username poste obbligatoria
+                        </div>
+                    
+                        <label class="relative">
+                            <input type="text" formControlName="passwordPoste" placeholder="Password Poste" (blur)="checkPosteAccesses()"
+                            [ngClass]="{
+                                'is-valid': accessValid,
+                                'is-invalid': accessNotValid
+                              }"/>
+                            <div class="loader-absolute" *ngIf="ctrlPosteaccesses">
+                                <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                            </div>
+                        </label>
+                        <div *ngIf="form.controls.passwordPoste.invalid && form.controls.passwordPoste.touched" class="error">
+                            Password poste obbligatoria
+                        </div>
+                        <div *ngIf="accessNotValid" class="error">
+                            Validazione poste errata. Controllare i dati inseriti.
+                        </div>
+                        <div *ngIf="accessValid" class="valid">
+                            Validazione POSTE completata.
+                        </div>
+                        <label>
+                           <button type="submit" [disabled]="form.invalid || !checkingVat|| !accessValid || passwordStrength !== 'forte'">Registrati</button>
+                        </label>
+                        <div *ngIf="errorMessage" class="error">
+                            {{ errorMessage }}
+                        </div>
+                        <label class="text-center mt-3">Sei un POE e sei già registrato? <a routerLink="/">Clicca qui</a></label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Partita iva {{vatNumber}}</h4>
+      <button type="button" class="btn-close" (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <h6>Di seguito i dati della azienda</h6>
+                <p>Se i dati sono corretti clicca su <b>Conferma</b>, altrimenti clicca su <b>Annulla</b></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span>Nome</span>
+                <span>{{businessName}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span>Indirizzo</span>
+                <span>{{address}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span>Cap</span>
+                <span>{{zipCode}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span>Città</span>
+                <span>{{city}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span>Pec</span>
+                <span>{{pec}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.dismiss()">Conferma</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal(modal)">Annulla</button>
+    </div>
+</ng-template>
