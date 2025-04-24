@@ -31,8 +31,10 @@
                         <div *ngIf="errorMessage" class="error">
                             {{ errorMessage }}
                         </div>
-                        <label class="text-center mt-3"><a routerLink="/passwordRecovery">Hai dimenticato la password?</a></label>
-                        <label class="text-center last-label">Sei un POE e non sei registrato? <a routerLink="/registration">Clicca qui</a></label>
+                        <section class="text-center mt-3">
+                            <label><a routerLink="/passwordRecovery">Hai dimenticato la password?</a></label>
+                            <label class="last-label">Sei un POE e non sei registrato? <a routerLink="/registration">Clicca qui</a></label>
+                        </section>
                     </form>
                 </div>
             </div>

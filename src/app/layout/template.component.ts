@@ -13,7 +13,16 @@ export class TemplateComponent {
   constructor(private router: Router) {}
   logout(){
     localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
     this.router.navigate(['/']);
+  }
+
+  OpenMenu(){
+    document.querySelector('.side-menu')!.classList.add('open');
+  }
+
+  CloseMenu(){
+    document.querySelector('.side-menu')!.classList.remove('open');
   }
 
 }

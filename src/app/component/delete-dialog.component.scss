@@ -1,0 +1,35 @@
+@use '../../variables' as *;
+
+h2{
+    font-size: 20px!important;
+    margin:-15px 0 0!important;
+    font-family: $font-stack!important;
+    padding: 10px 20px!important;
+}
+
+
+  ::ng-deep mat-dialog-content {
+    font-family: $font-stack!important;
+    font-size: 16px!important;
+    font-weight: 300!important;
+    padding: 20px!important;
+    color: #444;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+}
+
+.btn{
+    border-radius: 0!important;
+    color: $white-color!important;
+    font-family: $font-stack!important;
+    padding: 0px 22px!important;
+    font-size: 13px!important;
+    font-weight: 400!important;
+}
+
+.annulla{
+    background-color: $deep-grey-color!important;
+}
+.delete{
+    background-color: $error-color!important;
+}

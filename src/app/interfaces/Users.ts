@@ -1,5 +1,7 @@
 export interface Users {
   id?: number;
+  parentId?: number;
+  guid: string;
   businessName: string;
   vatNumber: string;
   email: string;

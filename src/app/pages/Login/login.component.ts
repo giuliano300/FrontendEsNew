@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Login } from '../../interfaces/Login';
 import { Router, RouterLink } from '@angular/router';
+import { Users } from '../../interfaces/Users';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   errorMessage: string | null = null;
+  user: Users  | null = null;
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -35,14 +37,16 @@ export class LoginComponent {
         email: this.form.value.email!,
         pwd: this.form.value.password!
       };
-
+      
       this.authService.login(login)
         .subscribe((data: any) => {
           if(data == null){
             this.errorMessage = 'Email o password non corretti.';
           }
           else {
+            this.user! = data.user;
             localStorage.setItem('authToken', data.token);
+            localStorage.setItem('user', JSON.stringify(this.user!));
             this.router.navigate(['/dashboard']);
           }
         });

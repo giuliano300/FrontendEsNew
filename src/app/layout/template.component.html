@@ -1,39 +1,101 @@
-  <div class="top">
+<header class="container-header">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-3">
-          <a routerLink="/dashboard"><img src="/assets/img/logo.png" class="logo"></a>
+        <div class="col-lg-12">
+
+          <div class="header">
+
+            <div class="header__logo">
+              <a routerLink="/dashboard">
+                <img src="/assets/img/logo.png" >
+              </a>
+            </div>
+    
+            <ul class="header__menu">
+              <li><a routerLink="/dashboard">Home</a></li>
+              <li><a routerLink="/dashboard">Nuova spedizione</a></li>
+              <li class="has-chid">
+                <a href="#">Stato invii</a>
+                <ul>
+                    <li><a href="#">Stato spedizioni</a></li>
+                    <li><a href="#">Stato spedizioni pacchi</a></li>
+                </ul>
+              </li>
+              <li class="has-chid">
+                <a href="#">Archivio</a>
+                <ul>
+                    <li><a href="#">Archivio visure/certificati</a></li>
+                    <li><a href="#">Archivio spedizioni</a></li>
+                    <li><a href="#">Archivio spedizioni pacchi</a></li>
+                </ul>
+              </li>
+              <li class="has-chid">
+                    <a href="#">Report</a>
+                    <ul>
+                        <li><a href="#">Report spedizioni</a></li>
+                        <li><a href="#">Report spedizioni pacchi</a></li>
+                    </ul>
+              </li>
+            </ul>
+
+            <ul class="header__quick">
+                <li>
+                    <p>Ciao, <strong>Mario Rossi</strong></p>
+                </li>
+                <li>
+                  <a id="open-side-menu" (click)="OpenMenu()">
+                    <img src="/assets/img/icn-usr-menu.png" />
+                  </a>
+              </li>
+
+            </ul>
+
         </div>
-        <div class="col-lg-6 text-center">
-            <nav class="menu">
-                <a routerLink="/dashboard">Home</a>
-                <a routerLink="/settings">Nuova spedizione</a>
-                <a routerLink="/settings">Stato invii</a>
-                <a routerLink="/settings">Archivio</a>
-                <a routerLink="/settings">Report</a>
-                <a routerLink="/settings">Utility</a>
-                <a (click)="logout()" href="#">logout</a>
-            </nav>
+          
         </div>
-        <div class="col-lg-3"></div>
       </div>
+
     </div>
+  </header>
+
+
+  <div class="side-menu">
+
+    <div class="close-menu" >
+      <a (click)="CloseMenu()"><i class='bx bx-x'></i></a>
+    </div>
+
+    <div class="header__user">
+        <img src="/assets/img/icn-user-head.png" alt="">
+        <h3>Mario Rossi</h3>
+    </div>
+
+    <div class="user-menu">
+      <ul>
+        <li>-&nbsp;&nbsp;<a routerLink="#">DATI PERSONALI</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="#">UTENTI</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="/userSenders" (click)="CloseMenu()">RUBRICA MITTENTI</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="#">PERSONALIZZAZIONE COVER</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="#">ERRORI NOTIFICATI</a></li>
+        <li>-&nbsp;&nbsp;<a (click)="logout()" href="#">LOGOUT</a></li>
+      </ul>
+    </div>
+
   </div>
 
   
-  <main class="margin-top-main">
+  <main>
     <router-outlet></router-outlet>
   </main>
 
   <footer>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-6">
-          <img src="/assets/img/logo-footer.png"> <span>© 2018-2025 / All Rights Reserved.</span>
-        </div>
-        <div class="col-lg-6 text-right">
-          <p>Easysender è un prodotto sviluppato da <label> EASYWAY TECHNOLOGY</label></p>
-        </div>
-      </div>
-    </div>
+
+    <section>
+      <img src="/assets/img/logo-footer.png"> <span>© 2018-2025 / All Rights Reserved.</span>
+    </section>
+
+    <section>
+      <p><strong>EasySender</strong> è un prodotto sviluppato da<a href="https://easyway.technology" target="_blank"> EASYWAY TECHNOLOGY</a></p>
+    </section>
+
   </footer>

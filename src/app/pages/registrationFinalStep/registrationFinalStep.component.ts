@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { Users } from '../../interfaces/Users';
 import { UserProducts } from '../../interfaces/UserProducts';
 import { UsersProductsService } from '../../services/userProducts.service';
 import { ProductTypes } from '../../interfaces/ProductTypes';
@@ -11,7 +10,7 @@ import { ProductTypes } from '../../interfaces/ProductTypes';
 
 @Component({
   selector: 'app-registration-final-step',
-  imports: [CommonModule, ReactiveFormsModule, NgbModalModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, NgbModalModule,],
   templateUrl: './registrationFinalStep.component.html',
   styleUrl: './registrationFinalStep.component.scss'
 })

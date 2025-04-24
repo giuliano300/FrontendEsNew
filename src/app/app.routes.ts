@@ -9,6 +9,7 @@ import { PasswordChangeComponent } from './pages/passwordChange/password-change.
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RegistrationFinalStepComponent } from './pages/registrationFinalStep/registrationFinalStep.component';
 import { RegistrationEndComponent } from './pages/registrationEnd/registrationEnd.component';
+import { UserSendersComponent } from './pages/userSenders/user-senders.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,11 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'userSenders',
+        component: UserSendersComponent,
         canActivate: [AuthGuard]
       },
       {

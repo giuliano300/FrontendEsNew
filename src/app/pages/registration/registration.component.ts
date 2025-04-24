@@ -11,7 +11,7 @@ import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { italianVatValidator } from '../../fncUtils/italian-vat.validator';
 import { FncUtils } from '../../fncUtils/fncUtils';
 import { Users } from '../../interfaces/Users';
-
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-registration',
@@ -20,7 +20,7 @@ import { Users } from '../../interfaces/Users';
   styleUrl: './registration.component.scss'
 })
 export class RegistrationComponent {
-  constructor(private userService: UsersService, private router: Router,private modalService: NgbModal) {}
+  constructor(private userService: UsersService, private router: Router, private modalService: NgbModal) {}
  
   @ViewChild('content') content: TemplateRef<any> | undefined;
 
@@ -76,6 +76,8 @@ export class RegistrationComponent {
         password: this.form.value.password!,
         usernamePoste: this.usrPoste!,
         passwordPoste: this.pwdPoste!,
+        parentId: 0,
+        guid: uuidv4(),
         enabled: true,
         deleted: false
       };
