@@ -14,6 +14,13 @@ export class TemplateComponent {
   logout(){
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
+
+    //ELIMINAZIONE DEI VALORI RELATIVI 
+    //ALLE SELEZIONI DEI PRODOTTI 
+    localStorage.removeItem('productType');    
+    localStorage.removeItem('sendType');    
+    localStorage.removeItem('bulletin');    
+
     this.router.navigate(['/']);
   }
 

@@ -1,0 +1,41 @@
+export interface Names {
+    id: number;
+    insertDate: string; 
+    operationId: number;
+    logoId?: number;
+    productType: number;
+    businessName: string;
+    complementName?: string;
+    address: string;
+    complementAddress?: string;
+    zipCode: string;
+    city: string;
+    province: string;
+    state: string;
+    currentState: number;
+    valid: boolean;
+    format: number;
+    printType: number;
+    frontBack: number;
+    returnReceipt: boolean;
+    code?: string;
+    codiceAgolAr?: string;
+    numberOfPages?: number;
+    price?: number;
+    vatPrice?: number;
+    totalPrice?: number;
+    attachedFile?: string;
+    fileName?: string;
+    pathRecoveryFile?: string;
+    pathGEDUrl?: string;
+    digitalReturnReceipt?: boolean;
+    message?: string;
+    tag1?: string;
+    tag2?: string;
+    tag3?: string;
+    tag4?: string;
+    tag5?: string;
+    tag6?: string;
+    notified?: boolean;
+  }
+  

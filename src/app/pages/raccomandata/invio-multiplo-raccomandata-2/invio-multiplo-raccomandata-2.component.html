@@ -13,7 +13,7 @@
                 <ul>
                     <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 9%;">Invio multiplo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 17%;">Invio multiplo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">Invio multiplo {{bulletin}}<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
         </div>
@@ -37,10 +37,10 @@
                         <span>Seleziona il logo <em>(se vuoi...)</em></span>
                         <select formControlName="sel_logo">
                             <option value="">-- Seleziona un logo --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
-                        </select>
+                            <option *ngFor="let option of userLogos" [value]="option.id">
+                                {{ option.name }}
+                              </option>                        
+                            </select>
                     </section>
                 </div>
             </div>  

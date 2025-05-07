@@ -3,6 +3,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { bulletin } from '../../../../main';
+import { UserLogos } from '../../../interfaces/UserLogos';
+import { UserLogosService } from '../../../services/user-logos.service';
+import { Users } from '../../../interfaces/Users';
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-2',
@@ -11,37 +15,71 @@ import { RouterLink } from '@angular/router';
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
 export class InvioMultiploRaccomandata2Component {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private userLogosService: UserLogosService) {}
   alertMessage = false;
   alertText = '';
 
-form = new FormGroup({
-  sel_mittente: new FormControl('', [Validators.required]),
-  tipoFormato: new FormControl('', [Validators.required]),
-  tipoColore: new FormControl('', [Validators.required]),
-  tipoStampa: new FormControl('', [Validators.required]),
-  tipoRicevuta: new FormControl('', [Validators.required]),
+  bulletin: string | null = "senza bollettino";
 
-   // campi AR, inizialmente senza required
-   nominativo_ar: new FormControl(''),
-   indirizzo_ar: new FormControl(''),
-   cap_ar: new FormControl(''),
-   provincia_ar: new FormControl(''),
-   comp_nominativo_ar: new FormControl(''),
-   comp_indirizzo_ar: new FormControl(''),
-   citta_ar: new FormControl(''),
-   stato_ar: new FormControl('')
-});
+  userLogos: UserLogos[] =[];
 
-ngOnInit() {
-  this.form.get('tipoRicevuta')?.valueChanges.subscribe(value => {
-    if (value === 'RicevutaRitornoSI') {
-      this.enableARValidators();
-    } else {
-      this.disableARValidators();
-    }
+  user: Users | null  = null;
+  
+
+  form = new FormGroup({
+    sel_logo: new FormControl(''),
+    sel_mittente: new FormControl('', [Validators.required]),
+    tipoFormato: new FormControl('', [Validators.required]),
+    tipoColore: new FormControl('', [Validators.required]),
+    tipoStampa: new FormControl('', [Validators.required]),
+    tipoRicevuta: new FormControl('', [Validators.required]),
+
+    // campi AR, inizialmente senza required
+    nominativo_ar: new FormControl(''),
+    indirizzo_ar: new FormControl(''),
+    cap_ar: new FormControl(''),
+    provincia_ar: new FormControl(''),
+    comp_nominativo_ar: new FormControl(''),
+    comp_indirizzo_ar: new FormControl(''),
+    citta_ar: new FormControl(''),
+    stato_ar: new FormControl('')
   });
-}
+
+  ngOnInit() {
+    const user = localStorage.getItem('user');
+      if (!user) {
+        this.router.navigate(['/']);
+        return;
+      }
+
+    this.user! = JSON.parse(user!);
+    
+    this.form.get('tipoRicevuta')?.valueChanges.subscribe(value => {
+      if (value === 'RicevutaRitornoSI') {
+        this.enableARValidators();
+      } else {
+        this.disableARValidators();
+      }
+    });
+    const bul = localStorage.getItem('bulletin')!;
+      if(parseInt(bul) == bulletin.si)
+        this.bulletin = "con bollettino";
+
+      this.getUserLogos();
+  }
+
+  getUserLogos(){
+    this.userLogosService.getUserLogos(this.user!.id!)
+    .subscribe((data: UserLogos[]) => {
+      if (!data || data.length === 0) {
+        console.log('Nessun dato disponibile');
+      } 
+      else 
+      {
+        this.userLogos = data;
+      }
+    });
+  }
 
 enableARValidators() {
   this.form.get('nominativo_ar')?.setValidators([Validators.required, Validators.maxLength(44)]);
@@ -72,14 +110,15 @@ disableARValidators() {
 onSubmit(): void {
       const errors: string[] = [];
 
-      const selLogo = this.form.value.sel_mittente;
+      const selLogo = this.form.value.sel_logo;
+      const selMittente = this.form.value.sel_mittente;
       const tipoFormato = this.form.value.tipoFormato;
       const tipoColore = this.form.value.tipoColore;
       const tipoStampa = this.form.value.tipoStampa;
       const tipoRicevuta = this.form.value.tipoRicevuta;
 
       // Costruisce lista errori se manca qualcosa
-      if (!selLogo) errors.push('Mittente'); 
+      if (!selMittente) errors.push('Mittente');
       if (!tipoFormato) errors.push('Formato');
       if (!tipoColore) errors.push('Colore');
       if (!tipoStampa) errors.push('Stampa');

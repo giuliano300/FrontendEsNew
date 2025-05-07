@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="select-type-send">
+      <div class="item">
+        <input id="invio-senza-bollettino" type="radio" formControlName="tipoDocumento" value="2" (change)="removeErroMessage()" />
+        <label for="invio-senza-bollettino">
+          <img src="/assets/img/icn-no-bollettino.png" alt="" /> Invio {{sType}} senza bollettino 
+        </label>
+      </div>
+      <div class="item">
+        <input id="invio-con-bollettino" type="radio" formControlName="tipoDocumento" value="1" (change)="removeErroMessage()" />
+        <label for="invio-con-bollettino">
+          <img src="/assets/img/icn-con-bollettino.png" alt="" /> Invio {{sType}} con bollettino 
+        </label>
+      </div>
+    </div>
+    
+    <div class="group-button">
+        <a routerLink="/tipoSpedizioneRaccomandata">INDIETRO</a>
+        <input type="submit" value="AVANTI" />
+    </div>
+
+    <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+    <div *ngIf="alertMessage" class="alert-message">
+      <span><i class='bx bxs-error color-orange'></i> Seleziona il tipo di documento da inviare.</span> 
+    </div>
+</form>

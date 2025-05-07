@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="select-type-send">
+      <div class="item">
+        <input id="invio-singolo" type="radio" formControlName="tipoInvio" value="invio-singolo" (change)="removeErroMessage()" />
+        <label for="invio-singolo">
+          <img src="/assets/img/icn-invio-singolo.png" alt="" /> Invio singolo </label>
+      </div>
+      <div class="item">
+        <input id="invio-multiplo" type="radio" formControlName="tipoInvio" value="invio-multiplo" (change)="removeErroMessage()" />
+        <label for="invio-multiplo">
+          <img src="/assets/img/icn-invio-multiplo.png" alt="" /> Invio multiplo </label>
+      </div>
+    </div>
+    
+    <div class="group-button">
+        <a routerLink="/nuovaSpedizione">INDIETRO</a>
+        <input type="submit" value="AVANTI" />
+    </div>
+  
+    <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+    <div *ngIf="alertMessage" class="alert-message">
+      <span><i class='bx bxs-error color-orange'></i> Seleziona un tipo di invio per procedere.</span> 
+    </div>
+</form>
+

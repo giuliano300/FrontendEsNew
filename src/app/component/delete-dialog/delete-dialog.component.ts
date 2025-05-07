@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { UserSendersService } from '../services/user-senders.service';
+import { UserSendersService } from '../../services/user-senders.service';
 
 @Component({
   selector: 'app-delete-dialog',

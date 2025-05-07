@@ -444,7 +444,7 @@ small{
             transition: all .3s cubic-bezier(.215, .61, .355, 1);
 
             &:hover{
-                background-color: darken($primary-color, 10%);
+                background-color: $primary-color, 10%;
             }
 
         }
@@ -467,7 +467,7 @@ small{
             transition: all .3s cubic-bezier(.215, .61, .355, 1);
 
             &:hover{
-                background-color: darken($grey-middle, 10%);
+                background-color: $grey-middle, 10%;
             }
         }
         

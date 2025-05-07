@@ -3,6 +3,11 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { bulletin } from '../../../../main';
+import { UserLogos } from '../../../interfaces/UserLogos';
+import { Users } from '../../../interfaces/Users';
+import { UserLogosService } from '../../../services/user-logos.service';
+import { Shipping } from '../../../interfaces/ViewModel/Shipping';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-2',
@@ -12,17 +17,55 @@ import { RouterLink } from '@angular/router';
 })
 export class InvioSingoloRaccomandata2Component {
 
-  constructor(private router: Router) {}
+  bulletin: string | null = "senza bollettino";
+
+  constructor(private router: Router, private userLogosService: UserLogosService) {}
   alertMessage = false;
   alertText = '';
 
+  userLogos: UserLogos[] =[];
+
+  shipping: Shipping = new Shipping();
+
+  user: Users | null  = null;
+    
+
 form = new FormGroup({
-  sel_logo: new FormControl('', [Validators.required]),
+  sel_logo: new FormControl(''),
   tipoFormato: new FormControl('', [Validators.required]),
   tipoColore: new FormControl('', [Validators.required]),
   tipoStampa: new FormControl('', [Validators.required]),
   tipoRicevuta: new FormControl('', [Validators.required])
 });
+
+ngOnInit() {
+  const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+  this.user! = JSON.parse(user!);
+  
+  const bul = localStorage.getItem('bulletin')!;
+  if(parseInt(bul) == bulletin.si)
+    this.bulletin = "con bollettino";
+
+  this.getUserLogos();
+}
+
+getUserLogos(){
+  this.userLogosService.getUserLogos(this.user!.id!)
+  .subscribe((data: UserLogos[]) => {
+    if (!data || data.length === 0) {
+      console.log('Nessun dato disponibile');
+    } 
+    else 
+    {
+      this.userLogos = data;
+    }
+  });
+}
 
 onSubmit(): void {
   const errors: string[] = [];
@@ -34,7 +77,6 @@ onSubmit(): void {
   const tipoRicevuta = this.form.value.tipoRicevuta;
 
   // Costruisce lista errori se manca qualcosa
-  if (!selLogo) errors.push('Logo'); 
   if (!tipoFormato) errors.push('Formato');
   if (!tipoColore) errors.push('Colore');
   if (!tipoStampa) errors.push('Stampa');
@@ -48,12 +90,12 @@ onSubmit(): void {
 
   // Se tutti sono presenti, vai alla pagina
   this.router.navigate(['/invioSingoloRaccomandata3']);
-}
+  }
 
-removeErroMessage(): void {
-  this.alertMessage = false;
-  this.alertText = '';
-}
+  removeErroMessage(): void {
+    this.alertMessage = false;
+    this.alertText = '';
+  }
 
 
 }

@@ -1,41 +1,22 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
+import { sendType } from '../../../../main';
+import { SelectionWithWithoutBulletinComponent } from '../../../component/selection-with-without-bulletin/selection-with-without-bulletin.component';
 
 
 @Component({
   selector: 'app-invio-singolo-raccomandata',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [SelectionWithWithoutBulletinComponent],
   templateUrl: './invio-singolo-raccomandata.component.html',
   styleUrl: './invio-singolo-raccomandata.component.scss'
 })
 export class InvioSingoloRaccomandataComponent {
-  constructor(private router: Router) {}
-  alertMessage = false;
 
+  tipoInvio = sendType.singolo
 
-  form = new FormGroup({
-    tipoDocumento: new FormControl('', [Validators.required])
-  });
+  constructor() {}
 
-  onSubmit(): void {
-    if (this.form.valid) {
-      const tipoDocumento = this.form.value.tipoDocumento;
-
-      if (tipoDocumento === 'invio-senza-bollettino') {
-        this.router.navigate(['/invioSingoloRaccomandata2']);
-      } else if (tipoDocumento === 'invio-con-bollettino') {
-        this.router.navigate(['/invioSingoloRaccomandata2']);
-      }
-    }
-    else
-      this.alertMessage = true;
+  ngOnInit(): void{
+    localStorage.setItem('sendType', this.tipoInvio!.toString());
   }
-
-  removeErroMessage(){
-    this.alertMessage = false;
-  }
-
 }

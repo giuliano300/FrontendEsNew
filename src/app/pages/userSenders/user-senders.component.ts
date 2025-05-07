@@ -6,7 +6,7 @@ import { UserSenders } from '../../interfaces/UserSenders';
 import { UserSendersService } from '../../services/user-senders.service';
 import { Users } from '../../interfaces/Users';
 import { Router } from '@angular/router';
-import { DeleteDialogComponent } from '../../component/delete-dialog.component';
+import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
