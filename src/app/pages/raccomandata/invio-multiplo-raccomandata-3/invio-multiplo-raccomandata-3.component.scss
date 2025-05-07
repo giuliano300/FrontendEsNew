@@ -1,0 +1,60 @@
+@use '../../../../variables' as *;
+
+
+.msg-upload{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size:1rem;
+
+    h5{
+        font-size: 1.1rem;
+        font-weight: $font-semi-bold;
+        margin-bottom: 5px;
+    }
+
+    i{
+        font-size: 4rem;
+    }
+
+}
+
+.msg-upload.success{
+    border: 1px solid $green-color-2;
+    padding: 15px;
+
+    h5, i{
+        color: $green-color-2;
+    }
+}
+
+.msg-upload.error{
+    border: 1px solid $red-color;
+    padding: 15px;
+
+    h5, i{
+        color: $red-color;
+    }
+}
+
+a.download-csv:link, a.download-csv:visited{
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: $secondary-color;
+    font-weight: $font-medium;
+    margin-top:10px;
+    transition: all .3s cubic-bezier(.215, .61, .355, 1);
+
+    &:hover{
+        color:$primary-color;
+    }
+
+    img{
+        width: 36px;
+        margin-right: 6px;
+    }
+}
+

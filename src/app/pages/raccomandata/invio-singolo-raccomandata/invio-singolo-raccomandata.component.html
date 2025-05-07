@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Scegli il tipo di comunicazione</h1>
+            <p class="mt-4 textsize-4">
+                Scegli se la raccomandata deve essere corredata di bollettino.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="select-type-send">
+                  <div class="item">
+                    <input id="invio-senza-bollettino" type="radio" formControlName="tipoDocumento" value="invio-senza-bollettino" (change)="removeErroMessage()" />
+                    <label for="invio-senza-bollettino">
+                      <img src="/assets/img/icn-no-bollettino.png" alt="" /> Invio senza bollettino 
+                    </label>
+                  </div>
+                  <div class="item">
+                    <input id="invio-con-bollettino" type="radio" formControlName="tipoDocumento" value="invio-con-bollettino" (change)="removeErroMessage()" />
+                    <label for="invio-con-bollettino">
+                      <img src="/assets/img/icn-con-bollettino.png" alt="" /> Invio con bollettino 
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="group-button">
+                    <a routerLink="/tipoSpedizioneRaccomandata">INDIETRO</a>
+                    <input type="submit" value="AVANTI" />
+                </div>
+
+                <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+                <div *ngIf="alertMessage" class="alert-message">
+                  <span><i class='bx bxs-error color-orange'></i> Seleziona il tipo di documento da inviare.</span> 
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

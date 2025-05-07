@@ -1,0 +1,39 @@
+@use '../../../../variables' as *;
+
+#destinatario-ar{
+    width: 100%;
+    margin-top: 60px;
+
+    h3{
+        justify-content:center!important;
+        font-weight: $font-bold;
+        font-size: 1.1rem;
+        margin:0!important;
+    }
+
+    ul{
+        width: 100%;
+        border-left:0px none!important;
+        padding:0!important;
+        margin-left:0px!important;
+        margin-top:45px;
+    }
+
+    li{
+        width: 90%;
+        border-bottom:0px none!important;
+        padding:0!important;
+
+        label{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+    }
+
+    
+}

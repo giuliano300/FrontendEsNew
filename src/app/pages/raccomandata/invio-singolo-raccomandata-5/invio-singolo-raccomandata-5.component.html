@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Carica il file .pdf</h1>
+            <p class="mt-4 textsize-4">
+                Effettua il caricamento del file in formato .pdf <br>
+                che contiene la tua corrispondenza.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 14%;">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="file-upload">
+                <label><strong>CARICA UN SINGOLO FILE</strong>&nbsp;<em>(in formato .pdf)</em></label>
+                <!-- AREA DRAG & DROP -->
+                <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                    <div class="drop-zone" (click)="openFileSelector()">
+                        Trascina qui il file o clicca per selezionarlo
+                    </div>
+                    </ng-template>
+                </ngx-file-drop>
+
+                <!-- BARRA DI CARICAMENTO -->
+                <div class="progress-container" *ngIf="uploadProgress !== null">
+                    <div
+                    class="progress-bar"
+                    [style.width.%]="uploadProgress"
+                    [ngClass]="{ 'completed': uploadProgress === 100 }"
+                    >
+                    {{ uploadProgress }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+        <div class="group-button">
+            <a routerLink="/invioSingoloRaccomandata4">INDIETRO</a>
+            <input type="submit" value="AVANTI" />
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,105 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Compila i dati per il bollettino</h1>
+            <p class="mt-4 textsize-4">
+                Compila i dati del form <br>
+                per inserire il bollettino di pagamento nelle tue comunicazioni.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 14%;">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="generic-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>NUMERO CONTO CORRENTE</label>
+                            <input type="text" formControlName="conto_corrente" />
+                        </li>
+                        <li>
+                            <label>ESEGUITO DA <em>(NOMINATIVO)</em></label>
+                            <input type="text" formControlName="eseguito_nominativo" />
+                        </li>
+                        <li>
+                            <label>ANNO DI RIFERIMENTO</label>
+                            <input type="text" formControlName="anno_riferimento" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>INTESTATO A</label>
+                            <input type="text" formControlName="intestatario" />
+                        </li>
+                        <li>
+                            <label>ESEGUITO DA <em>(INDIRIZZO)</em></label>
+                            <input type="text" formControlName="eseguito_indirizzo" />
+                        </li>
+                        <li>
+                            <label>ESEGUITO DA <em>(CAP)</em></label>
+                            <input type="text" formControlName="eseguito_cap" maxlength="5" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>IMPORTO EURO</label>
+                            <input type="number" formControlName="importo" />
+                        </li>
+                        <li>
+                            <label>ESEGUITO DA <em>(LOCALITA')</em></label>
+                            <input type="text" formControlName="eseguito_localita" />
+                        </li>
+                        <li>
+                            <label>CODICE CLIENTE</label>
+                            <input type="text" formControlName="codice_cliente" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                        <li>
+                            <label>CAUSALE</label>
+                            <input type="text" formControlName="causale" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="group-button">
+                <a routerLink="/invioSingoloRaccomandata5">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+
+</div>

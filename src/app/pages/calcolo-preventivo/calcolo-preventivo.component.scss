@@ -1,0 +1,39 @@
+@use '../../../variables' as *;
+
+
+.preventivo{
+    width: 100%;
+
+    h3{
+        font-size: 1.3rem;
+        color: $primary-color;
+    }
+
+    ul{
+        width: 100%;
+        margin-top: 45px;
+        background-color: $white-color;
+        padding: 15px;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+
+    li{
+        width: 100%;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $grey-light;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+
+        &:last-child{
+            width: 50%;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+    }
+}
