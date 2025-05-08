@@ -24,6 +24,26 @@ import { RiepilogoSpedizioneComponent } from './pages/riepilogo-spedizione/riepi
 import { InvioMultiploRaccomandata2Component } from './pages/raccomandata/invio-multiplo-raccomandata-2/invio-multiplo-raccomandata-2.component';
 import { InvioMultiploRaccomandata3Component } from './pages/raccomandata/invio-multiplo-raccomandata-3/invio-multiplo-raccomandata-3.component';
 import { InvioMultiploRaccomandata4Component } from './pages/raccomandata/invio-multiplo-raccomandata-4/invio-multiplo-raccomandata-4.component';
+import { InvioSingoloLetteraComponent } from './pages/lettera/invio-singolo-lettera/invio-singolo-lettera.component';
+import { InvioMultiploLetteraComponent } from './pages/lettera/invio-multiplo-lettera/invio-multiplo-lettera.component';
+import { TipoSpedizioneLetteraComponent } from './pages/lettera/tipo-spedizione-lettera/tipo-spedizione-lettera.component';
+import { InvioSingoloLettera2Component } from './pages/lettera/invio-singolo-lettera-2/invio-singolo-lettera-2.component';
+import { InvioSingoloLettera3Component } from './pages/lettera/invio-singolo-lettera-3/invio-singolo-lettera-3.component';
+import { InvioSingoloLettera4Component } from './pages/lettera/invio-singolo-lettera-4/invio-singolo-lettera-4.component';
+import { InvioSingoloLettera5Component } from './pages/lettera/invio-singolo-lettera-5/invio-singolo-lettera-5.component';
+import { InvioMultiploLettera2Component } from './pages/lettera/invio-multiplo-lettera-2/invio-multiplo-lettera-2.component';
+import { InvioMultiploLettera3Component } from './pages/lettera/invio-multiplo-lettera-3/invio-multiplo-lettera-3.component';
+import { InvioMultiploLettera4Component } from './pages/lettera/invio-multiplo-lettera-4/invio-multiplo-lettera-4.component';
+import { TipoSpedizioneAgolComponent } from './pages/agol/tipo-spedizione-agol/tipo-spedizione-agol.component';
+import { InvioSingoloAgolComponent } from './pages/agol/invio-singolo-agol/invio-singolo-agol.component';
+import { InvioSingoloAgol2Component } from './pages/agol/invio-singolo-agol-2/invio-singolo-agol-2.component';
+import { InvioSingoloAgol3Component } from './pages/agol/invio-singolo-agol-3/invio-singolo-agol-3.component';
+import { InvioSingoloAgol4Component } from './pages/agol/invio-singolo-agol-4/invio-singolo-agol-4.component';
+import { InvioSingoloAgol5Component } from './pages/agol/invio-singolo-agol-5/invio-singolo-agol-5.component';
+import { InvioMultiploAgolComponent } from './pages/agol/invio-multiplo-agol/invio-multiplo-agol.component';
+import { InvioMultiploAgol2Component } from './pages/agol/invio-multiplo-agol-2/invio-multiplo-agol-2.component';
+import { InvioMultiploAgol3Component } from './pages/agol/invio-multiplo-agol-3/invio-multiplo-agol-3.component';
+import { InvioMultiploAgol4Component } from './pages/agol/invio-multiplo-agol-4/invio-multiplo-agol-4.component';
 
 export const routes: Routes = [
   {
@@ -132,6 +152,106 @@ export const routes: Routes = [
       {
         path: 'invioMultiploRaccomandata4',
         component: InvioMultiploRaccomandata4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'tipoSpedizioneLettera',
+        component: TipoSpedizioneLetteraComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloLettera',
+        component: InvioSingoloLetteraComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloLettera2',
+        component: InvioSingoloLettera2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloLettera3',
+        component: InvioSingoloLettera3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloLettera4',
+        component: InvioSingoloLettera4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloLettera5',
+        component: InvioSingoloLettera5Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploLettera',
+        component: InvioMultiploLetteraComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploLettera2',
+        component: InvioMultiploLettera2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploLettera3',
+        component: InvioMultiploLettera3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploLettera4',
+        component: InvioMultiploLettera4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'tipoSpedizioneAgol',
+        component: TipoSpedizioneAgolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloAgol',
+        component: InvioSingoloAgolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloAgol2',
+        component: InvioSingoloAgol2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloAgol3',
+        component: InvioSingoloAgol3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloAgol4',
+        component: InvioSingoloAgol4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioSingoloAgol5',
+        component: InvioSingoloAgol5Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploAgol',
+        component: InvioMultiploAgolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploAgol2',
+        component: InvioMultiploAgol2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploAgol3',
+        component: InvioMultiploAgol3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioMultiploAgol4',
+        component: InvioMultiploAgol4Component,
         canActivate: [AuthGuard]
       },
       {

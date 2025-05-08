@@ -1,0 +1,126 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Scegli il tipo di comunicazione</h1>
+            <p class="mt-4 textsize-4">
+                Scegli se la lettera deve essere corredata di bollettino.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Lettera <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 18%;">Invio singolo {{bulletin}}<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-setting">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="select-form-type">
+                        <span>Seleziona il logo <em>(se vuoi...)</em></span>
+                        <select formControlName="sel_logo" (change)="removeErroMessage()">
+                            <option value="">-- Seleziona un logo --</option>
+                            <option *ngFor="let option of userLogos" [value]="option.id">
+                                {{ option.name }}
+                            </option>                        
+                        </select>
+                    </section>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-formato.png" alt="Formato"> Formato
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="A4">
+                               A4
+                               <input id="A4" type="radio" formControlName="tipoFormato" value="A4" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="FormatoSpeciale">
+                                Formato speciale
+                                <input id="FormatoSpeciale" type="radio" formControlName="tipoFormato" value="FormatoSpeciale" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-lettera.png" alt="Tipo lettera"> Tipo lettera
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="TipoLetteraP1">
+                                P1
+                                <input id="TipoLetteraP1" type="radio" formControlName="tipoLettera" value="TipoLetteraP1" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="TipoLetteraP4">
+                                P4
+                                <input id="TipoLetteraP4" type="radio" formControlName="tipoLettera" value="TipoLetteraP4" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-stampa.png" alt="Tipo stampa"> Tipo di stampa
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="BiancoNero">
+                                Bianco e nero
+                                <input id="BiancoNero" type="radio" formControlName="tipoColore" value="BiancoNero" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="Colori">
+                                Colori
+                                <input id="Colori" type="radio" formControlName="tipoColore" value="Colori" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-fronte-retro.png" alt="Stampa fronte retro"> Stampa fronte/retro
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="FronteRetroSI">
+                                SI
+                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="FronteRetroSI" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="FronteRetroNO">
+                                NO
+                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>   
+            <div class="group-button">
+                <a routerLink="/invioSingoloLettera">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
+            </div>
+
+        </form>
+    </div>
+</div>

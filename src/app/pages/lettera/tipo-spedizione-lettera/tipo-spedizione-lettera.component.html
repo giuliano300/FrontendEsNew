@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Invia una <span class="color-blue">Lettera</span></h1>
+            <p class="mt-4 textsize-4">
+                Inviare una lettera è semplice, veloce e affidabile con i nostri servizi postali.<br>
+               Scegli se effettuare un <strong>invio singolo</strong> oppure un <strong>invio multiplo</strong>.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Lettera <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <app-selection-single-multiple [tipoProdotto]="tipoProdotto"></app-selection-single-multiple>
+        </div>
+    </div>
+</div>

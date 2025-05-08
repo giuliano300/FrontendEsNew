@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Scegli il tipo di comunicazione</h1>
+            <p class="mt-4 textsize-4">
+                Scegli se l'atto giudiziario deve essere corredato di bollettino.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Atto giudiziario <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+          <app-selection-with-without-bulletin [tipoInvio] = "tipoInvio"></app-selection-with-without-bulletin>
+        </div>
+    </div>
+
+</div>

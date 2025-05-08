@@ -1,0 +1,118 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Carica file e spedisci </h1>
+            <p class="mt-4 textsize-4">
+                Carica i file pdf con la tua corrispondenza in un archivio .zip <br>
+                ed effettua la spedizione delle tue raccomandate.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Lettera <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 9%;">Invio multiplo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">Invio multiplo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;">Configura lettera<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;">Carica lista destinatari<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="generic-form">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4>Carica file <em>(in formato .zip)</em></h4>
+                    <div class="file-upload">
+                        <!-- AREA DRAG & DROP -->
+                        <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="drop-zone" (click)="openFileSelector()">
+                                Trascina qui il file o clicca per selezionarlo
+                            </div>
+                            </ng-template>
+                        </ngx-file-drop>
+        
+                        <!-- BARRA DI CARICAMENTO -->
+                        <div class="progress-container" *ngIf="uploadProgress !== null">
+                            <div
+                            class="progress-bar"
+                            [style.width.%]="uploadProgress"
+                            [ngClass]="{ 'completed': uploadProgress === 100 }"
+                            >
+                            {{ uploadProgress }}%
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-7">
+                    <h4>Risultato caricamento</h4>
+    
+                    <div class="result-upload">
+                        <div class="result-upload__top">
+                            <section><img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>24</strong></section>
+                            <section><img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>20</strong></section>
+                            <section><img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>4</strong></section>
+                        </div>
+                        <ul>
+                            <li>
+                                <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
+                            </li>
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                            <li>
+                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            </li>
+    
+                        </ul>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    
+    
+        <div class="group-button">
+            <a routerLink="/invioMultiploRaccomandata3">INDIETRO</a>
+            <input type="submit" value="AVANTI" />
+        </div>
+    
+        </form>
+    
+</div>

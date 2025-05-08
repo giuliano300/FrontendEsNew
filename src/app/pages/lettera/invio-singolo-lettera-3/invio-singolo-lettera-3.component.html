@@ -1,0 +1,102 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Inserisci il mittente</h1>
+            <p class="mt-4 textsize-4">
+                Scegli un mittente dalla tua rubrica oppure inserisci manualmente <br>
+                un nuovo nominativo compilando i campi richiesti.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 10%;">Lettera <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">Configura lettera<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="generic-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="select-form-type">
+                        <span>Seleziona un mittente dalla rubrica</span>
+                        <select formControlName="sel_mittente">
+                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
+                            <option value="1">Ewt</option>
+                            <option value="2">EasySender</option>
+                            <option value="3">Scialb</option>
+                        </select>
+                    </section>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire un nuovo mittente</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>NOMINATIVO <em>(Lunghezza massima 44 char)</em></label>
+                            <input type="text" formControlName="nominativo" />
+                        </li>
+                        <li>
+                            <label>INDIRIZZO <em>(ES.via Toledo, 50)</em></label>
+                            <input type="text" formControlName="indirizzo" />
+                        </li>
+                        <li>
+                            <label>CAP</label>
+                            <input type="text" formControlName="cap" maxlength="5" />
+                        </li>
+                        <li>
+                            <label>PROVINCIA <em>(SOLO 2 LETTERE)</em></label>
+                            <input type="text" formControlName="provincia" maxlength="2" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>COMPLETAMENTO NOMINATIVO <em>(Es. Presso sig.Rossi)</em></label>
+                            <input type="text" formControlName="comp_nominativo" />
+                        </li>
+                        <li>
+                            <label>COMPLETAMENTO INDIRIZZO <em>(Es. vicino alla stazione)</em></label>
+                            <input type="text" formControlName="comp_indirizzo" />
+                        </li>
+                        <li>
+                            <label>CITTÀ</label>
+                            <input type="text" formControlName="citta" />
+                        </li>
+                        <li>
+                            <label>STATO <em>(SECONDO I CODICI UPU)</em></label>
+                            <input type="text" formControlName="stato" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+
+            <div class="group-button">
+                <a routerLink="/invioSingoloLettera2">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+</div>

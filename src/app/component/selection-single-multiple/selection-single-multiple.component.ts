@@ -36,10 +36,18 @@ export class SelectionSingleMultipleComponent {
       const tipoInvio = this.form.value.tipoInvio;
 
       switch(this.tipoProdotto){
-          case productType.raccomandata:
-            this.navigationSingolo = '/invioSingoloRaccomandata';
-            this.navigationMultiplo = '/invioMultiploRaccomandata';
+        case productType.raccomandata:
+          this.navigationSingolo = '/invioSingoloRaccomandata';
+          this.navigationMultiplo = '/invioMultiploRaccomandata';
+          break;
+          case productType.lettera:
+            this.navigationSingolo = '/invioSingoloLettera';
+            this.navigationMultiplo = '/invioMultiploLettera';
             break;
+            case productType.agol:
+              this.navigationSingolo = '/invioSingoloAgol';
+              this.navigationMultiplo = '/invioMultiploAgol';
+              break;
           default:
             this.navigationSingolo = '/not-found';
             this.navigationMultiplo = '/not-found';

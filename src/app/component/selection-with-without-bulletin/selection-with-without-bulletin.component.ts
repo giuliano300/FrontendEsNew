@@ -64,7 +64,20 @@ export class SelectionWithWithoutBulletinComponent {
                 break;
             }
             break;
-        default:
+            case productType.agol:
+              switch(this.tipoInvio){
+                case sendType.mutiplo:
+                  this.navigation = "/invioMultiploAgol2";
+                  break;
+                case sendType.singolo:
+                  this.navigation = "/invioSingoloAgol2";
+                  break;
+                default:
+                  this.navigation = "/not-found";
+                  break;
+              }
+              break;
+          default:
           this.navigation = "/not-found";
           break;
     }
