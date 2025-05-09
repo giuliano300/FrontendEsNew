@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Messaggio del telegramma</h1>
+            <p class="mt-4 textsize-4">
+                Componi il testo del tuo messaggio <br>
+                e calcola il preventivo.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 10%;">Telegramma <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">Ricevuta di ritorno <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="generic-form mt-4">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <ul>
+                        <li>
+                            <label>SCRIVI QUI IL TUO MESSAGGIO</label>
+                            <textarea formControlName="messaggio"></textarea>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+            <div class="group-button">
+                <a routerLink="/invioTelegramma3">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+
+</div>

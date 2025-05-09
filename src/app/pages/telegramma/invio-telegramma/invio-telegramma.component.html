@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Invia un <span class="color-blue">Telegramma</span></h1>
+            <p class="mt-4 textsize-4">
+                Il telegramma offre un modo rapido ed efficace per comunicare messaggi importanti in modo urgente e tracciabile.<br>
+               Scopri come il nostro servizio può soddisfare le tue esigenze di comunicazione immediata.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Telegramma <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-setting">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-ricevuta-ritorno.png" alt="Ricevuta di ritorno"> Ricevuta di ritorno
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="RicevutaRitornoSI">
+                                SI
+                                <input id="RicevutaRitornoSI" type="radio" formControlName="ricevutaRitorno" value="RicevutaRitornoSI" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="RicevutaRitornoNO">
+                                NO
+                                <input id="RicevutaRitornoNO" type="radio" formControlName="ricevutaRitorno" value="RicevutaRitornoNO" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4"></div>
+            </div>   
+            <div class="group-button">
+                <a routerLink="/nuovaSpedizione">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
+            </div>
+
+        </form>
+    </div>
+</div>

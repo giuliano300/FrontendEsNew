@@ -34,7 +34,8 @@ form = new FormGroup({
   tipoFormato: new FormControl('', [Validators.required]),
   tipoColore: new FormControl('', [Validators.required]),
   tipoStampa: new FormControl('', [Validators.required]),
-  tipoLettera: new FormControl('', [Validators.required])
+  tipoNotificante: new FormControl('', [Validators.required]),
+  nomeNotificante: new FormControl('', [Validators.required])
 });
 
 ngOnInit() {
@@ -51,7 +52,7 @@ ngOnInit() {
     this.bulletin = "con bollettino";
 
   this.getUserLogos();
-}
+  }
 
 getUserLogos(){
   this.userLogosService.getUserLogos(this.user!.id!)
@@ -73,13 +74,16 @@ onSubmit(): void {
   const tipoFormato = this.form.value.tipoFormato;
   const tipoColore = this.form.value.tipoColore;
   const tipoStampa = this.form.value.tipoStampa;
-  const tipoLettera = this.form.value.tipoLettera;
+  const tipoNotificante = this.form.value.tipoNotificante;
+  const nomeNotificante = this.form.value.nomeNotificante;
 
   // Costruisce lista errori se manca qualcosa
   if (!tipoFormato) errors.push('Formato');
-  if (!tipoLettera) errors.push('Tipo lettera');
   if (!tipoColore) errors.push('Colore');
   if (!tipoStampa) errors.push('Stampa');
+  if (!tipoNotificante) errors.push('Tipo notificante');
+  if (!nomeNotificante) errors.push('Nome notificante');
+
 
   if (errors.length > 0) {
     this.alertText = `${errors.join(', ')}.`;
@@ -88,7 +92,7 @@ onSubmit(): void {
   }
 
   // Se tutti sono presenti, vai alla pagina
-  this.router.navigate(['/invioSingoloLettera3']);
+  this.router.navigate(['/invioSingoloAgol3']);
 }
 
 removeErroMessage(): void {

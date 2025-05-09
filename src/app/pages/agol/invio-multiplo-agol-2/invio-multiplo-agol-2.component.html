@@ -1,1 +1,193 @@
-<p>invio-multiplo-agol-2 works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Scegli il tipo di comunicazione</h1>
+            <p class="mt-4 textsize-4">
+                Scegli se la raccomandata deve essere corredata di bollettino.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 9%;">Invio multiplo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">Invio multiplo {{bulletin}}<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-setting">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <section class="select-form-type">
+                        <span>Seleziona il mittente dalla rubrica</span>
+                        <select formControlName="sel_mittente" (change)="removeErroMessage()">
+                            <option value="">-- Seleziona un mittente --</option>
+                            <option value="1">Ewt</option>
+                            <option value="2">EasySender</option>
+                            <option value="3">Scialb</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section class="select-form-type">
+                        <span>Seleziona il logo <em>(se vuoi...)</em></span>
+                        <select formControlName="sel_logo">
+                            <option value="">-- Seleziona un logo --</option>
+                            <option *ngFor="let option of userLogos" [value]="option.id">
+                                {{ option.name }}
+                              </option>                        
+                            </select>
+                    </section>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-formato.png" alt="Formato"> Formato
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="A4">
+                               A4
+                               <input id="A4" type="radio" formControlName="tipoFormato" value="A4" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="FormatoSpeciale">
+                                Formato speciale
+                                <input id="FormatoSpeciale" type="radio" formControlName="tipoFormato" value="FormatoSpeciale" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-stampa.png" alt="Tipo stampa"> Tipo di stampa
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="BiancoNero">
+                                Bianco e nero
+                                <input id="BiancoNero" type="radio" formControlName="tipoColore" value="BiancoNero" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="Colori">
+                                Colori
+                                <input id="Colori" type="radio" formControlName="tipoColore" value="Colori" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-fronte-retro.png" alt="Stampa fronte retro"> Stampa fronte/retro
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="FronteRetroSI">
+                                SI
+                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="FronteRetroSI" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="FronteRetroNO">
+                                NO
+                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-agol.png" alt="Tipologia notificante"> Tipologia notificante
+                    </h3>
+                    <ul>
+                        <li>
+                            <select formControlName="tipoNotificante" (change)="removeErroMessage()">
+                                <option value="">Seleziona tipologia notificante</option>
+                                <option value="1">Parte istante</option>
+                                <option value="1">Procuratore</option>
+                                <option value="1">Ufficiale giudiziario</option>
+                            </select>
+                        </li>
+                        <li>
+                            <input type="text" formControlName="nomeNotificante" placeholder="Nome notificante" (change)="removeErroMessage()">
+                        </li>
+                    </ul>
+                </div>
+            </div>   
+
+            <div class="generic-form">
+                <div id="destinatario-ar">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="text-center color-blue mt-5 mb-5">Destinatario dell'Avviso di Ricevimento</h3>
+                        </div>
+                    </div>
+                        <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <ul>
+                                <li>
+                                    <label>NOMINATIVO <em>(Uguale al nominativo del mittente)</em></label>
+                                    <input type="text" formControlName="nominativo_ar" />
+                                </li>
+                                <li>
+                                    <label>INDIRIZZO <em>(ES.via Toledo, 50)</em></label>
+                                    <input type="text" formControlName="indirizzo_ar" />
+                                </li>
+                                <li>
+                                    <label>CAP</label>
+                                    <input type="text" formControlName="cap_ar" maxlength="5" />
+                                </li>
+                                <li>
+                                    <label>PROVINCIA <em>(SOLO 2 LETTERE)</em></label>
+                                    <input type="text" formControlName="provincia_ar" maxlength="2" />
+                                </li>
+                            </ul>
+                            </div>
+                        <div class="col-md-4">
+                            <ul>
+                                <li>
+                                    <label>COMPLETAMENTO NOMINATIVO <em>(Es. Presso sig.Rossi)</em></label>
+                                    <input type="text" formControlName="comp_nominativo_ar" />
+                                </li>
+                                <li>
+                                    <label>COMPLETAMENTO INDIRIZZO <em>(Es. vicino alla stazione)</em></label>
+                                    <input type="text" formControlName="comp_indirizzo_ar" />
+                                </li>
+                                <li>
+                                    <label>CITTÀ</label>
+                                    <input type="text" formControlName="citta_ar" />
+                                </li>
+                                <li>
+                                    <label>STATO <em>(SECONDO I CODICI UPU)</em></label>
+                                    <input type="text" formControlName="stato_ar" />
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="group-button">
+                <a routerLink="/invioMultiploAgol">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
+            </div>
+
+        </form>
+    </div>
+</div>

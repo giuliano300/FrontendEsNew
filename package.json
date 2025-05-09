@@ -27,6 +27,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.5",
     "boxicons": "^2.1.4",
+    "gsap": "^3.13.0",
     "ngx-file-drop": "^16.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

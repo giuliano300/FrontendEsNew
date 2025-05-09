@@ -44,6 +44,10 @@ import { InvioMultiploAgolComponent } from './pages/agol/invio-multiplo-agol/inv
 import { InvioMultiploAgol2Component } from './pages/agol/invio-multiplo-agol-2/invio-multiplo-agol-2.component';
 import { InvioMultiploAgol3Component } from './pages/agol/invio-multiplo-agol-3/invio-multiplo-agol-3.component';
 import { InvioMultiploAgol4Component } from './pages/agol/invio-multiplo-agol-4/invio-multiplo-agol-4.component';
+import { InvioTelegrammaComponent } from './pages/telegramma/invio-telegramma/invio-telegramma.component';
+import { InvioTelegramma2Component } from './pages/telegramma/invio-telegramma-2/invio-telegramma-2.component';
+import { InvioTelegramma3Component } from './pages/telegramma/invio-telegramma-3/invio-telegramma-3.component';
+import { InvioTelegramma4Component } from './pages/telegramma/invio-telegramma-4/invio-telegramma-4.component';
 
 export const routes: Routes = [
   {
@@ -252,6 +256,26 @@ export const routes: Routes = [
       {
         path: 'invioMultiploAgol4',
         component: InvioMultiploAgol4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioTelegramma',
+        component: InvioTelegrammaComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioTelegramma2',
+        component: InvioTelegramma2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioTelegramma3',
+        component: InvioTelegramma3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioTelegramma4',
+        component: InvioTelegramma4Component,
         canActivate: [AuthGuard]
       },
       {

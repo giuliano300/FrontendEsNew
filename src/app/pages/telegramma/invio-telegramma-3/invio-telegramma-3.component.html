@@ -3,8 +3,8 @@
         <div class="col md-12 text-center mt-5">
             <h1>Inserisci il destinatario</h1>
             <p class="mt-4 textsize-4">
-                Compila i campi obbligatori e inserisci il destinatario <br>
-                della raccomandata.
+                Compila i campi obbligatori e inserisci<br> il destinatario 
+                del telegramma.
             </p>
         </div>
     </div>
@@ -12,10 +12,8 @@
         <div class="col-md-12">
             <div class="step-bar">
                 <ul>
-                    <li style="width: 12%;">Atto giudiziario <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 8%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 18%;">Invio singolo {{bulletin}}<i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 14%;">Configura atto giudiziario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Telegramma <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">Ricevuta di ritorno <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
@@ -23,6 +21,29 @@
     </div>
     <div class="generic-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <section class="select-form-type">
+                        <span>Seleziona un destinatario dalla rubrica</span>
+                        <select formControlName="sel_destinatario">
+                            <option value="" selected>-- Seleziona destinatario dalla rubrica --</option>
+                            <option value="1">Ewt</option>
+                            <option value="2">EasySender</option>
+                            <option value="3">Scialb</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section class="select-form-type">
+                        <span>Spedizione</span>
+                        <select formControlName="sel_spedizione">
+                            <option value="" selected>-- Seleziona spedizione italia o estero --</option>
+                            <option value="1">Italia</option>
+                            <option value="2">Estero</option>
+                        </select>
+                    </section>
+                </div>
+            </div>  
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire i dati del destinatario</h3>
@@ -72,34 +93,9 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-12">
-                    <h3 class="text-center color-blue mt-4 mb-3">Avviso di ricevimento digitale</h3>
-                </div>
-                <div class="col-md-2"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
-                    <label for="ric_digitale" class="flex mb-2">
-                        <input type="checkbox" formControlName="ric_digitale" id="ric_digitale">&nbsp;&nbsp;Seleziona se vuoi che l'avviso di ricevimento sia DIGITALE e NON carteceo
-                    </label>
-                </div>
-                <div class="col-md-2"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
-                    <label>PEC</label>
-                    <input type="email" formControlName="pec" />
-        </div>
-                <div class="col-md-2"></div>
-            </div>
-
 
             <div class="group-button">
-                <a routerLink="/invioSingoloAgol3">INDIETRO</a>
+                <a routerLink="/invioTelegramma2">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>
 
@@ -112,4 +108,4 @@
         </form>
     </div>
 
-</div>
+</div><p>invio-singolo-lettera-4 works!</p>

@@ -3,26 +3,24 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { bulletin } from '../../../../main';
-
 
 @Component({
-  selector: 'app-invio-singolo-agol-4',
+  selector: 'app-invio-telegramma-2',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
-  templateUrl: './invio-singolo-agol-4.component.html',
-  styleUrl: './invio-singolo-agol-4.component.scss'
+  templateUrl: './invio-telegramma-2.component.html',
+  styleUrl: './invio-telegramma-2.component.scss'
 })
-export class InvioSingoloAgol4Component {
+export class InvioTelegramma2Component {
 
-  bulletin: string | null = "senza bollettino";
-
-  constructor(private router: Router) {}
+    constructor(private router: Router) {}
   alertMessage = false;
-  alertText = ''; 
+  alertText = '';
+  
 
 
 
   form = new FormGroup({
+    sel_mittente: new FormControl(''),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
@@ -33,26 +31,16 @@ export class InvioSingoloAgol4Component {
     stato: new FormControl('', [Validators.required]),
   });
 
-  ngOnInit(): void {
-
-    const bul = localStorage.getItem('bulletin')!;
-    if(parseInt(bul) == bulletin.si)
-      this.bulletin = "con bollettino";
-    
-  }
-
-
 
   onSubmit(): void {
    
     if (this.form.valid) {
-      this.router.navigate(['/invioSingoloAgol5']);
+      this.router.navigate(['/invioTelegramma3']);
     } else {
       this.alertMessage = true;
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';
     }
   }
-
 
 
 }

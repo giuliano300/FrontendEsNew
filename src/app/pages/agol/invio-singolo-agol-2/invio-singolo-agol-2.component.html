@@ -55,25 +55,6 @@
                 </div>
                 <div class="col-md-3">
                     <h3>
-                        <img src="/assets/img/icn-tipo-lettera.png" alt="Tipo lettera"> Tipo lettera
-                    </h3>
-                    <ul>
-                        <li>
-                            <label for="TipoLetteraP1">
-                                P1
-                                <input id="TipoLetteraP1" type="radio" formControlName="tipoLettera" value="TipoLetteraP1" (change)="removeErroMessage()" />
-                            </label>
-                        </li>
-                        <li>
-                            <label for="TipoLetteraP4">
-                                P4
-                                <input id="TipoLetteraP4" type="radio" formControlName="tipoLettera" value="TipoLetteraP4" (change)="removeErroMessage()" />
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h3>
                         <img src="/assets/img/icn-tipo-stampa.png" alt="Tipo stampa"> Tipo di stampa
                     </h3>
                     <ul>
@@ -107,6 +88,24 @@
                                 NO
                                 <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
                             </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>
+                        <img src="/assets/img/icn-agol.png" alt="Tipologia notificante"> Tipologia notificante
+                    </h3>
+                    <ul>
+                        <li>
+                            <select formControlName="tipoNotificante" (change)="removeErroMessage()">
+                                <option value="">Seleziona tipologia notificante</option>
+                                <option value="1">Parte istante</option>
+                                <option value="1">Procuratore</option>
+                                <option value="1">Ufficiale giudiziario</option>
+                            </select>
+                        </li>
+                        <li>
+                            <input type="text" formControlName="nomeNotificante" placeholder="Nome notificante" (change)="removeErroMessage()">
                         </li>
                     </ul>
                 </div>

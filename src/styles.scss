@@ -141,6 +141,10 @@ small{
 .bg-color-red{background-color: $red-color!important;}
 
 
+/* ! Gsap Animation
+--------------------------------------------------------- */
+.fade-in{opacity: 0; transform: translateY(1rem);}
+.text-reveal{transform: translateY(1rem);clip-path: polygon(0 0, 100% 0, 100% 0, 0 0)};
 
 
 
@@ -498,30 +502,30 @@ small{
 
     .select-form-type{
         width: 100%;
-        height: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        border-bottom:2px dashed $grey-light;
+        height: 120px!important;
+        display: flex!important;
+        align-items: center!important;
+        justify-content: center!important;
+        flex-direction: column!important;
+        border-bottom:2px dashed $grey-light!important;
 
         select{
-            min-width: 460px;
-            max-width: 70%;
-            height: 50px;
+            min-width: 460px!important;
+            max-width: 70%!important;
+            height: 50px!important;
             font-size: 0.9rem;
-            border:1px solid $grey-light;
-            padding:0 15px;
-            outline: none;
-            margin-bottom: 30px;
+            border:1px solid $grey-light!important;
+            padding:0 15px!important;
+            outline: none!important;
+            margin-bottom: 30px!important;
         }
 
         span{
-            font-size: 1.1rem;
-            font-weight:$font-bold;
+            font-size: 1.1rem!important;
+            font-weight:$font-bold!important;
             
             em{
-                font-weight: $font-regular;
+                font-weight: $font-regular!important;
             }
         }
 
@@ -568,6 +572,26 @@ small{
                 font-size: 0.9rem;
             }
 
+        }
+
+        select{
+            width: 100%;
+            height: 30px;
+            font-size: 0.85rem;
+            border-radius: 0px;
+            border:1px solid $grey-middle;
+            padding: 0 10px;
+            outline: none;
+        }
+
+        input[type=text]{
+            width: 100%;
+            height: 30px;
+            font-size: 0.85rem;
+            border-radius: 0px;
+            border:1px solid $grey-middle;
+            padding: 0 10px;
+            outline: none;
         }
 
         
@@ -628,6 +652,14 @@ small{
             height: 50px;
             border: 1px solid $grey-light;
             padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
+        textarea{
+            width: 100%;
+            height: 200px;
+            border: 1px solid $grey-light;
+            padding:10px;
             font-size: 0.9rem;
             outline-color: $grey-middle;
         }
