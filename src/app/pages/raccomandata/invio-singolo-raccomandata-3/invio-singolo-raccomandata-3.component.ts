@@ -15,11 +15,11 @@ export class InvioSingoloRaccomandata3Component {
   constructor(private router: Router) {}
   alertMessage = false;
   alertText = '';
-  
 
 
 
   form = new FormGroup({
+    sel_mittente: new FormControl('', [Validators.required]),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),

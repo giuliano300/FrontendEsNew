@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Richiedi una <span class="color-blue">Visura</span> o un <span class="color-blue">Certificato</span></h1>
+            <p class="mt-4 textsize-4">
+                Offriamo servizi efficienti e affidabili per ottenere documenti ufficiali relativi alle imprese presso la Camera di Commercio.<br>
+               Scegli se effettuare una <strong>richiesta singola</strong> oppure una <strong>richiesta multipla</strong>.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 15%;">Visura/Certificati <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="select-type-send">
+                <div class="item">
+                    <input id="invio-singolo" type="radio" formControlName="tipoInvio" value="invio-singolo" (change)="removeErroMessage()" />
+                    <label for="invio-singolo">
+                    <img src="/assets/img/icn-visura-singola.png" alt="Richiesta singola" width="100" /> Richiesta singola </label>
+                </div>
+                <div class="item">
+                    <input id="invio-multiplo" type="radio" formControlName="tipoInvio" value="invio-multiplo" (change)="removeErroMessage()" />
+                    <label for="invio-multiplo">
+                    <img src="/assets/img/icn-visura-multipla.png" alt="Richiesta multipla" width="100" /> Richiesta multipla </label>
+                </div>
+                </div>
+                
+                <div class="group-button">
+                    <a routerLink="/nuovaSpedizione">INDIETRO</a>
+                    <input type="submit" value="AVANTI" />
+                </div>
+            
+                <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+                <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona un tipo di richiesta per procedere.</span> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

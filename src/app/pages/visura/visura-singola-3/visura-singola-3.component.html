@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Aggiungi intestatario</h1>
+            <p class="mt-4 textsize-4">
+                Compila i campi richiesti dell'intestatario.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 13%;">Visura/Certificati <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 11%;">Richiesta singola <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 9%;">Visura<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 9%;">Richiedente<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="generic-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center color-blue mt-4 mb-5">Compila i campi dell'intestatario</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>CODICE FISCALE / PARTITA IVA</label>
+                            <input type="text" formControlName="piva" />
+                        </li>
+                        <li>
+                            <label>NOMINATIVO </label>
+                            <input type="text" formControlName="nominativo" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label>CCIAA</label>
+                            <input type="text" formControlName="cciaa" />
+                        </li>
+                        <li>
+                            <label>NUMERO REA</label>
+                            <input type="text" formControlName="numero_rea" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+            <div class="group-button">
+                <a routerLink="/visuraSingola2">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+</div>

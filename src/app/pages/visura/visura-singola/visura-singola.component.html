@@ -1,0 +1,88 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Scegli il tipo di richiesta</h1>
+            <p class="mt-4 textsize-4">
+                Seleziona il richiedende <br>
+                E scegli se richiedere una <strong>visura</strong> o un <strong>certificato</strong>.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 15%;">Visura/Certificati <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 11%;">Richiesta singola <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-setting">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-richiesta.png" alt="Tipo richiesta"> Tipo
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="Visura">
+                               Visura
+                               <input id="Visura" type="radio" formControlName="tipoRichiesta" value="Visura" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="Certificato">
+                                Certificato
+                                <input id="Certificato" type="radio" formControlName="tipoRichiesta" value="Certificato" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-documento.png" alt="Tipo documento"> Tipo documento
+                    </h3>
+                    <ul>
+                        <li>
+                            <select formControlName="sel_documento" id="sel_documento" (change)="removeErroMessage()">
+                                <option value="">-- Tipo documento --</option>
+                                <option *ngFor="let opt of filteredOptions" [value]="opt.value">{{ opt.label }}</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-richiedente.png" alt="Tipo destinatario"> Destinatario diverso
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="DestinatarioSI">
+                                SI
+                                <input id="DestinatarioSI" type="radio" formControlName="tipoDestinatario" value="DestinatarioSI" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="DestinatarioNO">
+                                NO
+                                <input id="DestinatarioNO" type="radio" formControlName="tipoDestinatario" value="DestinatarioNO" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>   
+            <div class="group-button">
+                <a routerLink="/invioSingoloLettera">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
+            </div>
+
+        </form>
+    </div>
+</div>

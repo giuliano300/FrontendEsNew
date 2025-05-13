@@ -20,6 +20,7 @@ export class InvioSingoloLettera4Component {
 
   form = new FormGroup({
     sel_destinatario: new FormControl(''),
+    sel_spedizione: new FormControl(''),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),

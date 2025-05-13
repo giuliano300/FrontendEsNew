@@ -24,7 +24,7 @@
     <div class="generic-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <section class="select-form-type">
                         <span>Seleziona un destinatario dalla rubrica</span>
                         <select formControlName="sel_destinatario">
@@ -32,6 +32,16 @@
                             <option value="1">Ewt</option>
                             <option value="2">EasySender</option>
                             <option value="3">Scialb</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section class="select-form-type">
+                        <span>Spedizione</span>
+                        <select formControlName="sel_spedizione">
+                            <option value="" selected>-- Seleziona spedizione italia o estero --</option>
+                            <option value="1">Italia</option>
+                            <option value="2">Estero</option>
                         </select>
                     </section>
                 </div>

@@ -20,6 +20,8 @@ export class InvioSingoloRaccomandata4Component {
 
 
   form = new FormGroup({
+    sel_destinatario: new FormControl('', [Validators.required]),
+    sel_spedizione: new FormControl('', [Validators.required]),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),

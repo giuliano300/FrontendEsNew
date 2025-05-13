@@ -5,15 +5,17 @@
                 <h1>Effettua una nuova spedizione</h1>
                 <p class="mt-4 textsize-4">
                     Scegli il tipo di spedizione che desideri effettuare dal menu qui sotto:<br>
-                    lettere, raccomandate, telegrammi, atti giudiziari o visure.<br>
+                    lettere, raccomandate, telegrammi, atti giudiziari,visure o invio pacchi.<br>
                     Bastano pochi clic per inviare la tua corrispondenza in modo semplice e veloce.
                 </p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3 col-sm-2"></div>
-            <div class="col-md-6 col-sm-8">
+            <div class="col-md-12">
                 <h3>Scegli un prodotto</h3>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
                 <ul>
                     <li>
                         <a routerLink="/tipoSpedizioneRaccomandata">
@@ -39,6 +41,10 @@
                             <img src="/assets/img/icn-circle-right.png">
                         </a>
                     </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul>
                     <li>
                         <a routerLink="/tipoSpedizioneAgol">
                             <span>
@@ -48,17 +54,24 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a routerLink="/tipoVisura">
                             <span>
                                 <img src="/assets/img/icn-visura-send.png" alt="visura certificato">VISURA/CERTIFICATO
                             </span>
                             <img src="/assets/img/icn-circle-right.png">
                         </a>
                     </li>
-
+                    <li>
+                        <a routerLink="/invioPacco">
+                            <span>
+                                <img src="/assets/img/icn-pacchi-send.png" alt="pacchi">PACCHI
+                            </span>
+                            <img src="/assets/img/icn-circle-right.png">
+                        </a>
+                    </li>
                 </ul>
             </div>
-            <div class="col-md-3 col-sm-2"></div>
+            <div class="col-md-2"></div>
         </div>
     </div>
 </div>

@@ -48,6 +48,14 @@ import { InvioTelegrammaComponent } from './pages/telegramma/invio-telegramma/in
 import { InvioTelegramma2Component } from './pages/telegramma/invio-telegramma-2/invio-telegramma-2.component';
 import { InvioTelegramma3Component } from './pages/telegramma/invio-telegramma-3/invio-telegramma-3.component';
 import { InvioTelegramma4Component } from './pages/telegramma/invio-telegramma-4/invio-telegramma-4.component';
+import { TipoVisuraComponent } from './pages/visura/tipo-visura/tipo-visura.component';
+import { VisuraSingolaComponent } from './pages/visura/visura-singola/visura-singola.component';
+import { VisuraSingola2Component } from './pages/visura/visura-singola-2/visura-singola-2.component';
+import { VisuraSingola3Component } from './pages/visura/visura-singola-3/visura-singola-3.component';
+import { VisuraMultiplaComponent } from './pages/visura/visura-multipla/visura-multipla.component';
+import { VisuraMultipla2Component } from './pages/visura/visura-multipla-2/visura-multipla-2.component';
+import { InvioPaccoComponent } from './pages/pacchi/invio-pacco/invio-pacco.component';
+import { InvioPacco2Component } from './pages/pacchi/invio-pacco-2/invio-pacco-2.component';
 
 export const routes: Routes = [
   {
@@ -276,6 +284,46 @@ export const routes: Routes = [
       {
         path: 'invioTelegramma4',
         component: InvioTelegramma4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'tipoVisura',
+        component: TipoVisuraComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraSingola',
+        component: VisuraSingolaComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraSingola2',
+        component: VisuraSingola2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraSingola3',
+        component: VisuraSingola3Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraMultipla',
+        component: VisuraMultiplaComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraMultipla2',
+        component: VisuraMultipla2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioPacco',
+        component: InvioPaccoComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'invioPacco2',
+        component: InvioPacco2Component,
         canActivate: [AuthGuard]
       },
       {

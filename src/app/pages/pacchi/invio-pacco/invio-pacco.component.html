@@ -1,0 +1,92 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-5">
+            <h1>Spedisci un pacco</h1>
+            <p class="mt-4 textsize-4">
+                Offriamo soluzioni flessibili e convenienti per inviare pacchi in modo rapido, sicuro e affidabile. <br>
+                Scopri i nostri servizi e le opzioni disponibili per soddisfare le tue esigenze di spedizione.        
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="step-bar">
+                <ul>
+                    <li style="width: 10%;">Pacchi <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 13%;">Nuova spedizione <i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-setting">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <section class="select-form-type">
+                        <span>Seleziona un mittente dalla rubrica</span>
+                        <select formControlName="sel_mittente">
+                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
+                            <option value="1">Ewt</option>
+                            <option value="2">EasySender</option>
+                            <option value="3">Scialb</option>
+                        </select>
+                    </section>
+                </div>
+                <div class="col-md-2"></div>
+            </div>  
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-mittente-pacco.png" alt="Mittente da contratto"> Mittente da contratto
+                    </h3>
+                    <ul>
+                        <li>
+                            <label for="MittContrattoSI">
+                               SI
+                               <input id="MittContrattoSI" type="radio" formControlName="mitt_contratto" value="MittContrattoSI" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                        <li>
+                            <label for="MittContrattoNO">
+                                NO
+                                <input id="MittContrattoNO" type="radio" formControlName="mitt_contratto" value="MittContrattoNO" (change)="removeErroMessage()" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>
+                        <img src="/assets/img/icn-tipo-pacco.png" alt="Prodotto"> Prodotto
+                    </h3>
+                    <ul>
+                        <li>
+                            <select formControlName="sel_prodotto" id="sel_prodotto" (change)="removeErroMessage()">
+                                <option value="">-- Seleziona prodotto --</option>
+                                <option value="Standard">Standard</option>
+                                <option value="Express">Express</option>
+                                <option value="Standard Reverse">Standard Reverse</option>
+                                <option value="Express Reverse ">Express Reverse </option>
+                                <option value="Internazionale Standard">Internazionale Standard</option>
+                                <option value="Internazionale Express ">Internazionale Express </option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2"></div>
+            </div>   
+
+            <div class="group-button">
+                <a routerLink="/nuovaSpedizione">INDIETRO</a>
+                <input type="submit" value="AVANTI" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
+            </div>
+
+        </form>
+    </div>
+</div>
