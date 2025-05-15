@@ -3,10 +3,13 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
+
 
 @Component({
   selector: 'app-invio-singolo-lettera-3',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './invio-singolo-lettera-3.component.html',
   styleUrl: './invio-singolo-lettera-3.component.scss'
 })
@@ -14,6 +17,14 @@ export class InvioSingoloLettera3Component {
   constructor(private router: Router) {}
   alertMessage = false;
   alertText = '';
+
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
+
   
 
 

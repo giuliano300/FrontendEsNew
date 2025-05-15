@@ -134,11 +134,17 @@
                         <div class="col-md-4">
                             <ul>
                                 <li>
-                                    <label>NOMINATIVO <em>(Uguale al nominativo del mittente)</em></label>
+                                    <label class="flex-start">
+                                        NOMINATIVO
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="nominativo_ar" />
                                 </li>
                                 <li>
-                                    <label>INDIRIZZO <em>(ES.via Toledo, 50)</em></label>
+                                    <label class="flex-start">
+                                        INDIRIZZO
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="indirizzo_ar" />
                                 </li>
                                 <li>
@@ -146,7 +152,10 @@
                                     <input type="text" formControlName="cap_ar" maxlength="5" />
                                 </li>
                                 <li>
-                                    <label>PROVINCIA <em>(SOLO 2 LETTERE)</em></label>
+                                    <label class="flex-start">
+                                        PROVINCIA
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="provincia_ar" maxlength="2" />
                                 </li>
                             </ul>
@@ -154,11 +163,17 @@
                         <div class="col-md-4">
                             <ul>
                                 <li>
-                                    <label>COMPLETAMENTO NOMINATIVO <em>(Es. Presso sig.Rossi)</em></label>
+                                    <label class="flex-start">
+                                        COMPLETAMENTO NOMINATIVO
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="comp_nominativo_ar" />
                                 </li>
                                 <li>
-                                    <label>COMPLETAMENTO INDIRIZZO <em>(Es. vicino alla stazione)</em></label>
+                                    <label class="flex-start">
+                                        COMPLETAMENTO INDIRIZZO
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="comp_indirizzo_ar" />
                                 </li>
                                 <li>
@@ -166,7 +181,10 @@
                                     <input type="text" formControlName="citta_ar" />
                                 </li>
                                 <li>
-                                    <label>STATO <em>(SECONDO I CODICI UPU)</em></label>
+                                    <label class="flex-start">
+                                        STATO
+                                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
+                                    </label>
                                     <input type="text" formControlName="stato_ar" />
                                 </li>
                             </ul>

@@ -7,10 +7,13 @@ import { bulletin } from '../../../../main';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { Users } from '../../../interfaces/Users';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState, alertMailDest } from '../../../enviroments/enviroments';
+
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './invio-multiplo-raccomandata-2.component.html',
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
@@ -18,6 +21,15 @@ export class InvioMultiploRaccomandata2Component {
   constructor(private router: Router, private userLogosService: UserLogosService) {}
   alertMessage = false;
   alertText = '';
+  
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
+  alertMailDest= alertMailDest;
+
 
   bulletin: string | null = "senza bollettino";
 

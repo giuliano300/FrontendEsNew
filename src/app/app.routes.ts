@@ -56,6 +56,12 @@ import { VisuraMultiplaComponent } from './pages/visura/visura-multipla/visura-m
 import { VisuraMultipla2Component } from './pages/visura/visura-multipla-2/visura-multipla-2.component';
 import { InvioPaccoComponent } from './pages/pacchi/invio-pacco/invio-pacco.component';
 import { InvioPacco2Component } from './pages/pacchi/invio-pacco-2/invio-pacco-2.component';
+import { AddSenderComponent } from './pages/userSenders/add-sender/add-sender.component';
+import { InviiLettereComponent } from './pages/stato-invii/invii-lettere/invii-lettere.component';
+import { InviiRaccomandateComponent } from './pages/stato-invii/invii-raccomandate/invii-raccomandate.component';
+import { InviiTelegrammiComponent } from './pages/stato-invii/invii-telegrammi/invii-telegrammi.component';
+import { InviiAgolComponent } from './pages/stato-invii/invii-agol/invii-agol.component';
+import { InviiPacchiComponent } from './pages/stato-invii/invii-pacchi/invii-pacchi.component';
 
 export const routes: Routes = [
   {
@@ -324,6 +330,36 @@ export const routes: Routes = [
       {
         path: 'invioPacco2',
         component: InvioPacco2Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'addSender',
+        component: AddSenderComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoInviiLettere',
+        component: InviiLettereComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoInviiRaccomandate',
+        component: InviiRaccomandateComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoInviiTelegrammi',
+        component: InviiTelegrammiComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoInviiAgol',
+        component: InviiAgolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoInviiPacchi',
+        component: InviiPacchiComponent,
         canActivate: [AuthGuard]
       },
       {

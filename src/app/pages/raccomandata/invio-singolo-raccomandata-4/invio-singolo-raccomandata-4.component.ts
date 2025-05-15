@@ -3,10 +3,12 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState, alertMailDest } from '../../../enviroments/enviroments';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-4',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink,NgbModule],
   templateUrl: './invio-singolo-raccomandata-4.component.html',
   styleUrl: './invio-singolo-raccomandata-4.component.scss'
 })
@@ -16,6 +18,14 @@ export class InvioSingoloRaccomandata4Component {
   alertMessage = false;
   alertText = '';
   
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
+  alertMailDest= alertMailDest;
+
 
 
 

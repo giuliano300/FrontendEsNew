@@ -8,10 +8,12 @@ import { Users } from '../../interfaces/Users';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-user-senders',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink],
   templateUrl: './user-senders.component.html',
   styleUrl: './user-senders.component.scss',
   encapsulation: ViewEncapsulation.None

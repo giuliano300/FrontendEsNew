@@ -34,7 +34,10 @@
                             <input type="text" formControlName="conto_corrente" />
                         </li>
                         <li>
-                            <label>ESEGUITO DA <em>(NOMINATIVO)</em></label>
+                            <label class="flex-start">
+                                ESEGUITO DA
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollNominativo}}" placement="right"></i>
+                            </label>
                             <input type="text" formControlName="eseguito_nominativo" />
                         </li>
                         <li>
@@ -50,11 +53,17 @@
                             <input type="text" formControlName="intestatario" />
                         </li>
                         <li>
-                            <label>ESEGUITO DA <em>(INDIRIZZO)</em></label>
+                            <label class="flex-start">
+                                ESEGUITO DA
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollIndirizzo}}" placement="right"></i>
+                            </label>
                             <input type="text" formControlName="eseguito_indirizzo" />
                         </li>
                         <li>
-                            <label>ESEGUITO DA <em>(CAP)</em></label>
+                            <label class="flex-start">
+                                ESEGUITO DA
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollCap}}" placement="right"></i>
+                            </label>
                             <input type="text" formControlName="eseguito_cap" maxlength="5" />
                         </li>
                     </ul>
@@ -66,7 +75,10 @@
                             <input type="number" formControlName="importo" />
                         </li>
                         <li>
-                            <label>ESEGUITO DA <em>(LOCALITA')</em></label>
+                            <label class="flex-start">
+                                ESEGUITO DA
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollLocalita}}" placement="right"></i>
+                            </label>
                             <input type="text" formControlName="eseguito_localita" />
                         </li>
                         <li>

@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
 
 @Component({
   selector: 'app-visura-singola-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './visura-singola-2.component.html',
   styleUrl: './visura-singola-2.component.scss'
 })
@@ -16,8 +17,12 @@ export class VisuraSingola2Component {
   constructor(private router: Router) {}
   alertMessage = false;
   alertText = '';
-
-
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
 
   form = new FormGroup({
     sel_mittente: new FormControl(''),

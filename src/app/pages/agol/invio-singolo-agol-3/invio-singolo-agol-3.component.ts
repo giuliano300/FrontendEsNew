@@ -4,11 +4,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { bulletin } from '../../../../main';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
 
 
 @Component({
   selector: 'app-invio-singolo-agol-3',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './invio-singolo-agol-3.component.html',
   styleUrl: './invio-singolo-agol-3.component.scss'
 })
@@ -20,6 +22,13 @@ export class InvioSingoloAgol3Component {
   constructor(private router: Router) {}
   alertMessage = false;
   alertText = '';
+
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
 
 
   form = new FormGroup({

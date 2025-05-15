@@ -8,10 +8,13 @@ import { UserLogos } from '../../../interfaces/UserLogos';
 import { Users } from '../../../interfaces/Users';
 import { Shipping } from '../../../interfaces/ViewModel/Shipping';
 import { UserLogosService } from '../../../services/user-logos.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
+
 
 @Component({
   selector: 'app-invio-multiplo-agol-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink,NgbModule],
   templateUrl: './invio-multiplo-agol-2.component.html',
   styleUrl: './invio-multiplo-agol-2.component.scss'
 })
@@ -21,6 +24,13 @@ export class InvioMultiploAgol2Component {
   constructor(private router: Router,  private userLogosService: UserLogosService) {}
   alertMessage = false;
   alertText = '';
+
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
 
   userLogos: UserLogos[] =[];
 

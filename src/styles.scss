@@ -147,6 +147,49 @@ small{
 .bg-color-red{background-color: $red-color!important;}
 
 
+.button { 
+  text-decoration: none;
+  padding: 10px 15px; 
+  display: inline-block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: $font-medium;
+}
+
+.modal-content{
+    border-radius: 0px!important;
+}
+
+.modal-title{
+    font-weight: $font-semi-bold!important;
+    color: $primary-color!important;
+}
+
+.modal-body{
+    li{
+        margin:0 0 8px 10px;
+        font-weight: $font-regular;
+
+        i{
+            font-size: 1.2rem;
+        }
+
+        a{
+        display: flex;
+        align-items: center;
+        justify-content:start;
+        color: $secondary-color;
+        cursor: pointer;
+
+            &:hover{
+                color: $primary-color!important;
+            }
+
+        }
+    }
+}
+
 /* ! Gsap Animation
 --------------------------------------------------------- */
 .fade-in{opacity: 0; transform: translateY(1rem);}
@@ -629,6 +672,12 @@ small{
             em{
                 font-weight: $font-regular;
             }
+
+            i{
+                font-size:1.2rem;
+                margin-left: 5px;
+                margin-bottom: 2px;
+            }
         }
 
         h4{
@@ -906,5 +955,7 @@ a.download-csv:link, a.download-csv:visited{
         margin-right: 6px;
     }
 }
+
+
 
 

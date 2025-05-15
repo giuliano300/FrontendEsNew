@@ -3,9 +3,13 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertBollCap, alertBollIndirizzo, alertBollLocalita, alertBollNominativo } from '../../../enviroments/enviroments';
+
+
 @Component({
   selector: 'app-compila-bollettino',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './compila-bollettino.component.html',
   styleUrl: './compila-bollettino.component.scss'
 })
@@ -13,7 +17,10 @@ export class CompilaBollettinoComponent {
   constructor(private router: Router) {}
   alertMessage = false;
   alertText = '';
-
+  alertBollNominativo=alertBollNominativo;
+  alertBollIndirizzo=alertBollIndirizzo;
+  alertBollCap=alertBollCap;
+  alertBollLocalita=alertBollLocalita;
   
   form = new FormGroup({
     conto_corrente: new FormControl('', [Validators.required]),

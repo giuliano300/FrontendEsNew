@@ -3,10 +3,13 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
+
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-3',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './invio-singolo-raccomandata-3.component.html',
   styleUrl: './invio-singolo-raccomandata-3.component.scss'
 })
@@ -16,10 +19,17 @@ export class InvioSingoloRaccomandata3Component {
   alertMessage = false;
   alertText = '';
 
+  alertName = alertName;
+  alertComplName = alertComplName;
+  alertAddress = alertAddress;
+  alertComplAddress = alertComplAddress;
+  alertProvince = alertProvince;
+  alertState = alertState;
+  
 
 
   form = new FormGroup({
-    sel_mittente: new FormControl('', [Validators.required]),
+    sel_mittente: new FormControl(''),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),

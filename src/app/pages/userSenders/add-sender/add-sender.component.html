@@ -1,0 +1,102 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Inserisci un nuovo mittente</h1>
+            <p class="mt-2 textsize-4">
+                Compila i campi del form per inserire un nuovo mittente nella rubrica.
+            </p>
+        </div>
+    </div>
+    <div class="generic-form mt-5">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label class="flex-start">
+                                NOMINATIVO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="nominativo" />
+                        </li>
+                        <li>
+                            <label class="flex-start">
+                                COMPLETAMENTO INDIRIZZO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="comp_indirizzo" />
+                        </li>
+                        <li>
+                            <label class="flex-start">
+                                PROVINCIA
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="provincia" maxlength="2" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label class="flex-start">
+                                COMPLETAMENTO NOMINATIVO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="comp_nominativo" />
+                        </li>
+                        <li>
+                            <label>CAP</label>
+                            <input type="text" formControlName="cap" maxlength="5" />
+                        </li>
+                        <li>
+                            <label class="flex-start">
+                                STATO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="stato" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <label class="flex-start">
+                                INDIRIZZO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="indirizzo" />
+                        </li>
+                        <li>
+                            <label>CITTÀ</label>
+                            <input type="text" formControlName="citta" />
+                        </li>
+                        <li>
+                            <label>TELEFONO</label>
+                            <input type="phone" formControlName="telefono" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>
+                            <label>EMAIL</label>
+                            <input type="email" formControlName="email" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="group-button">
+                <input type="submit" value="SALVA" class="bg-color-green color-white" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+</div>
