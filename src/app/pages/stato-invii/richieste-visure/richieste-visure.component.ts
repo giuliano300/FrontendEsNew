@@ -10,19 +10,19 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoDettaglioInvii } from '../../../enviroments/enviroments';
 
 @Component({
-  selector: 'app-invii-agol',
+  selector: 'app-richieste-visure',
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgClass, NgbModule],
-  templateUrl: './invii-agol.component.html',
-  styleUrl: './invii-agol.component.scss'
+  templateUrl: './richieste-visure.component.html',
+  styleUrl: './richieste-visure.component.scss'
 })
-export class InviiAgolComponent {
+export class RichiesteVisureComponent {
 
     constructor(private router: Router) {}
   
     infoDettaglioInvii = infoDettaglioInvii;
   
   
-    displayedColumns: string[] = ['date', 'transfer', 'receiver', 'actions'];
+    displayedColumns: string[] = ['date', 'type', 'transfer', 'receiver', 'actions'];
     dataSource = new MatTableDataSource(USER_DATA);
     
       @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -41,21 +41,18 @@ export class InviiAgolComponent {
       }
   
       goToDetail(row: any) {
-        // Per esempio: vai a /dettaglio/[nome]
         this.router.navigate(['/dettaglio', row.name]);
       }
     
   
       getCustomTransferClass(value: number): string {
-        return value < 99 ? 'progress-orange' : 'progress-green';
+        return value < 100 ? 'progress-orange' : 'progress-green';
       }    
   
-
 }
 
 const USER_DATA = [
-  { date: '12/05/2025 - 09:33', transfer: 52, receiver: '41' },
-  { date: '8/05/2025 - 15:51', transfer: 85, receiver: '168' },
-  { date: '5/05/2025 - 16:01', transfer: 100, receiver: '57' },
+  { date: '12/05/2025 - 09:33', type: 'Visura', transfer: 0, receiver: '1' },
+  { date: '8/05/2025 - 15:51', type: 'Visura', transfer: 95, receiver: '4' },
+  { date: '5/05/2025 - 16:01', type: 'Certificato', transfer: 100, receiver: '1' },
 ];
-

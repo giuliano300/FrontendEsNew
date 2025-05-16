@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
-            <h1>Stato invii Pacchi</h1>
+            <h1>Stato richieste Visure/Certificati</h1>
             <p class="mt-2 mb-4 textsize-4">
                 In quest'area puoi controllare lo stato della spedizione di un documento. <br>
                 Cliccando sul dettaglio puoi visionare lo stato della spedizione per ogni destinatario.
@@ -21,6 +21,12 @@
                     <ng-container matColumnDef="date">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Data e ora creazione lotto </th>
                         <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+
+                    <!-- Colonna tipo -->
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
                     </ng-container>
 
                     <!-- Colonna transfer -->
@@ -43,7 +49,7 @@
 
                     <!-- Colonna Destinatari -->
                     <ng-container matColumnDef="receiver">
-                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"> numero destinatari </th>
+                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"> numero richieste </th>
                         <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.receiver}} </td>
                     </ng-container>
 

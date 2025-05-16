@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col md-12 text-center mt-4">
             <h1>Stato invii Raccomandate</h1>
-            <p class="mt-2 textsize-4">
+            <p class="mt-2 mb-4 textsize-4">
                 In quest'area puoi controllare lo stato della spedizione di un documento. <br>
                 Cliccando sul dettaglio puoi visionare lo stato della spedizione per ogni destinatario.
             </p>
@@ -14,6 +14,56 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+
+
+                    <!-- Colonna data -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data e ora creazione lotto </th>
+                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+
+                    <!-- Colonna transfer -->
+                    <ng-container matColumnDef="transfer">
+                    <th mat-header-cell *matHeaderCellDef>
+                        % lotto trasferimento a Poste Italiane
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-progress-bar
+                        mode="determinate"
+                        [value]="element.transfer"
+                        [ngClass]="getCustomTransferClass(element.transfer)"
+                        style="height:7px; margin-top: 7px;">
+                        </mat-progress-bar>
+                        <div class="text-center mt-1 perc-numb">
+                        {{ element.transfer }}%
+                        </div>
+                    </td>
+                    </ng-container>
+
+                    <!-- Colonna Destinatari -->
+                    <ng-container matColumnDef="receiver">
+                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"> numero destinatari </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.receiver}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Azioni -->
+                    <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Dettaglio </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;">
+                        <button mat-button class="mat-button" (click)="goToDetail(element)"><i class='bx bx-link-external' ngbTooltip="{{infoDettaglioInvii}}" placement="left"></i></button>
+                    </td>
+                    </ng-container>
+
+                    <!-- Header e righe -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>                            
+                                
+              
+            </table>
+              
+              <!-- Paginazione -->
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
 
         </div>
     </div>

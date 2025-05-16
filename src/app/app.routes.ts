@@ -62,6 +62,7 @@ import { InviiRaccomandateComponent } from './pages/stato-invii/invii-raccomanda
 import { InviiTelegrammiComponent } from './pages/stato-invii/invii-telegrammi/invii-telegrammi.component';
 import { InviiAgolComponent } from './pages/stato-invii/invii-agol/invii-agol.component';
 import { InviiPacchiComponent } from './pages/stato-invii/invii-pacchi/invii-pacchi.component';
+import { RichiesteVisureComponent } from './pages/stato-invii/richieste-visure/richieste-visure.component';
 
 export const routes: Routes = [
   {
@@ -360,6 +361,11 @@ export const routes: Routes = [
       {
         path: 'statoInviiPacchi',
         component: InviiPacchiComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'statoRichiesteVisure',
+        component: RichiesteVisureComponent,
         canActivate: [AuthGuard]
       },
       {

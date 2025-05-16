@@ -369,12 +369,18 @@ small{
       .mat-header-row {
         background-color: $primary-color;
         color: $white-color;
-        font-weight: 500;
+        font-weight: $font-medium;
         text-align: center;
+        text-transform: uppercase;
+        border:1px solid $primary-color;
+      font-family: $font-stack!important;
       }
   
       /* Stile per le righe del corpo */
       .mat-row {
+        font-family: $font-stack!important;
+
+
         &:nth-child(even) {
           background-color:  $white-color;
         }
@@ -384,10 +390,35 @@ small{
         }
 
         td{        
-            border: solid 1px #ddd!important;
+            border: solid 1px $grey-light!important;
         }
       }
+
+      .mat-sort-header-arrow{
+        opacity: .3;
+      }
+
+      .mat-button{
+        border:0px none;
+        background-color: $primary-color;
+        color: $white-color;
+        cursor: pointer;
+      }
+
+      .perc-numb{
+        font-size: 0.7rem;
+        font-weight: $font-medium;
+      }
+      
     }
+
+        .progress-orange .mdc-linear-progress__bar-inner {
+        border-color:$orange-color !important;
+        }
+
+        .progress-green .mdc-linear-progress__bar-inner{
+        border-color:$green-color-2 !important;
+        }
 
 
     .step-bar{
