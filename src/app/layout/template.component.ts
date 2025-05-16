@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Users } from '../interfaces/Users';
 
 @Component({
   selector: 'app-template',
@@ -11,6 +12,11 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 })
 export class TemplateComponent {
   constructor(private router: Router) {}
+
+  user: Users | null  = null;
+
+  userName: string | null = null;
+  
   logout(){
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
@@ -22,6 +28,18 @@ export class TemplateComponent {
     localStorage.removeItem('bulletin');    
 
     this.router.navigate(['/']);
+  }
+
+  ngOnInit() {
+    const user = localStorage.getItem('user');
+      if (!user) {
+        this.router.navigate(['/']);
+        return;
+      }
+  
+    this.user! = JSON.parse(user!);
+    
+    this.userName = this.user!.businessName;
   }
 
   OpenMenu(){

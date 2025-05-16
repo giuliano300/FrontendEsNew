@@ -5,16 +5,33 @@ import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState, alertMailDest } from '../../../enviroments/enviroments';
+import { UserRecipients } from '../../../interfaces/UserRecipients';
+import { filter, map, Observable, of, startWith } from 'rxjs';
+import { Comune } from '../../../interfaces/Comune';
+import { Users } from '../../../interfaces/Users';
+import { UserRecipientsService } from '../../../services/user-recipients.service';
+import { GlobalServicesService } from '../../../services/global-services.service';
+import { FormStorageService } from '../../../services/form-storage.service';
+import * as CryptoJS from 'crypto-js';
+
+
+// Import Angular Material modules necessari
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { secretKey } from '../../../../main';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-4',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink,NgbModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
   templateUrl: './invio-singolo-raccomandata-4.component.html',
   styleUrl: './invio-singolo-raccomandata-4.component.scss'
 })
 export class InvioSingoloRaccomandata4Component {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private userRecipientService: UserRecipientsService,
+    private globalServices: GlobalServicesService, private formStorage: FormStorageService
+  ) {}
   alertMessage = false;
   alertText = '';
   
@@ -26,12 +43,22 @@ export class InvioSingoloRaccomandata4Component {
   alertState = alertState;
   alertMailDest= alertMailDest;
 
+  userRecipients: UserRecipients[] = [];
 
+  userRecipient: UserRecipients | null = null;
 
+  filteredCAPs: Observable<string[]> = of([]);
 
+  comuni: Comune[] = [];
+  comuniDaCap: Comune[] = [];
+  
+  user: Users | null  = null;
+
+  isOne: boolean = true;
+  ifItalia: boolean = true;
   form = new FormGroup({
     sel_destinatario: new FormControl('', [Validators.required]),
-    sel_spedizione: new FormControl('', [Validators.required]),
+    sel_spedizione: new FormControl('Italia'),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
@@ -40,10 +67,192 @@ export class InvioSingoloRaccomandata4Component {
     comp_indirizzo: new FormControl('', [Validators.required]),
     citta: new FormControl('', [Validators.required]),
     stato: new FormControl('', [Validators.required]),
+    email: new FormControl('')
   });
 
+  onStatoChange(event: Event) {
+    this.ifItalia = (event.target as HTMLSelectElement).value === 'Italia';
+  }
+
+  getUserRecipient(id: number){
+    this.userRecipientService.getUserRecipient(id)
+      .subscribe((data: UserRecipients) => {
+        if (!data) {
+          console.log('Nessun dato disponibile');
+        } 
+        else 
+        {
+          this.userRecipient = data;
+          this.setFormValue(this.userRecipient);
+        }
+    });
+  }
+
+  setFormValue(u: UserRecipients){
+      this.form.patchValue({
+        nominativo: u.businessName,
+        comp_nominativo: u.complementNames,
+        indirizzo: u.address,
+        comp_indirizzo: u.complementAddress,
+        cap: u.zipCode,
+        citta: u.city,
+        provincia: u.province,
+        stato: u.state,
+        email: u.email
+      });
+  }
+
+  getThisUser(){
+    const user = localStorage.getItem('user');
+      if (!user) {
+        this.router.navigate(['/']);
+        return;
+      }
+
+      this.user! = JSON.parse(user!);
+  }
+
+  getComuni(){
+    this.globalServices.getComuni()
+      .subscribe((data: Comune[]) => {
+        if (!data || data.length === 0) {
+          console.log('Nessun dato disponibile');
+        } 
+        else 
+        {
+          this.comuni = data;
+          this.setListOfComuni();
+        }
+      });
+  }
+
+  setProvince(event: Event){
+    const v = (event.target as HTMLSelectElement).value;
+    const comune = this.comuni.filter(comune =>
+          comune.denominazione_ita.startsWith(v!)
+    );
+
+    this.form.patchValue({
+      provincia: comune[0].sigla_provincia
+    });
+
+  }
+
+  setListOfComuni(){
+
+    const capsUnici = Array.from(new Set(this.comuni.map(c => c.cap)));
+
+    this.filteredCAPs = this.form.get('cap')!.valueChanges.pipe(
+      startWith(''),
+      map(value => value ?? ''), 
+      filter((value: string | null): value is string => !!value && value.length >= 2),
+      map(value => this._filterCAP(value, capsUnici))
+    );
+  }
+  
+  private _filterCAP(value: string, caps: string[]): string[] {
+    const filterValue = value.trim();
+    return caps.filter(cap => cap.startsWith(filterValue));
+  }
+
+  setInputCityProvince(event: MatAutocompleteSelectedEvent){
+     const v = event.option.value;
+     if(v){
+
+      this.form.patchValue({
+        provincia: ""
+      });
+
+      const comune = this.comuni.filter(comune =>
+          comune.cap.startsWith(v!)
+      );
+      
+      if(comune.length == 1)
+      {
+        this.isOne = true;
+
+        this.form.patchValue({
+          citta: comune[0].denominazione_ita,
+          provincia: comune[0].sigla_provincia,
+          stato: "ITALIA"
+        });
+
+      }
+      else
+      {
+        this.isOne = false;
+        this.comuniDaCap = comune;
+        this.form.get('citta')?.setValue('');
+      }
+     }
+  }
+
+  getUserRecipients(){
+    this.userRecipientService.getUserRecipients(this.user!.id!)
+      .subscribe((data: UserRecipients[]) => {
+        if (!data || data.length === 0) {
+          console.log('Nessun dato disponibile');
+        } 
+        else 
+        {
+          this.userRecipients = data;
+        }
+      });
+  }
+  
+  setFormRecipientUser(){
+    const selectedValue = this.form.get('sel_destinatario')?.value;
+    if(selectedValue == "")
+      this.removeFields();
+    else
+      this.getUserRecipient(parseInt(selectedValue!));
+  }
+
+    removeFields(){
+    const fieldsToClear = [
+        'nominativo',
+        'comp_nominativo',
+        'indirizzo',
+        'comp_indirizzo',
+        'cap',
+        'citta',
+        'provincia',
+        'stato',
+        'email'
+    ];
+
+    const emptyValues: { [key: string]: string } = {};
+    fieldsToClear.forEach(field => emptyValues[field] = '');
+
+    this.form.patchValue(emptyValues);  
+  }
+
+
+  ngOnInit(): void {
+    this.getThisUser();
+
+    this.getUserRecipients();
+
+    this.getComuni();
+  }
+
   onSubmit(): void {
-   
+
+    const destinatario = {
+      nominativo: this.form.value.nominativo,
+      completamentoNominativo: this.form.value.comp_nominativo,
+      indirizzo: this.form.value.indirizzo,
+      completamentoIndirizzo: this.form.value.comp_indirizzo,
+      cap: this.form.value.cap,
+      citta: this.form.value.citta,
+      provincia: this.form.value.provincia,
+      stato: this.form.value.stato,
+      email: this.form.value.email
+    };
+  
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(destinatario), secretKey).toString();
+      this.formStorage.saveForm('step4-raccomandata-singola-destinatario', encrypted);
+  
     if (this.form.valid) {
       this.router.navigate(['/invioSingoloRaccomandata5']);
     } else {
@@ -51,7 +260,5 @@ export class InvioSingoloRaccomandata4Component {
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';
     }
   }
-
-
 
 }

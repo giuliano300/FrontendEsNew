@@ -8,6 +8,7 @@ import { importProvidersFrom } from '@angular/core';
 
 
 export const API_URL = "http://localhost:5105/Api/";
+export const secretKey = 'easysender2025!EWT';
 
 export enum productType{
   raccomandata = 1,

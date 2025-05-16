@@ -27,21 +27,20 @@
                 <div class="col-md-6">
                     <section class="select-form-type">
                         <span>Seleziona un destinatario dalla rubrica</span>
-                        <select formControlName="sel_destinatario">
+                        <select formControlName="sel_destinatario" (change)="setFormRecipientUser()">
                             <option value="" selected>-- Seleziona destinatario dalla rubrica --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
+                             <option *ngFor="let option of userRecipients" [value]="option.id">
+                                {{ option.businessName }}
+                            </option>      
                         </select>
                     </section>
                 </div>
                 <div class="col-md-6">
                     <section class="select-form-type">
-                        <span>Spedizione</span>
-                        <select formControlName="sel_spedizione">
-                            <option value="" selected>-- Seleziona spedizione italia o estero --</option>
-                            <option value="1">Italia</option>
-                            <option value="2">Estero</option>
+                        <span>Spedizione italia o estero</span>
+                        <select formControlName="sel_spedizione" (change)="onStatoChange($event)">
+                            <option value="Italia">Italia</option>
+                            <option value="Estero">Estero</option>
                         </select>
                     </section>
                 </div>
@@ -71,14 +70,24 @@
                         </li>
                         <li>
                             <label>CAP</label>
-                            <input type="text" formControlName="cap" maxlength="5" />
+                            <input type="text"
+                                formControlName="cap"
+                                maxlength="5"
+                                [matAutocomplete]="autoCap"
+                                class="custom-input" />
+
+                            <mat-autocomplete #autoCap="matAutocomplete" (optionSelected)="setInputCityProvince($event)">
+                            <mat-option *ngFor="let cap of filteredCAPs | async" [value]="cap">
+                                {{ cap }}
+                            </mat-option>
+                            </mat-autocomplete>                                    
                         </li>
                         <li>
                             <label class="flex-start">
                                 PROVINCIA
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="provincia" maxlength="2" />
+                            <input type="text" formControlName="provincia" maxlength="2"  [readonly]="ifItalia" [class.readonly]="ifItalia" />
                         </li>
                     </ul>
                 </div>
@@ -100,14 +109,20 @@
                         </li>
                         <li>
                             <label>CITTÀ</label>
-                            <input type="text" formControlName="citta" />
+                            <input type="text" formControlName="citta" [readonly]="ifItalia" [class.readonly]="ifItalia" *ngIf="isOne"  />
+                            <select formControlName="citta" *ngIf="!isOne" (change)="setProvince($event)" class="city">
+                                <option value="">-- Seleziona una città --</option>
+                                 <option *ngFor="let option of comuniDaCap" [value]="option.denominazione_ita">
+                                    {{ option.denominazione_ita }}
+                                </option>   
+                            </select>
                         </li>
                         <li>
                             <label class="flex-start">
                                 STATO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="stato" />
+                            <input type="text" formControlName="stato" [readonly]="ifItalia" [class.readonly]="ifItalia" />
                         </li>
                     </ul>
                 </div>
@@ -121,7 +136,7 @@
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertMailDest}}" placement="right"></i>
                     </label>
                     <input type="email" formControlName="email" />
-        </div>
+                </div>
                 <div class="col-md-2"></div>
             </div>
 

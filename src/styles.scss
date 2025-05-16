@@ -76,6 +76,10 @@ small{
 }
 
 
+.readonly{
+    outline: none;
+    background-color: $background-color-grey;
+}
 
 
 /* ! Helpers
@@ -772,6 +776,14 @@ small{
             border: 2px solid $red-color;
          }
 
+        .city{
+            width: 100%;
+            height: 50px;
+            border: 1px solid $grey-light;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
     }
 
 
@@ -986,7 +998,6 @@ a.download-csv:link, a.download-csv:visited{
         margin-right: 6px;
     }
 }
-
 
 
 
