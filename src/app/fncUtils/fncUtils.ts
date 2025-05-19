@@ -14,5 +14,22 @@ export class FncUtils {
       if (totalScore === 3 || totalScore === 4) return 'media';
       return 'forte';
     }
+
+      
+    static GetFormattedData(d: string): string{
+      const data = new Date(d);
+        const dataFormattata = data.toLocaleString('it-IT', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: 'Europe/Rome',
+        });
+
+        return dataFormattata;
+      }
+
   }
-  
+

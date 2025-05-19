@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
-import { HttpClient, HttpClientModule, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-
-
+import { FormStorageService } from '../../../services/form-storage.service';
+import { secretKey } from '../../../../main';
+import * as CryptoJS from 'crypto-js';
+import { PDFDocument } from 'pdf-lib'
 
 
 @Component({
@@ -23,10 +25,16 @@ form: FormGroup;
   uploadProgress: number | null = null;
   uploadCompleted: boolean = false;
 
+  fileName: string = '';
+  base64File: string = '';
+  errorMessage: string = '';
+  bulletin: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private formStorage: FormStorageService
   ) {
     this.form = this.fb.group({
       // eventuali altri controlli
@@ -34,42 +42,98 @@ form: FormGroup;
   }
 
   onFileDrop(files: NgxFileDropEntry[]) {
-    for (const droppedFile of files) {
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+    this.errorMessage = '';
+    this.fileName = '';
+    this.base64File = '';
+    this.uploadProgress = 0;
+    this.uploadCompleted = false;
 
-        fileEntry.file((file: File) => {
-          const formData = new FormData();
-          formData.append('file', file, droppedFile.relativePath);
+    if (files.length !== 1) {
+      this.errorMessage = 'Puoi caricare solo un file alla volta.';
+      return;
+    }
 
+    const droppedFile = files[0];
+
+    if (droppedFile.fileEntry.isFile) {
+      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+
+      fileEntry.file((file: File) => {
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+          this.errorMessage = 'Il file deve essere in formato PDF.';
+          return;
+        }
+
+        this.fileName = file.name;
+        const reader = new FileReader();
+
+        reader.onprogress = (event) => {
+          if (event.lengthComputable) {
+            this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+          }
+        };
+
+        reader.onload = async () => {
+          this.base64File = (reader.result as string).split(',')[1];
+          this.uploadCompleted = true;
+          this.uploadProgress = 100;
+
+          // Convert base64 in Uint8Array
+          const base64 = (reader.result as string).split(',')[1];
+          const byteArray = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+          const arrayBuffer = reader.result as ArrayBuffer;
+          const pdfDoc = await PDFDocument.load(arrayBuffer);
+          const numPages = pdfDoc.getPageCount();
+
+          let file = {
+            name: this.fileName,
+            base64: this.base64File,
+            pages: numPages
+          };
+
+          const encrypted = CryptoJS.AES.encrypt(JSON.stringify(file), secretKey).toString();
+          this.formStorage.saveForm("step-5-raccomandata-singola-file-upload", encrypted);
+          this.formStorage.saveForm("numero-pagine-totali", numPages.toString());
+        };
+
+        reader.onerror = () => {
+          this.errorMessage = 'Errore durante la lettura del file.';
           this.uploadProgress = 0;
-          this.uploadCompleted = false;
+        };
 
-          this.http.post('/api/upload', formData, {
-            reportProgress: true,
-            observe: 'events'
-          }).subscribe((event: HttpEvent<any>) => {
-            if (event.type === HttpEventType.UploadProgress && event.total) {
-              this.uploadProgress = Math.round((event.loaded / event.total) * 100);
-            } else if (event.type === HttpEventType.Response) {
-              console.log('Upload completato', event.body);
-              this.uploadProgress = 100;
-              this.uploadCompleted = true;
-            }
-          });
-        });
-      }
+        reader.readAsDataURL(file);
+      });
+    } else {
+      this.errorMessage = 'Non è stato caricato un file valido.';
     }
   }
 
-  onSubmit() {
-    //if (!this.uploadCompleted) {
-    //  alert('Devi attendere il completamento del caricamento del file prima di proseguire.');
-    //  return;
-    //}
+  downloadFile() {
+    if (!this.base64File || !this.fileName) return;
 
+    const link = document.createElement('a');
+    link.href = `data:application/pdf;base64,${this.base64File}`;
+    link.download = this.fileName;
+    link.click();
+  }
+
+  ngOnInit(): void {
+    Promise.all([
+      this.formStorage.getForm('step2'),
+    ]).then(([step1]) => {
+      const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
+      if(datiDecriptati.bollettino == 1)
+        this.bulletin = true;
+    });
+  }
+
+  onSubmit() {
     if (this.form.valid) {
-      this.router.navigate(['/compilaBollettino']);
+      if(this.bulletin)
+        this.router.navigate(['/compilaBollettino']);
+      else
+        this.router.navigate(['/calcoloPreventivo']);
     }
   }
 }

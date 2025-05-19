@@ -229,6 +229,7 @@ export class InvioSingoloRaccomandata4Component {
 
 
   ngOnInit(): void {
+
     this.getThisUser();
 
     this.getUserRecipients();
@@ -239,19 +240,19 @@ export class InvioSingoloRaccomandata4Component {
   onSubmit(): void {
 
     const destinatario = {
-      nominativo: this.form.value.nominativo,
-      completamentoNominativo: this.form.value.comp_nominativo,
-      indirizzo: this.form.value.indirizzo,
-      completamentoIndirizzo: this.form.value.comp_indirizzo,
-      cap: this.form.value.cap,
-      citta: this.form.value.citta,
-      provincia: this.form.value.provincia,
-      stato: this.form.value.stato,
+      businessName: this.form.value.nominativo,
+      complementName: this.form.value.comp_nominativo,
+      address: this.form.value.indirizzo,
+      complementAddress: this.form.value.comp_indirizzo,
+      zipCode: this.form.value.cap,
+      city: this.form.value.citta,
+      province: this.form.value.provincia,
+      state: this.form.value.stato,
       email: this.form.value.email
     };
   
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(destinatario), secretKey).toString();
-      this.formStorage.saveForm('step4-raccomandata-singola-destinatario', encrypted);
+    this.formStorage.saveForm('step4-raccomandata-singola-destinatario', encrypted);
   
     if (this.form.valid) {
       this.router.navigate(['/invioSingoloRaccomandata5']);

@@ -1,7 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="select-type-send">
       <div class="item">
-        <input id="invio-senza-bollettino" type="radio" formControlName="tipoDocumento" value="2" (change)="removeErroMessage()" />
+        <input id="invio-senza-bollettino" type="radio" formControlName="tipoDocumento" value="0" (change)="removeErroMessage()" />
         <label for="invio-senza-bollettino">
           <img src="/assets/img/icn-no-bollettino.png" alt="" /> Invio {{sType}} senza bollettino 
         </label>

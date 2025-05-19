@@ -47,6 +47,14 @@
                     {{ uploadProgress }}%
                     </div>
                 </div>
+                
+                <div *ngIf="errorMessage" class="error mt-3">
+                    {{ errorMessage }}
+                </div>
+
+                <div *ngIf="fileName && !errorMessage" class="valid mt-3">
+                   Vedi il file caricato: <a (click)="downloadFile()"> {{ fileName }}</a>
+                </div>
             </div>
         </div>
         <div class="col-md-2"></div>
@@ -54,7 +62,7 @@
 
         <div class="group-button">
             <a routerLink="/invioSingoloRaccomandata4">INDIETRO</a>
-            <input type="submit" value="AVANTI" />
+            <input type="submit" value="AVANTI" [disabled]="uploadProgress! < 100" />
         </div>
 
     </form>

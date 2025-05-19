@@ -48,6 +48,8 @@ export class InvioSingoloRaccomandata3Component {
 
   isOne:boolean = true;
 
+  ricevutaDiRitorno: boolean = true;
+
   alertName = alertName;
   alertComplName = alertComplName;
   alertAddress = alertAddress;
@@ -216,12 +218,13 @@ export class InvioSingoloRaccomandata3Component {
 
   ngOnInit(): void {
 
-    //Promise.all([
-    //  this.formStorage.getForm('step2-raccomandata-singola')
-    //]).then(([step1]) => {
-    //  const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-    //  console.log(datiDecriptati);
-    //});
+      Promise.all([
+        this.formStorage.getForm('step2')
+      ]).then(([step1]) => {
+        const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
+        if(datiDecriptati.tipoRicevuta == "NO")
+          this.ricevutaDiRitorno = false;
+      });
     
     this.getThisUser();
 
@@ -282,37 +285,44 @@ export class InvioSingoloRaccomandata3Component {
     if (this.form.valid) {
 
         const mittente = {
-          nominativo: this.form.value.nominativo,
-          completamentoNominativo: this.form.value.comp_nominativo,
-          indirizzo: this.form.value.indirizzo,
-          completamentoIndirizzo: this.form.value.comp_indirizzo,
-          cap: this.form.value.cap,
-          citta: this.form.value.citta,
-          provincia: this.form.value.provincia,
-          stato: this.form.value.stato
+          businessName: this.form.value.nominativo,
+          complementNames: this.form.value.comp_nominativo,
+          address: this.form.value.indirizzo,
+          complementAddress: this.form.value.comp_indirizzo,
+          zipCode: this.form.value.cap,
+          city: this.form.value.citta,
+          province: this.form.value.provincia,
+          state: this.form.value.stato
         };
 
         let destinatarioAR = {};
-        if(!this.form.value.destinatario){
-            destinatarioAR = {
-              nominativo: this.form.value.nominativo_ar,
-              completamentoNominativo: this.form.value.comp_nominativo_ar,
-              indirizzo: this.form.value.indirizzo_ar,
-              completamentoIndirizzo: this.form.value.comp_indirizzo_ar,
-              cap: this.form.value.cap_ar,
-              citta: this.form.value.citta_ar,
-              provincia: this.form.value.provincia_ar,
-              stato: this.form.value.stato_ar
-            };
+        if(this.ricevutaDiRitorno)
+        {
+          if(!this.form.value.destinatario){
+              destinatarioAR = {
+                businessName: this.form.value.nominativo_ar,
+                completamentoNominativo: this.form.value.comp_nominativo_ar,
+                address: this.form.value.indirizzo_ar,
+                complementAddress: this.form.value.comp_indirizzo_ar,
+                zipCode: this.form.value.cap_ar,
+                city: this.form.value.citta_ar,
+                province: this.form.value.provincia_ar,
+                state: this.form.value.stato_ar
+              };
+          }
+          else
+            destinatarioAR = mittente;
         }
-        else
-          destinatarioAR = mittente;
 
       const encrypted = CryptoJS.AES.encrypt(JSON.stringify(mittente), secretKey).toString();
-      const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(destinatarioAR), secretKey).toString();
 
       this.formStorage.saveForm('step3-raccomandata-singola-mittente', encrypted);
-      this.formStorage.saveForm('step3-raccomandata-singola-destinararioAR', encryptedAR);
+
+      
+      if (Object.keys(destinatarioAR).length > 0){
+        const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(destinatarioAR), secretKey).toString();
+        this.formStorage.saveForm('step3-raccomandata-singola-destinararioAR', encryptedAR);
+      }
 
       this.router.navigate(['/invioSingoloRaccomandata4']);
     } else {
