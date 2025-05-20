@@ -63,6 +63,9 @@ import { InviiTelegrammiComponent } from './pages/stato-invii/invii-telegrammi/i
 import { InviiAgolComponent } from './pages/stato-invii/invii-agol/invii-agol.component';
 import { InviiPacchiComponent } from './pages/stato-invii/invii-pacchi/invii-pacchi.component';
 import { RichiesteVisureComponent } from './pages/stato-invii/richieste-visure/richieste-visure.component';
+import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizioni/archivio-spedizioni.component';
+import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
+import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
 
 export const routes: Routes = [
   {
@@ -366,6 +369,21 @@ export const routes: Routes = [
       {
         path: 'statoRichiesteVisure',
         component: RichiesteVisureComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'archivioSpedizioni',
+        component: ArchivioSpedizioniComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'archivioVisure',
+        component: ArchivioVisureComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'dettaglioSpedizione/:id',
+        component: DettaglioSpedizioneComponent,
         canActivate: [AuthGuard]
       },
       {

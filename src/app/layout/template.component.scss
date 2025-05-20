@@ -155,6 +155,7 @@
     z-index: 9999;
     box-shadow: -2px 0px 18px rgba(0,0,0,.20);
     transition: all .3s cubic-bezier(.215, .61, .355, 1);
+
 }
 
 .side-menu.open {
@@ -181,6 +182,15 @@
     padding: 15px 0;
     margin-bottom: 30px;
     border-bottom: 1px dashed $border-color;
+
+    img{
+      width: 60px;
+    }
+
+    h3{
+      font-size: 1.2rem;
+    }
+
 }
 
 .user-menu{
