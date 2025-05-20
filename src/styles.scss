@@ -54,7 +54,7 @@ ol,ul{list-style-type: none;}
 
 img{height: auto;}
 
-a{text-decoration:none}
+a{text-decoration:none; cursor: pointer;}
 
 
 
@@ -79,6 +79,14 @@ small{
 .readonly{
     outline: none;
     background-color: $background-color-grey;
+}
+
+.error{
+    color: $error-color;
+}
+
+.valid{
+    color: $valid-color;
 }
 
 
@@ -602,7 +610,7 @@ small{
         }
 
 
-        a:link, a:visited{
+        a, a:link, a:visited{
             width: 130px;
             height: 35px;
             color: $white-color;

@@ -6,7 +6,6 @@ import { RouterLink } from '@angular/router';
 import { bulletin, secretKey } from '../../../../main';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { Users } from '../../../interfaces/Users';
-import { Shipping } from '../../../interfaces/ViewModel/Shipping';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
@@ -26,8 +25,6 @@ export class InvioSingoloRaccomandata2Component {
   alertText = '';
 
   userLogos: UserLogos[] =[];
-
-  shipping: Shipping = new Shipping();
 
   user: Users | null  = null;
    
@@ -103,12 +100,12 @@ onSubmit(): void {
     tipoRicevuta: this.form.value.tipoRicevuta,
     tipoinvio: localStorage.getItem('sendType'),
     prodotto: localStorage.getItem('productType'),
-    bollettino:  localStorage.getItem('bulletin')
+    bollettino:  localStorage.getItem('bulletin'),
   };
 
   const encrypted = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();
 
-  this.formStorage.saveForm('step2-raccomandata-singola', encrypted);
+  this.formStorage.saveForm('step2', encrypted);
 
   // Se tutti sono presenti, vai alla pagina
   this.router.navigate(['/invioSingoloRaccomandata3']);

@@ -10,16 +10,28 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="step-bar">
+            <div class="step-bar" [hidden]="!bulletin">
                 <ul>
-                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 18%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 16%;">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 12%;">Compila bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+
+            <div class="step-bar no-bollettino" [hidden]="bulletin">
+                <ul>
+                    <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 11%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 20%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 18%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
         </div>
@@ -42,25 +54,25 @@
             <div class="col-md-4">
                 <ul>
                     <li>
-                        <span>Invii totali</span> <strong>1</strong>
+                        <span>Invii totali</span> <strong>{{Inviitotali}}</strong>
                     </li>
                     <li>
-                        <span>Tipo stampa</span> <strong>bianco/nero</strong>
+                        <span>Tipo stampa</span> <strong>{{tipoColore}}</strong>
                     </li>
                     <li>
-                        <span>Fronte/retro</span> <strong>Si</strong>
+                        <span>Fronte/retro</span> <strong>{{fronteRetro}}</strong>
+                    </li>
+                    <li [hidden]="productType != 1">
+                        <span>Ricevuta di ritorno</span> <strong>{{ricevutaRitorno}}</strong>
                     </li>
                     <li>
-                        <span>Ricevuta di ritorno</span> <strong>Si</strong>
+                        <span>Importo netto</span> <strong>€ {{ImportoNetto}}</strong>
                     </li>
                     <li>
-                        <span>Importo netto</span> <strong>€ 4,00</strong>
+                        <span>Iva 22%</span> <strong>€ {{Iva}}</strong>
                     </li>
                     <li>
-                        <span>Iva 22%</span> <strong>€ 0,00</strong>
-                    </li>
-                    <li>
-                        <span>TOTALE</span> <strong class="color-orange">€ 4,00</strong>
+                        <span>TOTALE</span> <strong class="color-orange">€ {{totale}}</strong>
                     </li>
                 </ul>
             </div>
@@ -69,8 +81,8 @@
     </div>
 
     <div class="group-button">
-        <a routerLink="/compilaBollettino">INDIETRO</a>
-        <a routerLink="/riepilogoSpedizione" class="bg-color-green color-white">SPEDISCI</a>
+        <a [routerLink]="routerLink">INDIETRO</a>
+        <a (click)="sendShipping()" class="bg-color-green color-white">SPEDISCI</a>
     </div>
 
 

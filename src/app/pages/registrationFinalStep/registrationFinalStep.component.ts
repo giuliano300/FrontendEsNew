@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProducts } from '../../interfaces/UserProducts';
 import { UsersProductsService } from '../../services/userProducts.service';
-import { ProductTypes } from '../../interfaces/ProductTypes';
+import { ProductTypes } from '../../interfaces/EnumTypes';
 
 
 @Component({

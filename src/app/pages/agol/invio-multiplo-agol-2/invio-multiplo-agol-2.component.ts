@@ -6,7 +6,6 @@ import { RouterLink } from '@angular/router';
 import { bulletin } from '../../../../main';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { Users } from '../../../interfaces/Users';
-import { Shipping } from '../../../interfaces/ViewModel/Shipping';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
@@ -33,8 +32,6 @@ export class InvioMultiploAgol2Component {
   alertState = alertState;
 
   userLogos: UserLogos[] =[];
-
-  shipping: Shipping = new Shipping();
 
   user: Users | null  = null;
 

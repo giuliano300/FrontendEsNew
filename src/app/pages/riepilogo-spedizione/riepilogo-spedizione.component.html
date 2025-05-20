@@ -10,17 +10,30 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="step-bar">
+            <div class="step-bar" [hidden]="!bulletin">
                 <ul>
-                    <li style="width: 10%;" class="bg-color-green">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;" class="bg-color-green">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 16%;" class="bg-color-green">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 14%;" class="bg-color-green">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 14%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;"  class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;"  class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 9%;"  class="bg-color-green">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 12%;" class="bg-color-green">Compila bollettino<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 13%;" class="bg-color-green">Preventivo e spedizione</li>
+                </ul>
+            </div>
+
+            <div class="step-bar no-bollettino" [hidden]="bulletin">
+                <ul>
+                    <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;" class="bg-color-green">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;" class="bg-color-green">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;"  class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;"  class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;"  class="bg-color-green">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Preventivo e spedizione</li>
                 </ul>
             </div>
         </div>
@@ -37,13 +50,13 @@
             <div class="col-md-4">
                 <ul>
                     <li>
-                        <span>Lotto</span> <strong>435785</strong>
+                        <span>Lotto</span> <strong>{{numeroLotto}}</strong>
                     </li>
                     <li>
-                        <span>Destinatari</span> <strong>1</strong>
+                        <span>Destinatari</span> <strong>{{numeroDestinatari}}</strong>
                     </li>
                     <li>
-                        <span>Data di creazione</span> <strong>17/04/2025 12:06:19</strong>
+                        <span>Data di creazione</span> <strong>{{dataCreazione}}</strong>
                     </li>
                 </ul>
             </div>
