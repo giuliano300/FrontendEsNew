@@ -1,0 +1,16 @@
+@use '../../../variables' as *;
+
+h1{
+    font-size: 40px;
+    font-weight: 600;
+    color: $secondary-color;
+}
+
+a{
+    font-weight: 600;
+    color: $secondary-color;
+
+    &:hover{
+        color: $primary-color;
+    }
+}

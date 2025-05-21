@@ -18,7 +18,7 @@ import { InvioSingoloRaccomandata2Component } from './pages/raccomandata/invio-s
 import { InvioSingoloRaccomandata3Component } from './pages/raccomandata/invio-singolo-raccomandata-3/invio-singolo-raccomandata-3.component';
 import { InvioSingoloRaccomandata4Component } from './pages/raccomandata/invio-singolo-raccomandata-4/invio-singolo-raccomandata-4.component';
 import { InvioSingoloRaccomandata5Component } from './pages/raccomandata/invio-singolo-raccomandata-5/invio-singolo-raccomandata-5.component';
-import { CompilaBollettinoComponent } from './pages/raccomandata/compila-bollettino/compila-bollettino.component';
+import { CompilaBollettinoComponent } from './pages/compila-bollettino/compila-bollettino.component';
 import { CalcoloPreventivoComponent } from './pages/calcolo-preventivo/calcolo-preventivo.component';
 import { RiepilogoSpedizioneComponent } from './pages/riepilogo-spedizione/riepilogo-spedizione.component';
 import { InvioMultiploRaccomandata2Component } from './pages/raccomandata/invio-multiplo-raccomandata-2/invio-multiplo-raccomandata-2.component';
@@ -63,6 +63,7 @@ import { InviiTelegrammiComponent } from './pages/stato-invii/invii-telegrammi/i
 import { InviiAgolComponent } from './pages/stato-invii/invii-agol/invii-agol.component';
 import { InviiPacchiComponent } from './pages/stato-invii/invii-pacchi/invii-pacchi.component';
 import { RichiesteVisureComponent } from './pages/stato-invii/richieste-visure/richieste-visure.component';
+import { Errore500Component } from './pages/errore500/errore500.component';
 
 export const routes: Routes = [
   {
@@ -367,6 +368,10 @@ export const routes: Routes = [
         path: 'statoRichiesteVisure',
         component: RichiesteVisureComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'errore500',
+        component: Errore500Component,
       },
       {
         path: '**',

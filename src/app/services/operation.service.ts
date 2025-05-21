@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../main';
 import { HttpClient } from '@angular/common/http';
-import { CompleteOperation } from '../interfaces/ViewModel/CompleteOperation';
+import { CompleteOperation } from '../ViewModel/CompleteOperation';
 import { Observable } from 'rxjs';
-import { Operations } from '../interfaces/Operations';
+import { Operations } from '../classes/Operations';
 
 @Injectable({
   providedIn: 'root'

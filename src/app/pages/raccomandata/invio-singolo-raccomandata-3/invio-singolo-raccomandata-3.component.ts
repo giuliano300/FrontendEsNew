@@ -63,8 +63,8 @@ export class InvioSingoloRaccomandata3Component {
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
     provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    comp_nominativo: new FormControl('', [Validators.required]),
-    comp_indirizzo: new FormControl('', [Validators.required]),
+    comp_nominativo: new FormControl(''),
+    comp_indirizzo: new FormControl(''),
     citta: new FormControl('', [Validators.required]),
     stato: new FormControl('', [Validators.required]),
     destinatario: new FormControl(true),
@@ -77,6 +77,7 @@ export class InvioSingoloRaccomandata3Component {
     citta_ar: new FormControl(''),
     stato_ar: new FormControl(''),
   });
+  
 
   getThisUser(){
   const user = localStorage.getItem('user');
@@ -113,9 +114,7 @@ export class InvioSingoloRaccomandata3Component {
   removeFields(){
     const fieldsToClear = [
         'nominativo',
-        'comp_nominativo',
         'indirizzo',
-        'comp_indirizzo',
         'cap',
         'citta',
         'provincia',
@@ -137,7 +136,8 @@ export class InvioSingoloRaccomandata3Component {
         cap: u.zipCode,
         citta: u.city,
         provincia: u.province,
-        stato: u.state
+        stato: u.state,
+        nominativo_ar: u.businessName
       });
   }
 
@@ -239,7 +239,10 @@ export class InvioSingoloRaccomandata3Component {
         this.setDestinatarioARValidators(false); // checkbox selezionato → disattiva i campi AR
       }
     });
-  
+
+    this.form.get('nominativo')?.valueChanges.subscribe(value => {
+      this.form.get('nominativo_ar')?.setValue(value, { emitEvent: false });
+    });  
     // Applica lo stato iniziale alla creazione
     this.setDestinatarioARValidators(!this.form.get('destinatario')?.value);
   }
@@ -260,9 +263,7 @@ export class InvioSingoloRaccomandata3Component {
   setDestinatarioARValidators(active: boolean): void {
     const controls = [
       'nominativo_ar',
-      'comp_nominativo_ar',
       'indirizzo_ar',
-      'comp_indirizzo_ar',
       'cap_ar',
       'provincia_ar',
       'citta_ar',
@@ -316,12 +317,12 @@ export class InvioSingoloRaccomandata3Component {
 
       const encrypted = CryptoJS.AES.encrypt(JSON.stringify(mittente), secretKey).toString();
 
-      this.formStorage.saveForm('step3-raccomandata-singola-mittente', encrypted);
+      this.formStorage.saveForm('mittente', encrypted);
 
       
       if (Object.keys(destinatarioAR).length > 0){
         const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(destinatarioAR), secretKey).toString();
-        this.formStorage.saveForm('step3-raccomandata-singola-destinararioAR', encryptedAR);
+        this.formStorage.saveForm('destinararioAR', encryptedAR);
       }
 
       this.router.navigate(['/invioSingoloRaccomandata4']);

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { secretKey } from '../../../main';
 import { FormStorageService } from '../../services/form-storage.service';
 import { ProductTypes } from '../../interfaces/EnumTypes';
@@ -16,7 +16,8 @@ import { FncUtils } from '../../fncUtils/fncUtils';
 export class RiepilogoSpedizioneComponent {
 
   constructor(
-    private formStorage: FormStorageService
+    private formStorage: FormStorageService,
+    private router: Router
   ) 
   {
   } 
@@ -34,6 +35,9 @@ export class RiepilogoSpedizioneComponent {
       this.formStorage.getForm('step2'),
       this.formStorage.getForm('riepilogo'),
     ]).then(([step1, step2]) => {
+      if(!step1)
+        this.router.navigate(['/']);
+      
        const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
        if(datiDecriptati.bollettino == 1)
         this.bulletin = true;
@@ -41,6 +45,9 @@ export class RiepilogoSpedizioneComponent {
        switch(parseInt(datiDecriptati.prodotto)){
           case ProductTypes.ROL: 
             this.productName = "raccomandata";
+            break;
+          case ProductTypes.LOL: 
+            this.productName = "lettera";
             break;
         }
 

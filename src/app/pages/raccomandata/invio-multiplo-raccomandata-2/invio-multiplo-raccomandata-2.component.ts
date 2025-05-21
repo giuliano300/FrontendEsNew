@@ -3,12 +3,16 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { bulletin } from '../../../../main';
+import { bulletin, secretKey } from '../../../../main';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { Users } from '../../../interfaces/Users';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState, alertMailDest } from '../../../enviroments/enviroments';
+import { FormStorageService } from '../../../services/form-storage.service';
+import { UserSendersService } from '../../../services/user-senders.service';
+import { UserSenders } from '../../../interfaces/UserSenders';
+import * as CryptoJS from 'crypto-js';
 
 
 @Component({
@@ -18,7 +22,7 @@ import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, 
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
 export class InvioMultiploRaccomandata2Component {
-  constructor(private router: Router, private userLogosService: UserLogosService) {}
+  constructor(private router: Router, private userSendersService: UserSendersService, private userLogosService: UserLogosService, private formStorage: FormStorageService) {}
   alertMessage = false;
   alertText = '';
   
@@ -34,6 +38,8 @@ export class InvioMultiploRaccomandata2Component {
   bulletin: string | null = "senza bollettino";
 
   userLogos: UserLogos[] =[];
+  userSenders: UserSenders[] =[];
+  userSender: UserSenders | null = null;
 
   user: Users | null  = null;
   
@@ -57,6 +63,43 @@ export class InvioMultiploRaccomandata2Component {
     stato_ar: new FormControl('')
   });
 
+  getUserSenders(){
+    this.userSendersService.getUserSenders(this.user!.id!)
+      .subscribe((data: UserSenders[]) => {
+        if (!data || data.length === 0) {
+          console.log('Nessun dato disponibile');
+        } 
+        else 
+        {
+          this.userSenders = data;
+        }
+      });
+  }
+
+  getUserSender(id: number){
+    this.userSendersService.getUserSender(id)
+      .subscribe((data: UserSenders) => {
+        if (!data) {
+          console.log('Nessun dato disponibile');
+        } 
+        else 
+        {
+          this.userSender = data;
+          this.form.get('nominativo_ar')?.setValue(this.userSender!.businessName);
+        }
+    });
+  }
+
+    setFormSenderUser(){
+     this.removeErroMessage();
+     const selectedValue = this.form.get('sel_mittente')?.value;
+      if(selectedValue == "")
+        this.form.get('nominativo_ar')?.setValue('');
+      else
+        this.getUserSender(parseInt(selectedValue!));
+    }
+
+
   ngOnInit() {
     const user = localStorage.getItem('user');
       if (!user) {
@@ -77,7 +120,8 @@ export class InvioMultiploRaccomandata2Component {
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
 
-      this.getUserLogos();
+    this.getUserLogos();
+    this.getUserSenders();
   }
 
   getUserLogos(){
@@ -119,6 +163,11 @@ disableARValidators() {
   });
 }
 
+selectMittente(){
+  const senderId = this.form.value.sel_mittente;
+  console.log(senderId);
+}
+
 onSubmit(): void {
       const errors: string[] = [];
 
@@ -158,6 +207,49 @@ onSubmit(): void {
         this.alertMessage = true;
         return;
       }
+
+      const datiForm = {
+        selLogo: this.form.value.sel_logo,
+        tipoFormato: this.form.value.tipoFormato,
+        tipoColore: this.form.value.tipoColore,
+        tipoStampa: this.form.value.tipoStampa,
+        tipoRicevuta: this.form.value.tipoRicevuta,
+        tipoinvio: localStorage.getItem('sendType'),
+        prodotto: localStorage.getItem('productType'),
+        bollettino:  localStorage.getItem('bulletin'),
+      };
+
+      const encryptedStep2 = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();
+
+      this.formStorage.saveForm('step2', encryptedStep2);
+
+      const mittente = this.userSender!;
+
+      let destinatarioAR = {};
+      if(this.form.value.tipoRicevuta === "SI")
+      {
+          destinatarioAR = {
+            businessName: this.form.value.nominativo_ar,
+            completamentoNominativo: this.form.value.comp_nominativo_ar,
+            address: this.form.value.indirizzo_ar,
+            complementAddress: this.form.value.comp_indirizzo_ar,
+            zipCode: this.form.value.cap_ar,
+            city: this.form.value.citta_ar,
+            province: this.form.value.provincia_ar,
+            state: this.form.value.stato_ar
+          };
+      }
+
+    const encryptedMittente = CryptoJS.AES.encrypt(JSON.stringify(mittente), secretKey).toString();
+
+    this.formStorage.saveForm('mittente', encryptedMittente);
+
+    
+    if (Object.keys(destinatarioAR).length > 0){
+      const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(destinatarioAR), secretKey).toString();
+      this.formStorage.saveForm('destinararioAR', encryptedAR);
+    }
+      
 
       // Se tutti sono presenti, vai alla pagina
       this.router.navigate(['/invioMultiploRaccomandata3']);

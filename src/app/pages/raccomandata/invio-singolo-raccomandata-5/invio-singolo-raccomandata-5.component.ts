@@ -21,7 +21,7 @@ import { PDFDocument } from 'pdf-lib'
 export class InvioSingoloRaccomandata5Component {
   
   
-form: FormGroup;
+  form: FormGroup;
   uploadProgress: number | null = null;
   uploadCompleted: boolean = false;
 
@@ -29,6 +29,7 @@ form: FormGroup;
   base64File: string = '';
   errorMessage: string = '';
   bulletin: boolean = false;
+  destinatariDec:any;
 
   constructor(
     private fb: FormBuilder,
@@ -92,10 +93,25 @@ form: FormGroup;
             pages: numPages
           };
 
-          const encrypted = CryptoJS.AES.encrypt(JSON.stringify(file), secretKey).toString();
-          this.formStorage.saveForm("step-5-raccomandata-singola-file-upload", encrypted);
-          this.formStorage.saveForm("numero-pagine-totali", numPages.toString());
-        };
+          let files = [];
+          files.push(file);
+
+          //const encrypted = CryptoJS.AES.encrypt(JSON.stringify(files), secretKey).toString();
+          this.formStorage.saveForm("files-upload", files);
+
+          let Inviitotali = {
+            numeroInvii: 1,
+            numeroPagineTotali: [numPages]
+          };
+ 
+          const encryptedInvii = CryptoJS.AES.encrypt(JSON.stringify(Inviitotali), secretKey).toString();
+          this.formStorage.saveForm("invii-totali", encryptedInvii);
+
+          this.destinatariDec[0].fileName = this.fileName;
+
+           const encryptedDestinatari = CryptoJS.AES.encrypt(JSON.stringify(this.destinatariDec), secretKey).toString();
+          this.formStorage.saveForm("destinatari", encryptedDestinatari);
+      };
 
         reader.onerror = () => {
           this.errorMessage = 'Errore durante la lettura del file.';
@@ -121,10 +137,14 @@ form: FormGroup;
   ngOnInit(): void {
     Promise.all([
       this.formStorage.getForm('step2'),
-    ]).then(([step1]) => {
+      this.formStorage.getForm('destinatari'),
+    ]).then(([step1, step2]) => {
       const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
       if(datiDecriptati.bollettino == 1)
         this.bulletin = true;
+
+      this.destinatariDec = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
+      console.log(this.destinatariDec);
     });
   }
 
