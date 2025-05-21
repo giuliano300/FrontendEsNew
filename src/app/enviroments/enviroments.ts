@@ -10,3 +10,7 @@ export const alertBollIndirizzo = "Indirizzo";
 export const alertBollCap = "Cap";
 export const alertBollLocalita = "Località";
 export const infoDettaglioInvii = "Vai al dettaglio";
+export const infoBtnEdit = "Modifica";
+export const infoBtnDelete = "Elimina";
+export const infoBtnDownload = "Scarica il file";
+

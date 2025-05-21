@@ -190,8 +190,29 @@ small{
   font-weight: $font-medium;
 }
 
+.button-save{ 
+  width: 100%;
+  height: 40px;
+  text-decoration: none;
+  padding: 10px 15px; 
+  display: inline-block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: $font-medium;
+  border: 0px none;
+  background-color: $green-color-2;
+  color: $white-color;
+}
+
+
+.modal-dialog{
+    max-width: 1000px;
+}
+
 .modal-content{
     border-radius: 0px!important;
+    padding: 15px;
 }
 
 .modal-title{
@@ -222,11 +243,6 @@ small{
         }
     }
 }
-
-/* ! Gsap Animation
---------------------------------------------------------- */
-.fade-in{opacity: 0; transform: translateY(1rem);}
-.text-reveal{transform: translateY(1rem);clip-path: polygon(0 0, 100% 0, 100% 0, 0 0)};
 
 
 
@@ -433,10 +449,20 @@ small{
 
       .mat-button{
         border:0px none;
-        background-color: $primary-color;
-        color: $white-color;
+        background-color:transparent;
+        color: $green-color-2;
         cursor: pointer;
+        font-size: 1.4rem;
       }
+
+      .mat-button-download{
+        border:0px none;
+        background-color: transparent;
+        color: $red-color;
+        cursor: pointer;
+        font-size: 1.8rem;
+      }
+
 
       .perc-numb{
         font-size: 0.7rem;
@@ -452,6 +478,34 @@ small{
         .progress-green .mdc-linear-progress__bar-inner{
         border-color:$green-color-2 !important;
         }
+
+    .btn-edit{
+        width: 30px;
+        height: 30px;
+        border:0px none;
+        background-color: $green-color-2;
+        color: $white-color;
+        padding: 7px 0;
+        margin:0 5px;
+
+        i{
+            font-size: 0.9rem;
+        }
+    }
+
+    .btn-delete{
+        width: 30px;
+        height: 30px;
+        border:0px none;
+        background-color: $red-color;
+        color: $white-color;
+        padding: 7px 0;
+        margin:0 5px;
+
+        i{
+            font-size: 1rem;
+        }
+    }
 
 
     .step-bar{
@@ -732,6 +786,7 @@ small{
            label{
             font-size: 0.8rem;
             font-weight:$font-semi-bold;
+            color: $secondary-color;
 
             em{
                 font-weight: $font-regular;
@@ -813,6 +868,65 @@ small{
             font-size: 0.9rem;
             outline-color: $grey-middle;
         }
+    }
+
+
+    .filter{
+        width: 100%;
+        margin-top: 40px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed $grey-middle;
+
+        label{
+            font-size: 0.8rem;
+            font-weight:$font-semi-bold;
+         }
+
+        input[type=text]{
+            width: 100%;
+            height: 40px;
+            border: 1px solid $grey-light;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
+        input[type=date]{
+            width: 100%;
+            height: 40px;
+            border: 1px solid $grey-light;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
+        select{
+            width: 100%;
+            height: 40px;
+            border: 1px solid $grey-light;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
+        input[type=submit]{
+            width:100%;
+            height: 40px;
+            border: 1px solid $green-color-2;
+            background-color: $green-color-2;
+            color: $white-color;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-top: 24px;
+        }
+        input[type=button]{
+            border: 0px;
+            background-color:transparent;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+            font-weight: $font-medium;
+        }
+
+
     }
 
 
@@ -911,7 +1025,7 @@ small{
                 border-bottom: 1px solid $grey-light;
                 margin-bottom: 0px;
                 padding: 0 10px;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
 
                 span:nth-child(1){
                     width: 40%;
@@ -926,6 +1040,7 @@ small{
                     width: 45%;
                     padding-left: 10px;
                 }
+
             }
 
             li:first-child{
@@ -941,6 +1056,13 @@ small{
 
             li:last-child{
                 border-bottom: 0px none;
+            }
+
+
+            .error{
+                background-color:$red-color;
+                color: $white-color;
+                cursor: pointer;
             }
 
 
@@ -1028,5 +1150,75 @@ a.download-csv:link, a.download-csv:visited{
     }
 }
 
+.dettaglio-lotto{
+    width: 100%;
+    background-color: $white-color;
+    border: 1px solid $grey-light;
 
+    ul{
+        width: 100%;
+    }
+
+    li{
+        width: 100%;
+        height: 40px;
+        border-bottom: 1px solid $grey-light;
+        padding:0 10px;
+        display: flex;
+        align-items: center;
+
+        &:last-child{
+            border-bottom: 0px none;
+        }
+
+        h5{
+            width: 40%;
+            height: 100%;
+            font-size:0.9rem;
+            border-right: 1px solid $grey-light;
+            align-items: center;
+            display: flex;
+        }
+        h6{
+            width: 60%;
+            height: 100%;
+            font-size:0.9rem;
+            align-items: center;
+            display: flex;
+            padding: 0 15px;
+        }
+    }
+}
+
+.dettaglio-lotto__button{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    button{
+        background-color: transparent;
+        border: 0px none;
+        height: 40px;
+        font-size: 0.9rem;
+        margin: 7px 0 0 15px;
+        padding: 0 10px;
+        font-weight: $font-medium;
+        display: flex;
+        align-items: center;
+        transition: all .3s cubic-bezier(.215, .61, .355, 1);
+
+        &:hover{
+            color: $primary-color;
+        }
+
+
+        i{
+            font-size: 1.3rem;
+            margin-right: 5px;
+            color: $primary-color;
+        }
+    }
+}
 

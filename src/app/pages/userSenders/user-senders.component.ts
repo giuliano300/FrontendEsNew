@@ -9,11 +9,12 @@ import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { infoBtnDelete, infoBtnEdit } from '../../enviroments/enviroments';
 
 @Component({
   selector: 'app-user-senders',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule],
   templateUrl: './user-senders.component.html',
   styleUrl: './user-senders.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -24,6 +25,9 @@ export class UserSendersComponent {
   userSenders: UserSenders[] = [];
 
   user: Users | null  = null;
+
+  infoBtnDelete=infoBtnDelete
+  infoBtnEdit=infoBtnEdit
 
   constructor(private userSenderService: UserSendersService, private router: Router, private dialog: MatDialog) {}
 
