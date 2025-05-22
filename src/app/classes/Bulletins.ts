@@ -1,4 +1,8 @@
 export class Bulletins {
+  constructor(init?: Partial<Bulletins>) {
+    Object.assign(this, init);
+  }
+  
   id: number = 0;
   recipientId: number = 0;
   productType: number = 0;

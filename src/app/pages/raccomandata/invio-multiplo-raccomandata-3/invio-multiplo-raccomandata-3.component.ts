@@ -21,9 +21,7 @@ import { FormStorageService } from '../../../services/form-storage.service';
 import { bulletinFields, maxUploadLimit, secretKey } from '../../../../main';
 import * as CryptoJS from 'crypto-js';
 import { Bulletins } from '../../../classes/Bulletins';
-import { filter, map, Observable, of, startWith } from 'rxjs';
-import { GlobalServicesService } from '../../../services/global-services.service';
-import { Comune } from '../../../interfaces/Comune';
+import { EditRecipientComponent } from '../../../component/edit-recipient/edit-recipient.component';
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-3',
@@ -56,24 +54,11 @@ export class InvioMultiploRaccomandata3Component {
   nominativiInErrore: number = 0;
   bulletinText: string | null = "senza bollettino";
   result: { recipient: Recipients, bulletin?: Bulletins }[] = [];
-
-  filteredCAPs: Observable<string[]> = of([]);
-  comuni: Comune[] = [];
-  comuniDaCap: Comune[] = [];
-
-  alertName = alertName;
-  alertComplName = alertComplName;
-  alertAddress = alertAddress;
-  alertComplAddress = alertComplAddress;
-  alertProvince = alertProvince;
-  alertState = alertState;
-
-  alertBollNominativo = alertBollNominativo;
-  alertBollIndirizzo = alertBollIndirizzo;
-  alertBollCap = alertBollCap;
-  alertBollLocalita = alertBollLocalita;
-  
-  isOne:boolean = true;
+  recipientBulletin: { recipient: Recipients, isValid:boolean,  bulletin?: Bulletins } = {
+    recipient: new Recipients,
+    bulletin: undefined,
+    isValid: false
+  };
 
   notUploaded:boolean = true;
   checking:boolean = false;
@@ -84,9 +69,7 @@ export class InvioMultiploRaccomandata3Component {
     private http: HttpClient,
     private router: Router,
     private formStorage: FormStorageService,
-    private globalServices: GlobalServicesService,
     private modalService: NgbModal,
-    private cd: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       // eventuali altri controlli
@@ -96,98 +79,7 @@ export class InvioMultiploRaccomandata3Component {
     });
   }
 
-   getComuni(){
-     this.globalServices.getComuni()
-       .subscribe((data: Comune[]) => {
-         if (!data || data.length === 0) {
-           console.log('Nessun dato disponibile');
-         } 
-         else 
-         {
-           this.comuni = data;
-           this.setListOfComuni();
-         }
-       });
-   }
- 
-   setProvince(event: Event){
-     const v = (event.target as HTMLSelectElement).value;
-     const comune = this.comuni.filter(comune =>
-           comune.denominazione_ita.startsWith(v!)
-     );
- 
-     this.form.patchValue({
-       provincia: comune[0].sigla_provincia
-     });
- 
-   }
- 
-   setListOfComuni(){
- 
-     const capsUnici = Array.from(new Set(this.comuni.map(c => c.cap)));
- 
-     this.filteredCAPs = this.form.get('cap')!.valueChanges.pipe(
-       startWith(''),
-       map(value => value ?? ''), 
-       filter((value: string | null): value is string => !!value && value.length >= 2),
-       map(value => this._filterCAP(value, capsUnici))
-     );
-
-    console.log("attivo");
-
-   }
- 
-   private _filterCAP(value: string, caps: string[]): string[] {
-     const filterValue = value.trim();
-     return caps.filter(cap => cap.startsWith(filterValue));
-   }
- 
-   setInputCityProvince(event: MatAutocompleteSelectedEvent){
-      const v = event.option.value;
-      if(v){
- 
-       this.form.patchValue({
-         provincia: ""
-       });
- 
-       const comune = this.comuni.filter(comune =>
-           comune.cap.startsWith(v!)
-       );
-       
-       if(comune.length == 1)
-       {
-         this.isOne = true;
- 
-         this.form.patchValue({
-           citta: comune[0].denominazione_ita,
-           provincia: comune[0].sigla_provincia,
-           stato: "ITALIA"
-         });
- 
-       }
-       else
-       {
-         this.isOne = false;
-         this.comuniDaCap = comune;
-         this.form.get('citta')?.setValue('');
-      }
-      }
-   } 
-
   ngOnInit(): void {
-    this.form = new FormGroup({
-      rag_soc: new FormControl('', [Validators.required]),
-      indirizzo: new FormControl('',[Validators.required]),
-      compl_nom: new FormControl(''),
-      cod_fisc: new FormControl(''),
-      comp_indirizzo: new FormControl(''),
-      cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
-      provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-      citta: new FormControl('', [Validators.required]),
-      stato: new FormControl('', [Validators.required]),
-      file: new FormControl('', [Validators.required]),
-      tempGuid: new FormControl('', [Validators.required])
-    });
     
     Promise.all([
         this.formStorage.getForm('step2'),
@@ -201,21 +93,7 @@ export class InvioMultiploRaccomandata3Component {
             this.bulletinText = "con bollettimo";
           }
 
-          // Se c'è il bollettino, aggiungiamo i campi relativi
-          if (this.bulletin) {
-            this.form.addControl('conto_corrente', new FormControl('', [Validators.required]));
-            this.form.addControl('eseguito_nominativo', new FormControl('', [Validators.required]));
-            this.form.addControl('intestatario', new FormControl('', [Validators.required]));
-            this.form.addControl('eseguito_indirizzo', new FormControl('', [Validators.required]));
-            this.form.addControl('importo', new FormControl('', [Validators.required]));
-            this.form.addControl('eseguito_localita', new FormControl('', [Validators.required]));
-            this.form.addControl('codice_cliente', new FormControl('', [Validators.required]));
-          }    
-
-          this.setPopUpValidators();
       });
-
-    this.getComuni();
 
   }
 
@@ -373,134 +251,60 @@ export class InvioMultiploRaccomandata3Component {
 
 
     // Metodo per aprire il modal e salvare il riferimento
-    openModalWithData(templateRef: TemplateRef<any>, r: checkRecipient): void {
+    openModalWithData(r: checkRecipient): void {
       // Riempie il form con i dati di r
-      this.form.patchValue({
-        rag_soc: r.recipient?.businessName || '',
-        compl_nom: r.recipient?.complementName || '',
-        cod_fisc: r.recipient?.fiscalCode || '',
-        comp_indirizzo: r.recipient?.complementAddress || '',
-        indirizzo: r.recipient?.address || '',
-        cap: r.recipient?.zipCode || '',
-        citta: r.recipient?.city || '',
-        provincia: r.recipient?.province || '',
-        stato: r.recipient?.state || '',
-        file: r.recipient?.fileName || '',
-        tempGuid: r.recipient?.tempGuid
-      });
+
+      this.recipientBulletin.recipient = r.recipient!;
 
       if(this.bulletin){
-        const bulletin = this.bulletins?.find(a=>a.tempRecipientGuid == r.recipient?.tempGuid);
-        this.form.patchValue({
-          conto_corrente: bulletin?.numeroContoCorrente || '',
-          eseguito_nominativo: bulletin?.eseguitoDaNominativo || '',
-          intestatario: bulletin?.intestatoA || '',
-          eseguito_indirizzo: bulletin?.eseguitoDaIndirizzo || '',
-          importo: (bulletin?.importoEuro || '').replace(',', '.'),
-          eseguito_localita: bulletin?.eseguitoDaLocalita || '',
-          codice_cliente: bulletin?.codiceCliente || ''
+        const bulletin = this.bulletins?.find(a => a.tempRecipientGuid == r.recipient?.tempGuid);
+        this.recipientBulletin.bulletin = bulletin;
+      }
+
+      this.recipientBulletin.isValid = r.valido;
+      const modalRef = this.modalService.open(EditRecipientComponent);
+      modalRef.componentInstance.formData = this.recipientBulletin;
+      modalRef.componentInstance.haveBulletin = this.bulletin;
+
+    // Ascolta l'evento dataSaved
+      modalRef.componentInstance.dataSaved.subscribe((updatedData: any) => {
+        this.recipientBulletin = updatedData;
+        this.recipientBulletin;
+        modalRef.componentInstance.validChange.subscribe((v: any) => {
+          if(v.valid && v.isChange){
+
+            const obj = this.checkRecipient.find(
+              r => r.recipient?.tempGuid === this.recipientBulletin.recipient.tempGuid
+            );
+
+            obj!.recipient = this.recipientBulletin.recipient;
+            if(this.recipientBulletin.bulletin){
+              let b = this.bulletins!.find(
+                r => r.tempRecipientGuid === this.recipientBulletin.recipient.tempGuid
+              );
+
+              b = this.recipientBulletin.bulletin;
+            }
+
+            obj!.valido = true;
+            obj!.errore = "";
+
+            this.nominativiValidi += 1;
+            this.nominativiInErrore -= 1;
+            this.getFilterRecipients();
+
+         }
+
         });
-      }
-
-      const modalRef = this.modalService.open(templateRef, { centered: true, backdrop: 'static', keyboard: true });
-      this.currentModalRef = modalRef;
-
-    }
-
-    setPopUpValidators(): void {
-      const controls = [
-        'rag_soc',
-        'indirizzo',
-        'cap',
-        'citta',
-        'provincia',
-        'stato',
-        'file',
-      ];
-
-      if(this.bulletin)
-      {
-        const addControls =[
-          'conto_corrente',
-          'eseguito_nominativo',
-          'intestatario',
-          'eseguito_indirizzo',
-          'importo',
-          'eseguito_localita',
-          'codice_cliente'
-        ];
-        controls.push(...addControls);
-      }
-
-      controls.forEach(controlName => {
-        const control = this.form.get(controlName);
-        control?.setValidators([Validators.required]);
-        control?.updateValueAndValidity();
-      });
-    }  
-
-    onSubmitPopUpForm(){
-      if (this.form.valid) 
-      {
-        const r = this.result.find(a => a.recipient.tempGuid == this.form.value.tempGuid);
-        if (r) 
-        {
-          const obj = this.checkRecipient.find(
-            r => r.recipient?.tempGuid === this.form.value.tempGuid
-          );
-
-          if (obj && obj.recipient) 
-          {
-            Object.assign(obj.recipient, {
-              businessName: this.form.value.rag_soc,
-              complementName: this.form.value.compl_nom,
-              fiscalCode: this.form.value.cod_fisc,
-              complementAddress: this.form.value.comp_indirizzo,
-              address: this.form.value.indirizzo,
-              zipCode: this.form.value.cap,
-              city: this.form.value.citta,
-              province: this.form.value.provincia,
-              state: this.form.value.stato,
-              fileName: this.form.value.file
-            });
-
-            // Ricalcola validazione e messaggi di errore se necessario
-            FncUtils.getComuniList(this.http).subscribe({
-              next: data => {
-                const check =  CheckRecipient(obj.recipient!, data, true);
-                obj.valido = check.valido;
-                obj.errore = check.errore;
-
-                if(obj.valido)
-                {
-                  if (this.currentModalRef) {
-                    this.currentModalRef.close();
-                  }
-                  this.nominativiValidi += 1;
-                  this.nominativiInErrore -= 1;
-                  this.getFilterRecipients();
-                }
-                else
-                {
-                  this.alertMessage = true;
-                  this.alertText = obj.errore;
-                }
-
-              }
-            });
-          }          
-        } 
-        else 
-        {
-          console.warn('Nessun destinatario trovato con tempGuid:', this.form.value.tempGuid);
-        }
         
-      }
-      else 
-      {
-        this.alertMessage = true;
-        this.alertText = 'Compila tutti i campi obbligatori correttamente.';
-      }
+        modalRef.close(); // chiudi il modale manualmente
+      });
+
+      // Ascolta la chiusura (se usi @Output() close)
+      modalRef.componentInstance.close?.subscribe(() => {
+        modalRef.dismiss();
+      });
+
     }
 
     getCheckRecipients(valid?:boolean | null){
@@ -516,5 +320,9 @@ export class InvioMultiploRaccomandata3Component {
       if(this.valid  === false)
         this.checkRecipient = this.checkRecipientAll.filter(r => !r.valido);        
 
+    }
+
+    get hasValidRecipients(): boolean {
+      return this.checkRecipientAll?.some(r => r.valido) ?? false;
     }
 }

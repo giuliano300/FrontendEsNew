@@ -72,7 +72,7 @@
                         <li>
                             <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
                         </li>
-                        <li *ngFor="let r of checkRecipient" [ngClass]="r.valido ? '' : 'liError'" (click)="openModalWithData(editname, r)">
+                        <li *ngFor="let r of checkRecipient" [ngClass]="r.valido ? '' : 'liError'" (click)="openModalWithData(r)">
                             <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span class="error-upload">{{r.errore}}</span>
                         </li>
                         <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
@@ -87,176 +87,6 @@
             </div>
         </div>
     </div>
-    <ng-template #editname>
-        <div class="modal-header">
-            <h4 class="modal-title flex-start">
-                 Modifica il nominativo
-            </h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
-        </div>
-        <form [formGroup]="form" (ngSubmit)="onSubmitPopUpForm()">
-            <div class="generic-form form-popup">
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            RAGIONE SOCIALE
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right" ></i>
-                        </label>
-                        <input type="text" formControlName="rag_soc" value="EWT"/>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            COMPLETAMENTO NOMINATIVO
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
-                        </label>
-                        <input type="text" formControlName="compl_nom" value="CEO" />
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            INDIRIZZO
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
-                        </label>
-                        <input type="text" formControlName="compl_nom" value="VIA SCAFA, 30" />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            COMPLETAMENTO INDIRIZZO
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
-                        </label>
-                        <input type="text" formControlName="comp_indirizzo" value="NEL NULLA" />
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <label class="flex-start">
-                            CAP
-                        </label>
-                        <input type="text"
-                            formControlName="cap"
-                            maxlength="5"
-                            [matAutocomplete]="autoCap"
-                            class="custom-input" />
-
-                        <mat-autocomplete #autoCap="matAutocomplete" (optionSelected)="setInputCityProvince($event)">
-                            <mat-option *ngFor="let cap of filteredCAPs | async" [value]="cap">
-                                {{ cap }}
-                            </mat-option>                    
-                        </mat-autocomplete>                                    
-                    </div>
-                    <div class="col-md-4">
-                        <label class="flex-start">
-                            CITTA'
-                        </label>
-                        <input type="text" formControlName="citta" readonly class="readonly" *ngIf="isOne"  />
-                        <select formControlName="citta" *ngIf="!isOne" (change)="setProvince($event)" class="city">
-                            <option value="">-- Seleziona una città --</option>
-                                <option *ngFor="let option of comuniDaCap" [value]="option.denominazione_ita">
-                                {{ option.denominazione_ita }}
-                            </option>   
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="flex-start">
-                            PROVINCIA
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
-                        </label>
-                        <input type="text" formControlName="provincia" maxlength="2" readonly class="readonly"/>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            STATO
-                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
-                        </label>
-                        <input type="text" formControlName="stato" readonly class="readonly" />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="flex-start">
-                            FILE
-                        </label>
-                        <input type="text" formControlName="file" value="Preventivo29/2025.pdf" />
-                    </div>
-                </div>
-                <div [hidden]="!bulletin">
-                    <div class="row mt-3 mb-4">
-                        <h5 class="title flex-start">
-                            Campi bollettino
-                        </h5>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label class="flex-start">
-                                <label>NUMERO CONTO CORRENTE</label>
-                            </label>
-                            <input type="text" formControlName="conto_corrente" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="flex-start">
-                                ESEGUITO DA NOMINATIVO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollNominativo}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="eseguito_nominativo" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label class="flex-start">
-                                <label>INTESTATO A</label>
-                            </label>
-                            <input type="text" formControlName="intestatario" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="flex-start">
-                                ESEGUITO DA INDIRIZZO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollIndirizzo}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="eseguito_indirizzo" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <label class="flex-start">
-                                <label>IMPORTO EURO</label>
-                            </label>
-                            <input type="number" formControlName="importo" />
-                        </div>
-                        <div class="col-md-4">
-                            <label class="flex-start">
-                                ESEGUITO DA LOCALITA'
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollLocalita}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="eseguito_localita" />
-                        </div>
-                        <div class="col-md-4">
-                            <label class="flex-start">
-                                CODICE CLIENTE
-                            </label>
-                            <input type="text" formControlName="codice_cliente" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <input type="submit" class="button-save" value="SALVA" />
-                    </div>
-                    <div class="col-md-4"></div>
-                </div>
-                <div class="row mt-3">              
-                    <div class="col-lg-12 text-center">
-                        <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
-                        <div *ngIf="alertMessage" class="alert-message">
-                            <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
-                        </div>
-                    </div>
-                </div> 
-            </div>
-            <input type="hidden" formControlName="tempGuid" />
-        </form>
-    </ng-template>
 
     <div class="row" [hidden]="notUploaded">
         <div class="col-md-12">
@@ -273,7 +103,7 @@
     <form [formGroup]="formFinale" (ngSubmit)="onSubmit()">
         <div class="group-button">
             <a routerLink="/invioMultiploRaccomandata2">INDIETRO</a>
-            <input type="submit" value="AVANTI" [disabled]="checkRecipient.length <= 0" />
+            <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
         </div>
     </form>
 </div>
