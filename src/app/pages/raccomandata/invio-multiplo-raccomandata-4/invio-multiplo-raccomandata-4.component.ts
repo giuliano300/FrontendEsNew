@@ -10,7 +10,7 @@ import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
 import * as JSZip from 'jszip';
 import { Recipients } from '../../../classes/Recipients';
-import { checkRecipient } from '../../../interfaces/CheckRecipient';
+import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 
 import { PDFDocument } from 'pdf-lib'
 import { PdfBase64List } from '../../../classes/pdfBase64List';

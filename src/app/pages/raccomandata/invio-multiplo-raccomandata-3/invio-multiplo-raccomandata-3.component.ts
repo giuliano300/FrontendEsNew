@@ -16,7 +16,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 
 import { Recipients } from '../../../classes/Recipients';
 import { FncUtils } from '../../../fncUtils/fncUtils';
-import { checkRecipient, CheckRecipient } from '../../../interfaces/CheckRecipient';
+import { checkRecipient, CheckRecipient } from '../../../fncUtils/CheckRecipient';
 import { FormStorageService } from '../../../services/form-storage.service';
 import { bulletinFields, maxUploadLimit, secretKey } from '../../../../main';
 import * as CryptoJS from 'crypto-js';

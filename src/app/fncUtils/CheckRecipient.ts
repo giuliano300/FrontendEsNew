@@ -1,6 +1,6 @@
 
 import { Recipients } from "../classes/Recipients";
-import { ComuniXLS } from "../fncUtils/fncUtils";
+import { ComuniXLS } from "./fncUtils";
 
 export class checkRecipient {
   recipient: Recipients | null = null;
