@@ -61,9 +61,11 @@ export class CompilaBollettinoComponent {
 
       switch(parseInt(datiDecriptati.prodotto)){
           case ProductTypes.ROL: 
+          case ProductTypes.MOL: 
             this.productName = "raccomandata";
             break;
           case ProductTypes.LOL: 
+          case ProductTypes.COL: 
             this.productName = "lettera";
             break;
       }

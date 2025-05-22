@@ -78,21 +78,21 @@ export class InvioMultiploLettera3Component {
     }
   }
 
-
-  form_edit = new FormGroup({
-    rag_soc: new FormControl(''),
-    nome: new FormControl(''),
-    cognome: new FormControl(''),
-    compl_nom: new FormControl(''),
-    cod_fisc: new FormControl(''),
-    comp_indirizzo: new FormControl(''),
-    cap: new FormControl(''),
-    citta: new FormControl(''),
-    provincia: new FormControl(''),
-    stato: new FormControl(''),
-    file: new FormControl('')
-  });
-
+  ngOnInit(): void {
+    this.form = new FormGroup({
+      rag_soc: new FormControl(''),
+      nome: new FormControl(''),
+      cognome: new FormControl(''),
+      compl_nom: new FormControl(''),
+      cod_fisc: new FormControl(''),
+      comp_indirizzo: new FormControl(''),
+      cap: new FormControl(''),
+      citta: new FormControl(''),
+      provincia: new FormControl(''),
+      stato: new FormControl(''),
+      file: new FormControl('')
+    });
+  }
 
 
     // Metodo per aprire il modal e salvare il riferimento

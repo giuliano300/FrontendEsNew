@@ -33,6 +33,7 @@ export function CheckRecipient(
   if (!crtCap.valido) {
     ctrl.valido = false;
     ctrl.errore = crtCap.errore + ' - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO RAGIONE SOCIALE / NOMINATIVO
@@ -40,13 +41,15 @@ export function CheckRecipient(
   if (!crtRS.valido) {
     ctrl.valido = false;
     ctrl.errore = crtRS.errore + ' - destinatario';
-  }
+    return ctrl;
+ }
 
   // CONTROLLO INDIRIZZO
   const crtAddr = verificaIndirizzo(recipient.address);
   if (!crtAddr.valido) {
     ctrl.valido = false;
     ctrl.errore = crtAddr.errore + ' - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO CITTÀ
@@ -54,6 +57,7 @@ export function CheckRecipient(
   if (!crtCitta.valido) {
     ctrl.valido = false;
     ctrl.errore = crtCitta.errore + ' - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO CF
@@ -61,6 +65,7 @@ export function CheckRecipient(
   if (!crtCf.valido) {
     ctrl.valido = false;
     ctrl.errore = 'Codice fiscale - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO PROVINCIA
@@ -68,6 +73,7 @@ export function CheckRecipient(
   if (!crtProv.valido) {
     ctrl.valido = false;
     ctrl.errore = crtProv.errore + ' - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO CAP-COMUNE-PROVINCIA
@@ -77,10 +83,12 @@ export function CheckRecipient(
       if (!crtCcp.valido) {
         ctrl.valido = false;
         ctrl.errore = crtCcp.errore + ' - destinatario';
+        return ctrl;
       }
     } else {
       ctrl.valido = false;
       ctrl.errore = 'Cap non corretto - destinatario';
+      return ctrl;
     }
   }
 
@@ -89,6 +97,7 @@ export function CheckRecipient(
   if (!crtStato.valido) {
     ctrl.valido = false;
     ctrl.errore = crtStato.errore + ' - destinatario';
+    return ctrl;
   }
 
   // CONTROLLO FILE NAME
@@ -97,7 +106,8 @@ export function CheckRecipient(
     if (!crtFN.valido) {
       ctrl.valido = false;
       ctrl.errore = crtFN.errore + ' - destinatario';
-    }
+      return ctrl;
+   }
   }
 
   return ctrl;
@@ -273,8 +283,6 @@ export function verificaCodiceCliente(codiceCliente: string): Crt {
 // Funzione di verifica ragione sociale o nome e cognome
 export function verificaRagioneSociale(
   ragioneSociale: string = '',
-  nome: string = '',
-  cognome: string = ''
 ): Crt {
   const ctrl: Crt = { valido: true, errore: '' };
 
@@ -282,7 +290,7 @@ export function verificaRagioneSociale(
     return { valido: false, errore: 'Ragione sociale più di 44 caratteri' };
   }
 
-  if (ragioneSociale.length === 0 && (nome.length === 0 || cognome.length === 0)) {
+  if (ragioneSociale.length === 0) {
     return { valido: false, errore: 'Inserire Nome e Cognome o Ragione Sociale' };
   }
 
