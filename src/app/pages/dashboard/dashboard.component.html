@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="col-lg-2 mt-3">
-            <div class="box">
+            <div class="box" (click)="openModal(report)">
                 <img src="/assets/img/report.png">Report
             </div>
         </div>
@@ -88,6 +88,26 @@
       </a></li>
       <li><a (click)="navigateAndClose('/archivioVisure')">
         <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Archivio&nbsp;Visure/Certificati
+      </a></li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- MODAL REPORT-->
+<ng-template #report>
+  <div class="modal-header">
+    <h4 class="modal-title flex-start">
+      <img src="/assets/img/report.png" style="width: 50px;"> Report
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <ul>
+      <li><a (click)="navigateAndClose('/reportSpedizioni')">
+        <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Report&nbsp;Spedizioni
+      </a></li>
+      <li><a (click)="navigateAndClose('/reportSpedizioniBollettini')">
+        <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Report&nbsp;Spedizioni con bollettini
       </a></li>
     </ul>
   </div>

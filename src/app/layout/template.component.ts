@@ -44,10 +44,14 @@ export class TemplateComponent {
 
   OpenMenu(){
     document.querySelector('.side-menu')!.classList.add('open');
+    document.querySelector('.menu-overlay')!.classList.add('visible');
+    document.querySelector('.menu-overlay')!.classList.remove('hidden');
   }
 
   CloseMenu(){
     document.querySelector('.side-menu')!.classList.remove('open');
+    document.querySelector('.menu-overlay')!.classList.remove('visible');
+    document.querySelector('.menu-overlay')!.classList.add('hidden');
   }
 
 }

@@ -1,0 +1,119 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Dati personali</h1>
+            <p class="mt-2 textsize-4">
+                In questa sezione è possibile modificare i dati personali e login alla piattaforma EasySender.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 generic-form">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="color-blue mb-4">AGGIORNA DATI PERSONALI</h5>
+                </div>
+            </div>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label>NOME</label>
+                        <input type="text" formControlName="nome" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>COGNOME</label>
+                        <input type="text" formControlName="cognome" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>RAGIONE SOCIALE</label>
+                        <input type="text" formControlName="rag_soc" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label>INDIRIZZO</label>
+                        <input type="text" formControlName="indirizzo" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>CAP</label>
+                        <input type="text" formControlName="cap" maxlength="5" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>CITTÀ</label>
+                        <input type="text" formControlName="citta" />
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label>PROVINCIA</label>
+                        <input type="text" formControlName="prov" maxlength="2" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>TELEFONO</label>
+                        <input type="phone" formControlName="telefono" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>EMAIL</label>
+                        <input type="email" formControlName="email" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" class="button bg-color-green color-white" value="SALVA DATI">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="alertMessage" class="alert-message">
+                            <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="color-blue mb-4">MODIFICA PASSWORD</h5>
+                </div>
+            </div>
+            <form [formGroup]="form_pwd" (ngSubmit)="onSubmitPwd()">
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label>VECCHIA PASSWORD</label>
+                        <input type="password" formControlName="old_pwd" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label>NUOVA PASSWORD</label>
+                        <input type="password" formControlName="new_pwd" />
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <label>RIPETI NUOVA PASSWORD</label>
+                        <input type="password" formControlName="rpt_new_pwd" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" class="button bg-color-green color-white" value="AGGIORNA PASSWORD">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="alertMessagePwd" class="alert-message">
+                            <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

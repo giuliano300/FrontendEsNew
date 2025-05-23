@@ -32,10 +32,10 @@
                 </ul>
               </li>
               <li class="has-chid">
-                    <a href="#">Report</a>
+                    <a>Report</a>
                     <ul>
-                        <li><a href="#">Report spedizioni</a></li>
-                        <li><a href="#">Report spedizioni pacchi</a></li>
+                        <li><a routerLink="/reportSpedizioni">Report spedizioni</a></li>
+                        <li><a routerLink="/reportSpedizioniBollettini">Report spedizioni con bollettini</a></li>
                     </ul>
               </li>
             </ul>
@@ -74,17 +74,18 @@
 
     <div class="user-menu">
       <ul>
-        <li>-&nbsp;&nbsp;<a routerLink="#">DATI PERSONALI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="#">UTENTI</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="/datiPersonali" (click)="CloseMenu()">DATI PERSONALI</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="/utentiList" (click)="CloseMenu()">UTENTI</a></li>
         <li>-&nbsp;&nbsp;<a routerLink="/userSenders" (click)="CloseMenu()">RUBRICA MITTENTI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="#">PERSONALIZZAZIONE COVER</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="#">ERRORI NOTIFICATI</a></li>
-        <li>-&nbsp;&nbsp;<a (click)="logout()" href="#">LOGOUT</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="/personalizzazioneCover" (click)="CloseMenu()">PERSONALIZZAZIONE COVER</a></li>
+        <li>-&nbsp;&nbsp;<a routerLink="/erroriNotificati" (click)="CloseMenu()">ERRORI NOTIFICATI</a></li>
+        <li>-&nbsp;&nbsp;<a (click)="logout()">LOGOUT</a></li>
       </ul>
     </div>
 
   </div>
 
+  <div class="menu-overlay"></div>
   
   <main>
     <router-outlet></router-outlet>

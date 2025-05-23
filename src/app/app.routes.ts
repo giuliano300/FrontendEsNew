@@ -56,7 +56,7 @@ import { VisuraMultiplaComponent } from './pages/visura/visura-multipla/visura-m
 import { VisuraMultipla2Component } from './pages/visura/visura-multipla-2/visura-multipla-2.component';
 import { InvioPaccoComponent } from './pages/pacchi/invio-pacco/invio-pacco.component';
 import { InvioPacco2Component } from './pages/pacchi/invio-pacco-2/invio-pacco-2.component';
-import { AddSenderComponent } from './pages/userSenders/add-sender/add-sender.component';
+import { AddSenderComponent } from './pages/personal-area/add-sender/add-sender.component';
 import { InviiLettereComponent } from './pages/stato-invii/invii-lettere/invii-lettere.component';
 import { InviiRaccomandateComponent } from './pages/stato-invii/invii-raccomandate/invii-raccomandate.component';
 import { InviiTelegrammiComponent } from './pages/stato-invii/invii-telegrammi/invii-telegrammi.component';
@@ -66,6 +66,13 @@ import { RichiesteVisureComponent } from './pages/stato-invii/richieste-visure/r
 import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizioni/archivio-spedizioni.component';
 import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
 import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
+import { ReportSpedizioniComponent } from './pages/report/report-spedizioni/report-spedizioni.component';
+import { ReportSpedizioniBollettiniComponent } from './pages/report/report-spedizioni-bollettini/report-spedizioni-bollettini.component';
+import { DatiPersonaliComponent } from './pages/personal-area/dati-personali/dati-personali.component';
+import { ErroriNotificatiComponent } from './pages/personal-area/errori-notificati/errori-notificati.component';
+import { PersonalizzazioneCoverComponent } from './pages/personal-area/personalizzazione-cover/personalizzazione-cover.component';
+import { RubricaDestinatariComponent } from './pages/personal-area/rubrica-destinatari/rubrica-destinatari.component';
+import { UtentiComponent } from './pages/personal-area/utenti/utenti.component';
 
 export const routes: Routes = [
   {
@@ -384,6 +391,41 @@ export const routes: Routes = [
       {
         path: 'dettaglioSpedizione/:id',
         component: DettaglioSpedizioneComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'reportSpedizioni',
+        component: ReportSpedizioniComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'reportSpedizioniBollettini',
+        component: ReportSpedizioniBollettiniComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'datiPersonali',
+        component: DatiPersonaliComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'erroriNotificati',
+        component: ErroriNotificatiComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'personalizzazioneCover',
+        component: PersonalizzazioneCoverComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'rubricaDestinatari',
+        component: RubricaDestinatariComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'utentiList',
+        component: UtentiComponent,
         canActivate: [AuthGuard]
       },
       {
