@@ -30,8 +30,10 @@ import { FncUtils } from '../../../fncUtils/fncUtils';
 })
 export class InvioSingoloRaccomandata4Component {
 
-  constructor(private router: Router, private userRecipientService: UserRecipientsService,
-    private globalServices: GlobalServicesService, private formStorage: FormStorageService
+  constructor(private router: Router, 
+    private userRecipientService: UserRecipientsService,
+    private globalServices: GlobalServicesService, 
+    private formStorage: FormStorageService
   ) {}
   alertMessage = false;
   alertText = '';
@@ -68,7 +70,8 @@ export class InvioSingoloRaccomandata4Component {
     comp_indirizzo: new FormControl(''),
     citta: new FormControl('', [Validators.required]),
     stato: new FormControl('', [Validators.required]),
-    email: new FormControl('')
+    email: new FormControl(''),
+    addRecipient: new FormControl('')
   });
 
   onStatoChange(event: Event) {
@@ -239,17 +242,19 @@ export class InvioSingoloRaccomandata4Component {
   onSubmit(): void {
 
     const destinatario = {
-      businessName: this.form.value.nominativo,
-      complementName: this.form.value.comp_nominativo,
-      address: this.form.value.indirizzo,
-      complementAddress: this.form.value.comp_indirizzo,
-      zipCode: this.form.value.cap,
-      city: this.form.value.citta,
-      province: this.form.value.provincia,
-      state: this.form.value.stato,
-      email: this.form.value.email,
+      businessName: this.form.value.nominativo!,
+      complementName: this.form.value.comp_nominativo!,
+      address: this.form.value.indirizzo!,
+      complementAddress: this.form.value.comp_indirizzo!,
+      zipCode: this.form.value.cap!,
+      city: this.form.value.citta!,
+      province: this.form.value.provincia!,
+      state: this.form.value.stato!,
+      email: this.form.value.email!,
       fileName: null,
-      tempGuid: FncUtils.generateGuid()
+      tempGuid: FncUtils.generateGuid(),
+      userId: this.user!.id!,
+      userParentId: this.user!.parentId!
     };
 
     const destinatari = [];
@@ -259,7 +264,15 @@ export class InvioSingoloRaccomandata4Component {
     this.formStorage.saveForm('destinatari', encrypted);
   
     if (this.form.valid) {
-      this.router.navigate(['/invioSingoloRaccomandata5']);
+
+      if(this.form.value.addRecipient)
+        this.userRecipientService.setUserRecipient(destinatario!).subscribe(data => {
+          this.router.navigate(['/invioSingoloRaccomandata5']);
+        });
+      else
+        this.router.navigate(['/invioSingoloRaccomandata5']);
+
+
     } else {
       this.alertMessage = true;
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';

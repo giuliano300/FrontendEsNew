@@ -22,6 +22,7 @@ export class UserRecipientsService {
     }
   
     setUserRecipient(userSender:UserRecipients): Observable<UserRecipients>{
+      let x = JSON.stringify(userSender!);
       return this.http.post<UserRecipients>(this.apiUrl, userSender);
     }
   
