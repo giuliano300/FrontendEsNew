@@ -15,6 +15,7 @@ export class DatiPersonaliComponent {
     alertMessage = false;
     alertMessagePwd = false;
     alertText = '';
+    alertTextPwd = '';
 
 
       form = new FormGroup({
@@ -42,7 +43,7 @@ export class DatiPersonaliComponent {
       this.router.navigate(['/datiPersonali']);
     } else {
       this.alertMessage = true;
-      this.alertText = 'Compila tutti i campi obbligatori.';
+      this.alertText = 'Compila tutti i campi obbligatori .';
     }
   }
 
@@ -52,7 +53,7 @@ export class DatiPersonaliComponent {
       this.router.navigate(['/datiPersonali']);
     } else {
       this.alertMessagePwd = true;
-      this.alertText = 'Compila tutti i campi obbligatori per aggiornare la password.';
+      this.alertTextPwd = 'Compila tutti i campi obbligatori per aggiornare la password.';
     }
   }
 

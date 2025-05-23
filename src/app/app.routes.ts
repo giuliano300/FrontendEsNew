@@ -73,6 +73,8 @@ import { RubricaDestinatariComponent } from './pages/personal-area/rubrica-desti
 import { UtentiComponent } from './pages/personal-area/utenti/utenti.component';
 import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizioni/archivio-spedizioni.component';
 import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
+import { ListeDestinatariComponent } from './pages/personal-area/liste-destinatari/liste-destinatari.component';
+import { AddReceiverComponent } from './pages/personal-area/add-receiver/add-receiver.component';
 
 export const routes: Routes = [
   {
@@ -425,6 +427,16 @@ export const routes: Routes = [
       {
         path: 'archivioVisure',
         component: ArchivioVisureComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'listeDestinatari',
+        component: ListeDestinatariComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'addReceiver',
+        component: AddReceiverComponent,
         canActivate: [AuthGuard]
       },
       {

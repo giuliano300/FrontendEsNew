@@ -1,0 +1,85 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Liste destinatari</h1>
+            <p class="mt-2 textsize-4">
+                In quest'area puoi aggiungere e modificare le liste dei destinatari.
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<div class="filter pb-4">
+    <form [formGroup]="form">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h5 class="color-blue textsize-4 mb-3">INSERISCI UNA NUOVA LISTA DESTINATARI</h5>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <label>NOME LISTA</label>
+                    <input type="text" formControlName="list_name" />
+                </div>
+                <div class="col-md-3">
+                    <input type="submit" name="export" value="INSERISCI">
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 mt-3">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+
+                    <!-- Colonna Data inserimento -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef > Data di creazione </th>
+                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Nome lista -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef > Nome della lista </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+
+
+                    <!-- Colonna Dettalgio litsa -->
+                    <ng-container matColumnDef="detail">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Dettaglio lista </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;">
+                        <a routerLink="/rubricaDestinatari"><i class='bx bx-search textsize-4 color-blue' ngbTooltip="{{infoBtnOpenList}}" placement="left"></i></a>
+                    </td>
+                    </ng-container>
+
+                    <!-- Colonna Elimina -->
+                    <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> elimina lista</th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;">
+                        <button mat-button class="mat-button-download"><i class='fa-solid fa-trash textsize-5' ngbTooltip="{{infoBtnDelete}}" placement="left"></i></button>
+                    </td>
+                    </ng-container>
+
+
+                    <!-- Header e righe -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>                            
+                                
+              
+            </table>
+              
+              <!-- Paginazione -->
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+
+
+        </div>
+    </div>
+</div>

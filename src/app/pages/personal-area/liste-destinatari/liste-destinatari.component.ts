@@ -1,31 +1,36 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { infoBtnEdit, infoBtnDelete } from '../../../enviroments/enviroments';
-import { RouterLink } from '@angular/router';
-
+import { infoBtnOpenList, infoBtnDelete } from '../../../enviroments/enviroments';
 
 @Component({
-  selector: 'app-rubrica-destinatari',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule,RouterLink],
-  templateUrl: './rubrica-destinatari.component.html',
-  styleUrl: './rubrica-destinatari.component.scss'
+  selector: 'app-liste-destinatari',
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule,RouterLink],
+  templateUrl: './liste-destinatari.component.html',
+  styleUrl: './liste-destinatari.component.scss'
 })
-export class RubricaDestinatariComponent {
+export class ListeDestinatariComponent {
 
         constructor(private router: Router) {}
       
-        infoBtnEdit = infoBtnEdit;
+        infoBtnOpenList = infoBtnOpenList;
         infoBtnDelete = infoBtnDelete;
-             
+        
+      
+        form = new FormGroup({
+          list_name: new FormControl(''),
+        });
       
       
-        displayedColumns: string[] = ['name','address', 'cap','city', 'province', 'state', 'edit', 'delete'];
+      
+        displayedColumns: string[] = ['date','name', 'detail', 'delete'];
         dataSource = new MatTableDataSource(USER_DATA);
         
           @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -42,11 +47,10 @@ export class RubricaDestinatariComponent {
             const filterValue = (event.target as HTMLInputElement).value;
             this.dataSource.filter = filterValue.trim().toLowerCase();
           }
-  
+
 }
 
 const USER_DATA = [
-  { name:'Mario Rossi', address:'Viale Michelangelo, 50', cap:'80129', city: 'Napoli', province:'NA', state:'Italia' },
-  { name:'Domenico Carlino', address:'Via Scafa, 30', cap:'81100', city: 'Caiazzo', province:'CE', state:'Italia' },
+  { date:'15/05/2025',name:'Lista test 1'},
 ];
 
