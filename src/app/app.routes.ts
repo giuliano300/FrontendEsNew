@@ -71,6 +71,8 @@ import { ErroriNotificatiComponent } from './pages/personal-area/errori-notifica
 import { PersonalizzazioneCoverComponent } from './pages/personal-area/personalizzazione-cover/personalizzazione-cover.component';
 import { RubricaDestinatariComponent } from './pages/personal-area/rubrica-destinatari/rubrica-destinatari.component';
 import { UtentiComponent } from './pages/personal-area/utenti/utenti.component';
+import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizioni/archivio-spedizioni.component';
+import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
 
 export const routes: Routes = [
   {
@@ -413,6 +415,16 @@ export const routes: Routes = [
       {
         path: 'utentiList',
         component: UtentiComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'archivioSpedizioni',
+        component: ArchivioSpedizioniComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'archivioVisure',
+        component: ArchivioVisureComponent,
         canActivate: [AuthGuard]
       },
       {
