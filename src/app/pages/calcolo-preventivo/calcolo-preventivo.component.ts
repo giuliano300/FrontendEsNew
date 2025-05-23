@@ -15,7 +15,7 @@ import { Operations } from '../../classes/Operations';
 import { GetFilePrice, Prices } from '../../fncUtils/getPrices';
 import { Bulletins } from '../../classes/Bulletins';
 import { FncUtils } from '../../fncUtils/fncUtils';
-import { PdfBase64List } from '../../classes/pdfBase64List';
+import { PdfBase64List } from '../../classes/PdfBase64List';
 
 @Component({
   selector: 'app-calcolo-preventivo',
@@ -42,11 +42,12 @@ export class CalcoloPreventivoComponent {
   tipoStampa: string | null = null;
   tipoColore: string | null = null;
   fronteRetro: string | null = null;
-  tipoPosta?: string | null = null;
+  format: number = 0;
   boolTipoColore: boolean = false;
   logoId?: number = 0;
   send:boolean = false;
   errorMessage: string = "";
+  tipoLettera?: string | null = null;
 
   //VARIABILI PAGINA
   Inviitotali: string = "0";
@@ -65,7 +66,7 @@ export class CalcoloPreventivoComponent {
       let numeroPagineTotali: any[] = datiDecriptati.numeroPagineTotali;
       let tots: Prices = new Prices();
       for(let i = 0; i < numeroPagineTotali.length; i++){
-        let p = GetFilePrice(this.productType!, numeroPagineTotali[i], this.boolTipoColore, this.tipoPosta!);
+        let p = GetFilePrice(this.productType!, numeroPagineTotali[i], this.boolTipoColore, this.tipoLettera!);
         tots.price += p.price;
         tots.vatPrice += p.vatPrice;
         tots.totalPrice += p.totalPrice;
@@ -104,6 +105,10 @@ export class CalcoloPreventivoComponent {
       this.ricevutaRitorno = datiDecriptati.tipoRicevuta;
       this.boolTipoColore = this.tipoColore == "BiancoNero" ? false : true;
       this.logoId = datiDecriptati.selLogo == "" ? 0 : parseInt(datiDecriptati.selLogo);
+      if(datiDecriptati.tipoFormato == "FormatoSpeciale")
+        this.format = 1;
+
+      this.tipoLettera = datiDecriptati.tipoLettera;
 
       this.calcolaPreventivo();
 
@@ -170,6 +175,7 @@ export class CalcoloPreventivoComponent {
           Recipient.numberOfPages = fileTrovato!.pages;
           Recipient.productType = this.productType!;
           Recipient.logoId = this.logoId;
+          Recipient.format = this.format;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
           Recipient.frontBack = (this.tipoStampa == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);

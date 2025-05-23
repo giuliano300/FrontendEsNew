@@ -73,7 +73,7 @@
                                 <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span>{{r.errore}}</span>
                             </li>
                             <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
-                                nessun nominativo ancora caricato
+                                nessun file .zip ancora caricato
                             </div>
                             <div *ngIf="checking" class="preloader">
                                 <i class="fas fa-spinner fa-spin"></i>
@@ -89,7 +89,7 @@
     
         <div class="group-button">
             <a routerLink="/invioMultiploRaccomandata3">INDIETRO</a>
-            <input type="submit" value="AVANTI" [disabled]="nominativiCaricati <= 0" />
+            <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
         </div>
     
         </form>

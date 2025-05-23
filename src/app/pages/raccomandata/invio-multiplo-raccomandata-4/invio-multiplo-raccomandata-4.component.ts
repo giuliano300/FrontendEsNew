@@ -13,7 +13,7 @@ import { Recipients } from '../../../classes/Recipients';
 import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 
 import { PDFDocument } from 'pdf-lib'
-import { PdfBase64List } from '../../../classes/pdfBase64List';
+import { PdfBase64List } from '../../../classes/PdfBase64List';
 
 
 
@@ -169,5 +169,8 @@ export class InvioMultiploRaccomandata4Component {
     }
   }
 
+  get hasValidRecipients(): boolean {
+    return this.checkRecipient.some(r => r.valido) ?? false;
+  }
 
 }

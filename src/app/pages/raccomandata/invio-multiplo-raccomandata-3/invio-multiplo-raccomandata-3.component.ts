@@ -123,131 +123,131 @@ export class InvioMultiploRaccomandata3Component {
     return this.result;
   }
 
-  onFileDrop(files: NgxFileDropEntry[]) {
-    this.errorMessage = '';
-    this.fileName = '';
-    this.base64File = '';
-    this.uploadProgress = 0;
-    this.uploadCompleted = false;
-    this.valid = null;
+    onFileDrop(files: NgxFileDropEntry[]) {
+      this.errorMessage = '';
+      this.fileName = '';
+      this.base64File = '';
+      this.uploadProgress = 0;
+      this.uploadCompleted = false;
+      this.valid = null;
 
-    if (files.length !== 1) {
-      this.errorMessage = 'Puoi caricare solo un file alla volta.';
-      return;
-    }
+      if (files.length !== 1) {
+        this.errorMessage = 'Puoi caricare solo un file alla volta.';
+        return;
+      }
 
-    const droppedFile = files[0];
+      const droppedFile = files[0];
 
-    if (droppedFile.fileEntry.isFile) {
-      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
 
-      fileEntry.file((file: File) => {
-        if (file.type !== 'text/csv' && !file.name.toLowerCase().endsWith('.csv')) {
-          this.errorMessage = 'Il file deve essere in formato CSV.';
-          return;
-        }
-
-
-        this.fileName = file.name;
-        const reader = new FileReader();
-
-        reader.onprogress = (event) => {
-          if (event.lengthComputable) {
-            this.uploadProgress = Math.round((event.loaded / event.total) * 100);
-          }
-        };
-
-        reader.onload = () => {
-          this.checking = true;
-          this.recipients = [];
-          this.bulletins = [];
-          this.checkRecipient = [];
-          this.checkRecipientAll = [];
-          this.result = []; 
-          this.nominativiCaricati = 0;
-          this.nominativiValidi = 0;
-          this.nominativiInErrore = 0;         
-          const text = reader.result as string;
-
-          const parsedRows = this.parseCsv(text);
-          
-          // Estrai solo i recipients
-          this.recipients = parsedRows.map(r => r.recipient);
-          
-          // Salva anche i bulletins, se presenti
-          this.bulletins = parsedRows
-              .filter(r => r.bulletin !== undefined)
-              .map(r => r.bulletin!);
-
-          console.log(this.bulletins);
-
-          // Conta le righe (ignorando eventualmente una riga vuota finale)
-          const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
-
-          if (lines.length > maxUploadLimit) {
-            this.errorMessage = 'Il file non può contenere più di ' + maxUploadLimit + ' righe.';
-            this.uploadProgress = 0;
-            this.checking = false;
+        fileEntry.file((file: File) => {
+          if (file.type !== 'text/csv' && !file.name.toLowerCase().endsWith('.csv')) {
+            this.errorMessage = 'Il file deve essere in formato CSV.';
             return;
           }
 
-          this.checkRecipient = [];
-          FncUtils.getComuniList(this.http).subscribe({
-            next: data => {
-             for(var i = 0; i < this.recipients.length; i++){
-                const result = CheckRecipient( this.recipients[i], data, false);
-                this.checkRecipient.push(result);
-              };
 
-              this.nominativiCaricati = this.checkRecipient.length;
-              this.nominativiValidi = this.checkRecipient.filter(r => r.valido).length;
-              this.nominativiInErrore = this.checkRecipient.filter(r => !r.valido).length;        
-              this.checking = false;    
-              this.notUploaded = false;
-              this.checkRecipientAll = this.checkRecipient;
-            },
-            error: err => {
-              console.error(err);
+          this.fileName = file.name;
+          const reader = new FileReader();
+
+          reader.onprogress = (event) => {
+            if (event.lengthComputable) {
+              this.uploadProgress = Math.round((event.loaded / event.total) * 100);
             }
-          });
-        };
-        reader.readAsText(file);
+          };
 
-        reader.onerror = () => {
-          this.errorMessage = 'Errore durante la lettura del file.';
-          this.uploadProgress = 0;
-        };
-      });
+          reader.onload = () => {
+            this.checking = true;
+            this.recipients = [];
+            this.bulletins = [];
+            this.checkRecipient = [];
+            this.checkRecipientAll = [];
+            this.result = []; 
+            this.nominativiCaricati = 0;
+            this.nominativiValidi = 0;
+            this.nominativiInErrore = 0;         
+            const text = reader.result as string;
 
-    } else {
-      this.errorMessage = 'Non è stato caricato un file valido.';
-    }
-  }
-  
-  onSubmit() {
-    if (this.formFinale.valid) {
+            const parsedRows = this.parseCsv(text);
+            
+            // Estrai solo i recipients
+            this.recipients = parsedRows.map(r => r.recipient);
+            
+            // Salva anche i bulletins, se presenti
+            this.bulletins = parsedRows
+                .filter(r => r.bulletin !== undefined)
+                .map(r => r.bulletin!);
 
-      let destinatari = this.checkRecipient.filter(r => r.valido).map(r => r.recipient);
+            console.log(this.bulletins);
 
-      const destinatariEnc = CryptoJS.AES.encrypt(JSON.stringify(destinatari), secretKey).toString();
+            // Conta le righe (ignorando eventualmente una riga vuota finale)
+            const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
 
-      this.formStorage.saveForm('destinatari', destinatariEnc);
+            if (lines.length > maxUploadLimit) {
+              this.errorMessage = 'Il file non può contenere più di ' + maxUploadLimit + ' righe.';
+              this.uploadProgress = 0;
+              this.checking = false;
+              return;
+            }
 
-      if(this.bulletin)
-      {
-        const validGuids = new Set(destinatari.map(r => r!.tempGuid));
+            this.checkRecipient = [];
+            FncUtils.getComuniList(this.http).subscribe({
+              next: data => {
+              for(var i = 0; i < this.recipients.length; i++){
+                  const result = CheckRecipient( this.recipients[i], data, false);
+                  this.checkRecipient.push(result);
+                };
 
-        const bollettini = this.bulletins!.filter(b => b.tempRecipientGuid && validGuids.has(b.tempRecipientGuid));     
-      
-        const bollettiniEnc = CryptoJS.AES.encrypt(JSON.stringify(bollettini), secretKey).toString();
+                this.nominativiCaricati = this.checkRecipient.length;
+                this.nominativiValidi = this.checkRecipient.filter(r => r.valido).length;
+                this.nominativiInErrore = this.checkRecipient.filter(r => !r.valido).length;        
+                this.checking = false;    
+                this.notUploaded = false;
+                this.checkRecipientAll = this.checkRecipient;
+              },
+              error: err => {
+                console.error(err);
+              }
+            });
+          };
+          reader.readAsText(file);
 
-        this.formStorage.saveForm('bollettini', bollettiniEnc);
+          reader.onerror = () => {
+            this.errorMessage = 'Errore durante la lettura del file.';
+            this.uploadProgress = 0;
+          };
+        });
 
+      } else {
+        this.errorMessage = 'Non è stato caricato un file valido.';
       }
-      
-      this.router.navigate(['/invioMultiploRaccomandata4']);
     }
-  }
+    
+    onSubmit() {
+      if (this.formFinale.valid) {
+
+        let destinatari = this.checkRecipient.filter(r => r.valido).map(r => r.recipient);
+
+        const destinatariEnc = CryptoJS.AES.encrypt(JSON.stringify(destinatari), secretKey).toString();
+
+        this.formStorage.saveForm('destinatari', destinatariEnc);
+
+        if(this.bulletin)
+        {
+          const validGuids = new Set(destinatari.map(r => r!.tempGuid));
+
+          const bollettini = this.bulletins!.filter(b => b.tempRecipientGuid && validGuids.has(b.tempRecipientGuid));     
+        
+          const bollettiniEnc = CryptoJS.AES.encrypt(JSON.stringify(bollettini), secretKey).toString();
+
+          this.formStorage.saveForm('bollettini', bollettiniEnc);
+
+        }
+        
+        this.router.navigate(['/invioMultiploRaccomandata4']);
+      }
+    }
 
 
     // Metodo per aprire il modal e salvare il riferimento

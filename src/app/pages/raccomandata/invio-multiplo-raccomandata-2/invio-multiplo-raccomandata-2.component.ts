@@ -13,16 +13,24 @@ import { FormStorageService } from '../../../services/form-storage.service';
 import { UserSendersService } from '../../../services/user-senders.service';
 import { UserSenders } from '../../../interfaces/UserSenders';
 import * as CryptoJS from 'crypto-js';
+import { filter, map, Observable, of, startWith } from 'rxjs';
+import { Comune } from '../../../interfaces/Comune';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { GlobalServicesService } from '../../../services/global-services.service';
 
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatAutocompleteModule],
   templateUrl: './invio-multiplo-raccomandata-2.component.html',
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
 export class InvioMultiploRaccomandata2Component {
-  constructor(private router: Router, private userSendersService: UserSendersService, private userLogosService: UserLogosService, private formStorage: FormStorageService) {}
+  constructor(private router: Router, 
+    private userSendersService: UserSendersService, 
+    private userLogosService: UserLogosService, 
+    private globalServices: GlobalServicesService,     
+    private formStorage: FormStorageService) {}
   alertMessage = false;
   alertText = '';
   
@@ -33,6 +41,12 @@ export class InvioMultiploRaccomandata2Component {
   alertProvince = alertProvince;
   alertState = alertState;
   alertMailDest= alertMailDest;
+
+  //FILTRO CAP
+  filteredCAPs: Observable<string[]> = of([]);
+  comuni: Comune[] = [];
+  comuniDaCap: Comune[] = [];
+  isOne:boolean = true;
 
 
   bulletin: string | null = "senza bollettino";
@@ -63,6 +77,85 @@ export class InvioMultiploRaccomandata2Component {
     stato_ar: new FormControl('')
   });
 
+
+   getComuni(){
+     this.globalServices.getComuni()
+       .subscribe((data: Comune[]) => {
+         if (!data || data.length === 0) {
+           console.log('Nessun dato disponibile');
+         } 
+         else 
+         {
+           this.comuni = data;
+           this.setListOfComuni();
+         }
+       });
+   }
+ 
+   setProvince(event: Event){
+     const v = (event.target as HTMLSelectElement).value;
+     const comune = this.comuni.filter(comune =>
+           comune.denominazione_ita.startsWith(v!)
+     );
+ 
+     this.form.patchValue({
+       provincia_ar: comune[0].sigla_provincia
+     });
+ 
+   }
+ 
+   setListOfComuni(){
+ 
+     const capsUnici = Array.from(new Set(this.comuni.map(c => c.cap)));
+ 
+     this.filteredCAPs = this.form.get('cap_ar')!.valueChanges.pipe(
+       startWith(''),
+       map(value => value ?? ''), 
+       filter((value: string | null): value is string => !!value && value.length >= 2),
+       map(value => this._filterCAP(value, capsUnici))
+     );
+
+    console.log("attivo");
+
+   }
+ 
+   private _filterCAP(value: string, caps: string[]): string[] {
+     const filterValue = value.trim();
+     return caps.filter(cap => cap.startsWith(filterValue));
+   }
+ 
+   setInputCityProvince(event: MatAutocompleteSelectedEvent){
+      const v = event.option.value;
+      if(v){
+ 
+       this.form.patchValue({
+         provincia_ar: ""
+       });
+ 
+       const comune = this.comuni.filter(comune =>
+           comune.cap.startsWith(v!)
+       );
+       
+       if(comune.length == 1)
+       {
+         this.isOne = true;
+ 
+         this.form.patchValue({
+           citta_ar: comune[0].denominazione_ita,
+           provincia_ar: comune[0].sigla_provincia,
+           stato_ar: "ITALIA"
+         });
+ 
+       }
+       else
+       {
+         this.isOne = false;
+         this.comuniDaCap = comune;
+         this.form.get('citta_ar')?.setValue('');
+      }
+      }
+   } 
+
   getUserSenders(){
     this.userSendersService.getUserSenders(this.user!.id!)
       .subscribe((data: UserSenders[]) => {
@@ -90,14 +183,14 @@ export class InvioMultiploRaccomandata2Component {
     });
   }
 
-    setFormSenderUser(){
-     this.removeErroMessage();
-     const selectedValue = this.form.get('sel_mittente')?.value;
-      if(selectedValue == "")
-        this.form.get('nominativo_ar')?.setValue('');
-      else
-        this.getUserSender(parseInt(selectedValue!));
-    }
+  setFormSenderUser(){
+    this.removeErroMessage();
+    const selectedValue = this.form.get('sel_mittente')?.value;
+    if(selectedValue == "")
+      this.form.get('nominativo_ar')?.setValue('');
+    else
+      this.getUserSender(parseInt(selectedValue!));
+  }
 
 
   ngOnInit() {
@@ -110,7 +203,7 @@ export class InvioMultiploRaccomandata2Component {
     this.user! = JSON.parse(user!);
     
     this.form.get('tipoRicevuta')?.valueChanges.subscribe(value => {
-      if (value === 'RicevutaRitornoSI') {
+      if (value === 'SI') {
         this.enableARValidators();
       } else {
         this.disableARValidators();
@@ -122,6 +215,7 @@ export class InvioMultiploRaccomandata2Component {
 
     this.getUserLogos();
     this.getUserSenders();
+    this.getComuni();
   }
 
   getUserLogos(){
@@ -185,7 +279,7 @@ onSubmit(): void {
       if (!tipoStampa) errors.push('Stampa');
       if (!tipoRicevuta) errors.push('Ricevuta');
 
-      if (tipoRicevuta === 'RicevutaRitornoSI') {
+      if (tipoRicevuta === 'SI') {
         const requiredARFields = [
           { key: 'nominativo_ar', label: 'Nominativo AR' },
           { key: 'indirizzo_ar', label: 'Indirizzo AR' },
@@ -253,7 +347,7 @@ onSubmit(): void {
 
       // Se tutti sono presenti, vai alla pagina
       this.router.navigate(['/invioMultiploRaccomandata3']);
-    }
+  }
 
     removeErroMessage(): void {
       this.alertMessage = false;
