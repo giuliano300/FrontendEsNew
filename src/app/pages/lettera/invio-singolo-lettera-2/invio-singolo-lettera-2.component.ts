@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { bulletin } from '../../../../main';
+import { bulletin, secretKey } from '../../../../main';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { Users } from '../../../interfaces/Users';
 import { UserLogosService } from '../../../services/user-logos.service';
-
+import { FormStorageService } from '../../../services/form-storage.service';
+import * as CryptoJS from 'crypto-js';
 
 
 @Component({
@@ -19,7 +20,10 @@ import { UserLogosService } from '../../../services/user-logos.service';
 export class InvioSingoloLettera2Component {
 
   bulletin: string | null = "senza bollettino";
-  constructor(private router: Router,  private userLogosService: UserLogosService) {}
+  constructor(private router: Router,  
+    private userLogosService: UserLogosService,
+    private formStorage: FormStorageService
+  ) {}
   alertMessage = false;
   alertText = '';
 
@@ -85,6 +89,23 @@ onSubmit(): void {
     this.alertMessage = true;
     return;
   }
+
+    const datiForm = {
+      selLogo: this.form.value.sel_logo,
+      tipoFormato: this.form.value.tipoFormato,
+      tipoColore: this.form.value.tipoColore,
+      tipoStampa: this.form.value.tipoStampa,
+      tipoRicevuta: false,
+      tipoinvio: localStorage.getItem('sendType'),
+      prodotto: localStorage.getItem('productType'),
+      bollettino:  localStorage.getItem('bulletin'),
+      tipoLettera: this.form.value.tipoLettera
+    };
+
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();
+
+    this.formStorage.saveForm('step2', encrypted);
+
 
   // Se tutti sono presenti, vai alla pagina
   this.router.navigate(['/invioSingoloLettera3']);

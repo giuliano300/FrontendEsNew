@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { productType, sendType } from '../../../main';
+import { ProductTypes } from '../../interfaces/EnumTypes';
 
 
 @Component({
@@ -36,15 +36,15 @@ export class SelectionSingleMultipleComponent {
       const tipoInvio = this.form.value.tipoInvio;
 
       switch(this.tipoProdotto){
-        case productType.raccomandata:
+        case ProductTypes.ROL:
           this.navigationSingolo = '/invioSingoloRaccomandata';
           this.navigationMultiplo = '/invioMultiploRaccomandata';
           break;
-          case productType.lettera:
+          case ProductTypes.LOL:
             this.navigationSingolo = '/invioSingoloLettera';
             this.navigationMultiplo = '/invioMultiploLettera';
             break;
-            case productType.agol:
+            case ProductTypes.AGOL:
               this.navigationSingolo = '/invioSingoloAgol';
               this.navigationMultiplo = '/invioMultiploAgol';
               break;

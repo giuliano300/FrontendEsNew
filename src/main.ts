@@ -17,14 +17,6 @@ export const bulletinFields = [
   'causale', 'anno', 'iban'
 ];
 
-export enum productType{
-  raccomandata = 1,
-  lettera = 2,
-  telegramma = 3,
-  agol = 4,
-  visura = 5
-}
-
 export enum sendType{
   singolo = 1,
   mutiplo = 2

@@ -13,10 +13,10 @@
         <div class="col-md-12">
             <div class="step-bar">
                 <ul>
-                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 11%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 18%;">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 17%;">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">Configura {{ productName }}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 9%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 11%;">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
@@ -102,7 +102,7 @@
 
 
             <div class="group-button">
-                <a routerLink="/invioSingoloRaccomandata5">INDIETRO</a>
+                <a [routerLink]="backLink">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>
 

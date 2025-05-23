@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { bulletin, productType, sendType } from '../../../main';
+import { sendType } from '../../../main';
+import { ProductTypes } from '../../interfaces/EnumTypes';
 
 @Component({
   selector: 'app-selection-with-without-bulletin',
@@ -38,7 +39,7 @@ export class SelectionWithWithoutBulletinComponent {
       const tipoProdotto = parseInt(localStorage.getItem("productType")!);
 
       switch(tipoProdotto){
-        case productType.raccomandata:
+        case ProductTypes.ROL:
           switch(this.tipoInvio){
             case sendType.mutiplo:
               this.navigation = "/invioMultiploRaccomandata2";
@@ -51,7 +52,7 @@ export class SelectionWithWithoutBulletinComponent {
               break;
           }
           break;
-          case productType.lettera:
+          case ProductTypes.LOL:
             switch(this.tipoInvio){
               case sendType.mutiplo:
                 this.navigation = "/invioMultiploLettera2";
@@ -64,7 +65,7 @@ export class SelectionWithWithoutBulletinComponent {
                 break;
             }
             break;
-            case productType.agol:
+            case ProductTypes.AGOL:
               switch(this.tipoInvio){
                 case sendType.mutiplo:
                   this.navigation = "/invioMultiploAgol2";

@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectionSingleMultipleComponent } from '../../../component/selection-single-multiple/selection-single-multiple.component';
-import { productType } from '../../../../main';
-
+import { ProductTypes } from '../../../interfaces/EnumTypes';
 
 @Component({
   selector: 'app-tipo-spedizione',
@@ -14,7 +13,7 @@ import { productType } from '../../../../main';
 export class TipoSpedizioneRaccomandataComponent {
   constructor() {}
 
-  tipoProdotto: number = productType.raccomandata; 
+  tipoProdotto: number = ProductTypes.ROL; 
 
   ngOnInit(): void{
     localStorage.setItem('productType', this.tipoProdotto!.toString());

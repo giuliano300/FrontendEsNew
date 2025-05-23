@@ -56,6 +56,8 @@ export class CalcoloPreventivoComponent {
   totale: string = "0";
   ricevutaRitorno: string | null = null;
 
+  bulletinw:string = "con bollettino";
+
   calcolaPreventivo(){
     Promise.all([
       this.formStorage.getForm('invii-totali'),
@@ -93,10 +95,11 @@ export class CalcoloPreventivoComponent {
         this.router.navigate(['/']);
 
       const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-
-      
+     
       if(datiDecriptati.bollettino == HaveBulletin.si)
         this.bulletin = true;
+      else
+        this.bulletinw = "senza bollettino";
 
       this.productType = datiDecriptati.prodotto;
       this.shippingTypes = datiDecriptati.tipoinvio;
@@ -120,6 +123,15 @@ export class CalcoloPreventivoComponent {
             }
             else
               this.routerLink = "/invioMultiploRaccomandata4";           
+            break;
+          case ProductTypes.LOL: 
+            this.productName = "lettera";
+            if(datiDecriptati.tipoinvio == ShippingTypes.singola){
+              this.routerLink = "/invioSingoloLettera5";
+            }
+            else
+              this.routerLink = "/invioMultiploLettera4";      
+          break;     
       }
     });
   }

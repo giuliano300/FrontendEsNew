@@ -32,6 +32,8 @@ export class CompilaBollettinoComponent {
   productName: string | null = null;
   productType: number | null = null;
   recipients: Recipients[] | null = null;
+
+  backLink: string | null = null;
   
   form = new FormGroup({
     conto_corrente: new FormControl('', [Validators.required]),
@@ -63,11 +65,13 @@ export class CompilaBollettinoComponent {
           case ProductTypes.ROL: 
           case ProductTypes.MOL: 
             this.productName = "raccomandata";
+            this.backLink = "/invioSingoloRaccomandata5";
             break;
           case ProductTypes.LOL: 
           case ProductTypes.COL: 
             this.productName = "lettera";
-            break;
+            this.backLink = "/invioSingoloLettera5";
+           break;
       }
 
     })

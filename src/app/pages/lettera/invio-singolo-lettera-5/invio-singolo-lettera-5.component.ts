@@ -1,71 +1,35 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
-import { HttpClient, HttpClientModule, HttpEvent, HttpEventType } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
+import { FormStorageService } from '../../../services/form-storage.service';
+import { secretKey } from '../../../../main';
+import * as CryptoJS from 'crypto-js';
+import { UploadFileComponent } from '../../../component/upload-file/upload-file/upload-file.component';
+
 
 @Component({
   selector: 'app-invio-singolo-lettera-5',
-  imports: [CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink],
+  standalone: true,
+  imports: [UploadFileComponent],
   templateUrl: './invio-singolo-lettera-5.component.html',
   styleUrl: './invio-singolo-lettera-5.component.scss'
 })
 export class InvioSingoloLettera5Component {
-
-  form: FormGroup;
-  uploadProgress: number | null = null;
-  uploadCompleted: boolean = false;
-
+  
+  bulletin: string = "con bollettino";
+  
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private formStorage: FormStorageService
   ) {
-    this.form = this.fb.group({
-      // eventuali altri controlli
+    
+  }
+  ngOnInit(): void {
+    Promise.all([
+      this.formStorage.getForm('step2')
+    ]).then(([step1]) => {
+      const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
+      if(datiDecriptati.bollettino == 0)
+        this.bulletin = "senza bolletino";
+
     });
-  }
-
-  onFileDrop(files: NgxFileDropEntry[]) {
-    for (const droppedFile of files) {
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-
-        fileEntry.file((file: File) => {
-          const formData = new FormData();
-          formData.append('file', file, droppedFile.relativePath);
-
-          this.uploadProgress = 0;
-          this.uploadCompleted = false;
-
-          this.http.post('/api/upload', formData, {
-            reportProgress: true,
-            observe: 'events'
-          }).subscribe((event: HttpEvent<any>) => {
-            if (event.type === HttpEventType.UploadProgress && event.total) {
-              this.uploadProgress = Math.round((event.loaded / event.total) * 100);
-            } else if (event.type === HttpEventType.Response) {
-              console.log('Upload completato', event.body);
-              this.uploadProgress = 100;
-              this.uploadCompleted = true;
-            }
-          });
-        });
-      }
-    }
-  }
-
-  onSubmit() {
-    //if (!this.uploadCompleted) {
-    //  alert('Devi attendere il completamento del caricamento del file prima di proseguire.');
-    //  return;
-    //}
-
-    if (this.form.valid) {
-      this.router.navigate(['/compilaBollettino']);
-    }
   }
 
 }
