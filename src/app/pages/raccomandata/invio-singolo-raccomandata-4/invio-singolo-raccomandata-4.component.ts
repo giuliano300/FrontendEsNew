@@ -19,7 +19,8 @@ import * as CryptoJS from 'crypto-js';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { secretKey } from '../../../../main';
+import { productType, secretKey } from '../../../../main';
+import { FncUtils } from '../../../fncUtils/fncUtils';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-4',
@@ -63,8 +64,8 @@ export class InvioSingoloRaccomandata4Component {
     indirizzo: new FormControl('', [Validators.required]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
     provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    comp_nominativo: new FormControl('', [Validators.required]),
-    comp_indirizzo: new FormControl('', [Validators.required]),
+    comp_nominativo: new FormControl(''),
+    comp_indirizzo: new FormControl(''),
     citta: new FormControl('', [Validators.required]),
     stato: new FormControl('', [Validators.required]),
     email: new FormControl('')
@@ -211,9 +212,7 @@ export class InvioSingoloRaccomandata4Component {
     removeFields(){
     const fieldsToClear = [
         'nominativo',
-        'comp_nominativo',
         'indirizzo',
-        'comp_indirizzo',
         'cap',
         'citta',
         'provincia',
@@ -248,11 +247,16 @@ export class InvioSingoloRaccomandata4Component {
       city: this.form.value.citta,
       province: this.form.value.provincia,
       state: this.form.value.stato,
-      email: this.form.value.email
+      email: this.form.value.email,
+      fileName: null,
+      tempGuid: FncUtils.generateGuid()
     };
+
+    const destinatari = [];
+    destinatari.push(destinatario);
   
-    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(destinatario), secretKey).toString();
-    this.formStorage.saveForm('step4-raccomandata-singola-destinatario', encrypted);
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(destinatari), secretKey).toString();
+    this.formStorage.saveForm('destinatari', encrypted);
   
     if (this.form.valid) {
       this.router.navigate(['/invioSingoloRaccomandata5']);

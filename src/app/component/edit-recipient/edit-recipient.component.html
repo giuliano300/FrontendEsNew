@@ -1,0 +1,178 @@
+<div class="modal-header">
+  <h4 class="modal-title flex-start">Modifica il nominativo</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmitPopUpForm()">
+  <div class="generic-form form-popup">
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <label class="flex-start">
+          RAGIONE SOCIALE
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertName" placement="right"></i>
+        </label>
+        <input type="text" formControlName="rag_soc" />
+      </div>
+      <div class="col-md-6">
+        <label class="flex-start">
+          COMPLETAMENTO NOMINATIVO
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertComplName" placement="right"></i>
+        </label>
+        <input type="text" formControlName="compl_nom" />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label class="flex-start">
+          INDIRIZZO
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertAddress" placement="right"></i>
+        </label>
+        <input type="text" formControlName="indirizzo" />
+      </div>
+      <div class="col-md-6">
+        <label class="flex-start">
+          COMPLETAMENTO INDIRIZZO
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertComplAddress" placement="right"></i>
+        </label>
+        <input type="text" formControlName="comp_indirizzo" />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="flex-start">CAP</label>
+        <input
+          type="text"
+          formControlName="cap"
+          maxlength="5"
+          [matAutocomplete]="autoCap"
+          class="custom-input"
+        />
+        <mat-autocomplete #autoCap="matAutocomplete" (optionSelected)="setInputCityProvince($event)">
+          <mat-option *ngFor="let cap of filteredCAPs | async" [value]="cap">
+            {{ cap }}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div class="col-md-4">
+        <label class="flex-start">CITTA'</label>
+        <input *ngIf="isOne" type="text" formControlName="citta" readonly class="readonly" />
+        <select *ngIf="!isOne" formControlName="citta" (change)="setProvince($event)" class="city">
+          <option value="">-- Seleziona una città --</option>
+          <option *ngFor="let option of comuniDaCap" [value]="option.denominazione_ita">
+            {{ option.denominazione_ita }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="flex-start">
+          PROVINCIA
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertProvince" placement="right"></i>
+        </label>
+        <input type="text" formControlName="provincia" maxlength="2" readonly class="readonly" />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label class="flex-start">
+          STATO
+          <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertState" placement="right"></i>
+        </label>
+        <input type="text" formControlName="stato" readonly class="readonly" />
+      </div>
+      <div class="col-md-6">
+        <label class="flex-start">FILE</label>
+        <input type="text" formControlName="file" />
+      </div>
+    </div>
+    
+    <div [hidden]="!haveBulletin">
+      <div class="row mt-3 mb-4">
+        <h5 class="title flex-start">Campi bollettino</h5>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label class="flex-start">NUMERO CONTO CORRENTE</label>
+          <input type="text" formControlName="conto_corrente" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-6">
+          <label class="flex-start">
+            ESEGUITO DA NOMINATIVO
+            <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertBollNominativo" placement="right"></i>
+          </label>
+          <input type="text" formControlName="eseguito_nominativo" *ngIf="haveBulletin" />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label class="flex-start">INTESTATO A</label>
+          <input type="text" formControlName="intestatario" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-6">
+          <label class="flex-start">
+            ESEGUITO DA INDIRIZZO
+            <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertBollIndirizzo" placement="right"></i>
+          </label>
+          <input type="text" formControlName="eseguito_indirizzo" *ngIf="haveBulletin" />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="flex-start">IMPORTO EURO</label>
+          <input type="number" formControlName="importo" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-4">
+          <label class="flex-start">
+            ESEGUITO DA LOCALITA'
+            <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertBollLocalita" placement="right"></i>
+          </label>
+          <input type="text" formControlName="eseguito_localita" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-4">
+          <label class="flex-start">CODICE CLIENTE</label>
+          <input type="text" formControlName="codice_cliente" *ngIf="haveBulletin" />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="flex-start">ANNO DI RIFERIMENTO</label>
+          <input type="number" formControlName="annoDiRiferimento" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-4">
+          <label class="flex-start">
+            ESEGUITO DA CAP
+            <i class='bx bxs-info-square color-blue' [ngbTooltip]="alertBollCap" placement="right"></i>
+          </label>
+          <input type="text" formControlName="eseguitoDaCap" *ngIf="haveBulletin" />
+        </div>
+        <div class="col-md-4">
+          <label class="flex-start">IBAN</label>
+          <input type="text" formControlName="iban" *ngIf="haveBulletin" />
+        </div>
+      </div>
+    </div>
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <label class="flex-start">CAUSALE</label>
+          <input type="text" formControlName="causale" *ngIf="haveBulletin" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <input type="submit" class="button-save" value="SALVA" />
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-lg-12 text-center">
+        <div *ngIf="alertMessage" class="alert-message">
+          <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span>
+        </div>
+      </div>
+    </div>
+
+  <input type="hidden" formControlName="tempGuid" />
+</form>

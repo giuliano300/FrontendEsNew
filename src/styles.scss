@@ -1,5 +1,6 @@
 @use 'variables' as *;
 @use '@angular/material' as mat;
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
 
 @import "bootstrap/dist/css/bootstrap.min.css";
@@ -89,6 +90,35 @@ small{
     color: $valid-color;
 }
 
+
+.no-upload, .preloader{
+    width: 100%;
+    text-align: center;
+    margin-top: 100px;
+
+    i{
+        font-size: 40px;
+        color: $primary-color;
+    }
+}
+
+.error-upload{
+    font-size: 12px;
+}
+
+.liError{
+    background-color: $error-color;
+    color: $white-color;
+    cursor: pointer;
+}
+
+.cdk-overlay-container {
+  z-index: 10000 !important;
+}
+
+.selected{
+    color: #567FC5;
+}
 
 /* ! Helpers
 ---------------------------------------------------------*/
@@ -763,9 +793,14 @@ small{
         
     }
 
+    .form-popup{
+        margin-bottom: 10px!important;
+    }
+
     .generic-form{
         width: 100%;
-        margin-bottom: 60px;
+        margin-bottom: 60px;    
+        padding: 0 15px;
 
         h3{
             font-size: 1.1rem;
@@ -864,6 +899,12 @@ small{
             padding: 0 10px;
             font-size: 0.9rem;
             outline-color: $grey-middle;
+        }
+
+        .title{
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 15px;
+            font-size: 18px;
         }
     }
 
@@ -1023,6 +1064,7 @@ small{
                 margin-bottom: 0px;
                 padding: 0 10px;
                 font-size: 0.8rem;
+                cursor: pointer;
 
                 span:nth-child(1){
                     width: 40%;
@@ -1079,6 +1121,11 @@ small{
             align-items: center;
             justify-content: start;
             font-size: 0.9rem;
+            cursor: pointer!important;
+
+            &:hover{
+                color: #567FC5;
+            }
 
             img{
                 width: 26px;

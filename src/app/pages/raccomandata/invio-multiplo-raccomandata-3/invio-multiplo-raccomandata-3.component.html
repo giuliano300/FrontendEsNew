@@ -13,13 +13,12 @@
                 <ul>
                     <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 9%;">Invio multiplo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 17%;">Invio multiplo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">Invio multiplo {{bulletinText}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 15%;">Configura raccomandata<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
         </div>
     </div>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <div class="generic-form">
         <div class="row">
@@ -29,9 +28,9 @@
                     <!-- AREA DRAG & DROP -->
                     <ngx-file-drop (onFileDrop)="onFileDrop($event)">
                         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                        <div class="drop-zone" (click)="openFileSelector()">
-                            Trascina qui il file o clicca per selezionarlo
-                        </div>
+                            <div class="drop-zone" (click)="openFileSelector()">
+                                Trascina qui il file o clicca per selezionarlo
+                            </div>
                         </ng-template>
                     </ngx-file-drop>
     
@@ -46,7 +45,12 @@
                         </div>
                     </div>
                 </div>
-                <a class="download-csv" href="#"><img src="/assets/img/icn-csv.png" alt="">Scarica il file di esempio in formato .csv</a>
+                <a class="download-csv" [hidden]="bulletin" href="/assets/file-demo/file-demo-senza-bollettino.csv" target="_blank"><img src="/assets/img/icn-csv.png" alt=""> il file di esempio in formato .csv</a>
+                <a class="download-csv" [hidden]="!bulletin" href="/assets/file-demo/file-demo-con-bollettino.csv" target="_blank"><img src="/assets/img/icn-csv.png" alt=""> il file di esempio in formato .csv</a>
+
+                <div *ngIf="errorMessage" class="error mt-3">
+                    {{ errorMessage }}
+                </div>                    
                 
             </div>
             <div class="col-md-7">
@@ -54,50 +58,29 @@
 
                 <div class="result-upload">
                     <div class="result-upload__top">
-                        <section><img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>24</strong></section>
-                        <section><img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>20</strong></section>
-                        <section><img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>4</strong></section>
+                        <section (click)="getCheckRecipients(null)" [ngClass]="valid === null ? 'selected' : ''">
+                            <img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>{{nominativiCaricati}}</strong>
+                        </section>
+                        <section (click)="getCheckRecipients(true)" [ngClass]="valid ? 'selected' : ''">
+                            <img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>{{nominativiValidi}}</strong>
+                        </section>
+                        <section (click)="getCheckRecipients(false)" [ngClass]="valid === false ? 'selected' : ''">
+                            <img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>{{nominativiInErrore}}</strong>
+                        </section>
                     </div>
                     <ul>
                         <li>
                             <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
                         </li>
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
+                        <li *ngFor="let r of checkRecipient" [ngClass]="r.valido ? '' : 'liError'" (click)="openModalWithData(r)">
+                            <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span class="error-upload">{{r.errore}}</span>
                         </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
-                        <li>
-                            <span>Mario Rossi</span><span>SI</span><span></span>
-                        </li>
-
+                        <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
+                            nessun nominativo presente
+                        </div>
+                        <div *ngIf="checking" class="preloader">
+                           <i class="fas fa-spinner fa-spin"></i>
+                        </div>
                     </ul>
                 </div>
 
@@ -105,7 +88,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" [hidden]="notUploaded">
         <div class="col-md-12">
             <div class="msg-upload success">
                 <i class='bx bx-check'></i>
@@ -117,12 +100,10 @@
         </div>
     </div>
 
-    <div class="group-button">
-        <a routerLink="/invioMultiploRaccomandata2">INDIETRO</a>
-        <input type="submit" value="AVANTI" />
-    </div>
-
+    <form [formGroup]="formFinale" (ngSubmit)="onSubmit()">
+        <div class="group-button">
+            <a routerLink="/invioMultiploRaccomandata2">INDIETRO</a>
+            <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
+        </div>
     </form>
-
-
 </div>

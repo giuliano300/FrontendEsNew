@@ -77,12 +77,16 @@
                 </ul>
             </div>
             <div class="col-md-4"></div>
+            <div *ngIf="errorMessage" class="error text-center col-md-12 mt-3">
+                {{errorMessage}}
+            </div>
         </div>
-    </div>
+   </div>
 
     <div class="group-button">
         <a [routerLink]="routerLink">INDIETRO</a>
-        <a (click)="sendShipping()" class="bg-color-green color-white">SPEDISCI</a>
+        <a (click)="sendShipping()" [hidden]="send" class="bg-color-green color-white">SPEDISCI</a>
+        <a [hidden]="!send" class="bg-color-green color-white"><i class="fas fa-spinner fa-spin"></i></a>
     </div>
 
 

@@ -19,7 +19,6 @@
             </div>
         </div>
     </div>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <div class="generic-form">
         <div class="row">
@@ -105,123 +104,120 @@
         </div>
     </div>
     
-<ng-template #editname>
-  <div class="modal-header">
-    <h4 class="modal-title flex-start">
-      Modifica il nominativo
-    </h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
-  </div>
-  <div class="generic-form">
-         <div class="row mt-4">
-            <div class="col-md-4">
-                <label class="flex-start">
-                    RAGIONE SOCIALE
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right" ></i>
-                </label>
-                <input type="text" formControlName="rag_soc" value="EWT"/>
-            </div>
-            <div class="col-md-4">
-                <label class="flex-start">
-                    NOME
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="nome" value="Domenici" />
-            </div>
-            <div class="col-md-4">
-                <label class="flex-start">
-                    COGNOME
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="cognome" value="Carlini" />
-            </div>
+    <ng-template #editname>
+        <div class="modal-header">
+            <h4 class="modal-title flex-start">
+            Modifica il nominativo
+            </h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
         </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <label class="flex-start">
-                    COMPLETAMENTO NOMINATIVO
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="compl_nom" value="CEO" />
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="generic-form">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            RAGIONE SOCIALE
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right" ></i>
+                        </label>
+                        <input type="text" formControlName="rag_soc" value="EWT"/>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            NOME
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="nome" value="Domenici" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            COGNOME
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="cognome" value="Carlini" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            COMPLETAMENTO NOMINATIVO
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="compl_nom" value="CEO" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            CODICE FISCALE
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="cod_fisc" value="DMCCRL29A16F666X" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            INDIRIZZO
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="compl_nom" value="VIA SCAFA, 30" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            COMPLETAMENTO INDIRIZZO
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="comp_indirizzo" value="NEL NULLA" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            CAP
+                        </label>
+                        <input type="text" formControlName="cap" value="81100" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            CITTA'
+                        </label>
+                        <input type="text" formControlName="citta"  value="CAIAZZO"/>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="flex-start">
+                            PROVINCIA
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="provincia" maxlength="2" value="CE" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            STATO
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="stato" value="ITALIA" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="flex-start">
+                            FILE
+                        </label>
+                        <input type="text" formControlName="file" value="Preventivo29/2025.pdf" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input type="submit" class="button-save" value="SALVA" />
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label class="flex-start">
-                    CODICE FISCALE
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="cod_fisc" value="DMCCRL29A16F666X" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <label class="flex-start">
-                    INDIRIZZO
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="compl_nom" value="VIA SCAFA, 30" />
-            </div>
-            <div class="col-md-6">
-                <label class="flex-start">
-                    COMPLETAMENTO INDIRIZZO
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="comp_indirizzo" value="NEL NULLA" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <label class="flex-start">
-                    CAP
-                </label>
-                <input type="text" formControlName="cap" value="81100" />
-            </div>
-            <div class="col-md-4">
-                <label class="flex-start">
-                    CITTA'
-                </label>
-                <input type="text" formControlName="citta"  value="CAIAZZO"/>
-            </div>
-            <div class="col-md-4">
-                <label class="flex-start">
-                    PROVINCIA
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="provincia" maxlength="2" value="CE" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <label class="flex-start">
-                    STATO
-                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
-                </label>
-                <input type="text" formControlName="stato" value="ITALIA" />
-            </div>
-            <div class="col-md-6">
-                <label class="flex-start">
-                    FILE
-                </label>
-                <input type="text" formControlName="file" value="Preventivo29/2025.pdf" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <input type="submit" class="button-save" value="SALVA" />
-            </div>
-            <div class="col-md-4"></div>
-        </div>
-  </div>
-</ng-template>
-
-
+        </form>
+    </ng-template>
 
     <div class="group-button">
         <a routerLink="/invioMultiploLettera2">INDIETRO</a>
         <input type="submit" value="AVANTI" />
     </div>
-
-    </form>
-
 
 </div>

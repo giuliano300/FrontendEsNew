@@ -9,6 +9,13 @@ import { importProvidersFrom } from '@angular/core';
 
 export const API_URL = "http://localhost:5105/Api/";
 export const secretKey = 'easysender2025!EWT';
+export const maxUploadLimit = 1200;
+
+export const bulletinFields = [
+  'numerocontocorrente', 'intestatoa', 'codicecliente', 'importoeuro',
+  'eseguitodanominativo', 'eseguitodaindirizzo', 'eseguitodacap', 'eseguitodalocalita',
+  'causale', 'anno', 'iban'
+];
 
 export enum productType{
   raccomandata = 1,
