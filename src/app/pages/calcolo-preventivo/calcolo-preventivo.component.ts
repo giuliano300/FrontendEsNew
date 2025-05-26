@@ -48,6 +48,9 @@ export class CalcoloPreventivoComponent {
   send:boolean = false;
   errorMessage: string = "";
   tipoLettera?: string | null = null;
+  tipoInvio: string = "";
+  tipoNotificante?: number | null = null;
+  nomeNotificante: string = "";
 
   //VARIABILI PAGINA
   Inviitotali: string = "0";
@@ -55,6 +58,7 @@ export class CalcoloPreventivoComponent {
   Iva: string = "0";
   totale: string = "0";
   ricevutaRitorno: string | null = null;
+  ifIsCalcolable: boolean = false;
 
   bulletinw:string = "con bollettino";
 
@@ -74,9 +78,16 @@ export class CalcoloPreventivoComponent {
         tots.totalPrice += p.totalPrice;
       }      
       this.totale = FncUtils.formatPrice(tots.totalPrice);
-      this.ImportoNetto = FncUtils.formatPrice(tots.vatPrice);
+      this.Iva = FncUtils.formatPrice(tots.vatPrice);
       this.ImportoNetto = FncUtils.formatPrice(tots.price);
     });
+  }
+
+  havePrice(): boolean{
+    if(this.productType == ProductTypes.LOL || this.productType == ProductTypes.ROL || this.productType == ProductTypes.TOL)
+      this.ifIsCalcolable = true;
+
+    return this.ifIsCalcolable;
   }
 
   ngOnInit(): void {
@@ -112,25 +123,49 @@ export class CalcoloPreventivoComponent {
         this.format = 1;
 
       this.tipoLettera = datiDecriptati.tipoLettera;
+      this.tipoNotificante = datiDecriptati.tipoNotificante;
+      this.nomeNotificante = datiDecriptati.nomeNotificante;
 
-      this.calcolaPreventivo();
-
+      if(this.havePrice!)
+        this.calcolaPreventivo();
+      
       switch(parseInt(datiDecriptati.prodotto)){
           case ProductTypes.ROL: 
+          case ProductTypes.MOL: 
             this.productName = "raccomandata";
             if(datiDecriptati.tipoinvio == ShippingTypes.singola){
               this.routerLink = "/invioSingoloRaccomandata5";
+              this.tipoInvio = "singolo";
             }
-            else
+            else{
               this.routerLink = "/invioMultiploRaccomandata4";           
+              this.tipoInvio = "multiplo";
+            }
             break;
           case ProductTypes.LOL: 
+          case ProductTypes.COL: 
             this.productName = "lettera";
             if(datiDecriptati.tipoinvio == ShippingTypes.singola){
               this.routerLink = "/invioSingoloLettera5";
+              this.tipoInvio = "singolo";
             }
             else
+            {
               this.routerLink = "/invioMultiploLettera4";      
+              this.tipoInvio = "multiplo";
+            }
+          break;     
+          case ProductTypes.AGOL: 
+            this.productName = "agol";
+            if(datiDecriptati.tipoinvio == ShippingTypes.singola){
+              this.routerLink = "/invioSingoloAgol5";
+              this.tipoInvio = "singolo";
+            }
+            else
+            {
+              this.routerLink = "/invioMultiploAgol4";      
+              this.tipoInvio = "multiplo";
+            }
           break;     
       }
     });
@@ -188,6 +223,9 @@ export class CalcoloPreventivoComponent {
           Recipient.productType = this.productType!;
           Recipient.logoId = this.logoId;
           Recipient.format = this.format;
+          Recipient.posteType = this.tipoLettera;
+          Recipient.tipologiaNotificante = this.tipoNotificante;
+          Recipient.valoreNotificante = this.nomeNotificante;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
           Recipient.frontBack = (this.tipoStampa == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);
@@ -231,8 +269,8 @@ export class CalcoloPreventivoComponent {
         senderAR: senderAR,
       };
 
-      //var test = JSON.stringify(o);
-      //console.log(test);
+      var test = JSON.stringify(o);
+      console.log(test);
       this.operationService.setOperation(o)
       .subscribe((data: Operations) => {
         if (!data) {

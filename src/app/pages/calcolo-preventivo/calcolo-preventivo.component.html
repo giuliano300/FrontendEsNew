@@ -13,8 +13,8 @@
             <div class="step-bar" [hidden]="!bulletin">
                 <ul>
                     <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 10%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 18%;">Invio singolo {{bulletinw}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;">Invio {{tipoInvio}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 18%;">Invio {{tipoInvio}} {{bulletinw}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 16%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
@@ -26,9 +26,9 @@
             <div class="step-bar no-bollettino" [hidden]="bulletin">
                 <ul>
                     <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 11%;">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 20%;">Invio singolo {{bulletinw}}<i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 18%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 11%;">Invio {{tipoInvio}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 20%;">Invio {{tipoInvio}} {{bulletinw}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 14%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 12%;">Carica file .pdf<i class='bx bxs-right-arrow-alt'></i></li>
@@ -65,13 +65,16 @@
                     <li [hidden]="productType != 1">
                         <span>Ricevuta di ritorno</span> <strong>{{ricevutaRitorno}}</strong>
                     </li>
-                    <li>
+                    <li [hidden]="ifIsCalcolable">
+                        <span>Importo</span> <span class="error">Calcolato sulla base del listino associato</span>
+                    </li>
+                    <li [hidden]="!ifIsCalcolable">
                         <span>Importo netto</span> <strong>€ {{ImportoNetto}}</strong>
                     </li>
-                    <li>
+                    <li [hidden]="!ifIsCalcolable">
                         <span>Iva 22%</span> <strong>€ {{Iva}}</strong>
                     </li>
-                    <li>
+                    <li [hidden]="!ifIsCalcolable">
                         <span>TOTALE</span> <strong class="color-orange">€ {{totale}}</strong>
                     </li>
                 </ul>

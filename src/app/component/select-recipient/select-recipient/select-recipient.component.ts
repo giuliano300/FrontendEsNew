@@ -56,6 +56,7 @@ export class SelectRecipientComponent {
 
   isOne: boolean = true;
   ifItalia: boolean = true;
+  isNotAgol: boolean = true;
 
   backLink: string | null = null;
   ffwLink: string | null = null;
@@ -72,7 +73,8 @@ export class SelectRecipientComponent {
     citta: new FormControl('', [Validators.required]),
     stato: new FormControl('', [Validators.required]),
     email: new FormControl(''),
-    addRecipient: new FormControl('')
+    addRecipient: new FormControl(''),
+    pec: new FormControl('')
   });
 
   onStatoChange(event: Event) {
@@ -103,7 +105,8 @@ export class SelectRecipientComponent {
         citta: u.city,
         provincia: u.province,
         stato: u.state,
-        email: u.email
+        email: u.email,
+        pec: u.pec
       });
   }
 
@@ -221,7 +224,8 @@ export class SelectRecipientComponent {
         'citta',
         'provincia',
         'stato',
-        'email'
+        'email',
+        'pec'
     ];
 
     const emptyValues: { [key: string]: string } = {};
@@ -246,6 +250,11 @@ export class SelectRecipientComponent {
         case ProductTypes.LOL:
           this.backLink = "/invioSingoloLettera3";
           this.ffwLink = "/invioSingoloLettera5";
+          break;
+        case ProductTypes.AGOL:
+          this.backLink = "/invioSingoloAgol3";
+          this.ffwLink = "/invioSingoloAgol5";
+          this.isNotAgol = false;
           break;
       }
 
@@ -272,7 +281,8 @@ export class SelectRecipientComponent {
       fileName: null,
       tempGuid: FncUtils.generateGuid(),
       userId: this.user!.id!,
-      userParentId: this.user!.parentId!
+      userParentId: this.user!.parentId!,
+      pec: this.form.value.pec!
     };
 
     const destinatari = [];

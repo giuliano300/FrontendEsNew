@@ -191,33 +191,34 @@ export class EditRecipientComponent {
  
    setInputCityProvince(event: MatAutocompleteSelectedEvent){
       const v = event.option.value;
-      if(v){
+      if(v)
+      {
  
-       this.form.patchValue({
-         provincia: ""
-       });
- 
-       const comune = this.comuni.filter(comune =>
-           comune.cap.startsWith(v!)
-       );
-       
-       if(comune.length == 1)
-       {
-         this.isOne = true;
- 
-         this.form.patchValue({
-           citta: comune[0].denominazione_ita,
-           provincia: comune[0].sigla_provincia,
-           stato: "ITALIA"
-         });
- 
-       }
-       else
-       {
-         this.isOne = false;
-         this.comuniDaCap = comune;
-         this.form.get('citta')?.setValue('');
-      }
+        this.form.patchValue({
+          provincia: ""
+        });
+  
+        const comune = this.comuni.filter(comune =>
+            comune.cap.startsWith(v!)
+        );
+        
+        if(comune.length == 1)
+        {
+          this.isOne = true;
+  
+          this.form.patchValue({
+            citta: comune[0].denominazione_ita,
+            provincia: comune[0].sigla_provincia,
+            stato: "ITALIA"
+          });
+  
+        }
+        else
+        {
+          this.isOne = false;
+          this.comuniDaCap = comune;
+          this.form.get('citta')?.setValue('');
+        }
       }
    } 
 
@@ -225,7 +226,7 @@ export class EditRecipientComponent {
     onSubmitPopUpForm(){
       if (this.form.valid) 
       {
-          Object.assign(this.outPutData.recipient , {
+          const updatedRecipient = {
             businessName: this.form.value.rag_soc,
             complementName: this.form.value.compl_nom,
             fiscalCode: this.form.value.cod_fisc,
@@ -237,7 +238,26 @@ export class EditRecipientComponent {
             state: this.form.value.stato,
             fileName: this.form.value.file,
             tempGuid: this.form.value.tempGuid
-          });
+          };
+
+          const keys = Object.keys(updatedRecipient) as (keyof typeof updatedRecipient)[];
+          const hasChanged = keys.some(key => updatedRecipient[key] !== this.outPutData.recipient[key]);
+
+          if(hasChanged)
+            Object.assign(this.outPutData.recipient , {
+              businessName: this.form.value.rag_soc,
+              complementName: this.form.value.compl_nom,
+              fiscalCode: this.form.value.cod_fisc,
+              complementAddress: this.form.value.comp_indirizzo,
+              address: this.form.value.indirizzo,
+              zipCode: this.form.value.cap,
+              city: this.form.value.citta,
+              province: this.form.value.provincia,
+              state: this.form.value.stato,
+              fileName: this.form.value.file,
+              tempGuid: this.form.value.tempGuid
+            });
+
           if(this.haveBulletin)
             this.outPutData.bulletin = new Bulletins({
               numeroContoCorrente: this.form.value.conto_corrente,
@@ -267,7 +287,7 @@ export class EditRecipientComponent {
               else
               {
                 this.dataSaved.emit(this.outPutData);
-                this.validChange.emit({valid: check.valido, isChange: !this.formData.isValid});
+                this.validChange.emit({valid: check.valido, isChange: hasChanged});
                 this.activeModal.close();
               }
 

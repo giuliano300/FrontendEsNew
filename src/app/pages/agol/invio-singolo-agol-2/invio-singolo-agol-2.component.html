@@ -80,13 +80,13 @@
                         <li>
                             <label for="FronteRetroSI">
                                 SI
-                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="FronteRetroSI" (change)="removeErroMessage()" />
+                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="SI" (change)="removeErroMessage()" />
                             </label>
                         </li>
                         <li>
                             <label for="FronteRetroNO">
                                 NO
-                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
+                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="NO" (change)="removeErroMessage()" />
                             </label>
                         </li>
                     </ul>
@@ -99,9 +99,9 @@
                         <li>
                             <select formControlName="tipoNotificante" (change)="removeErroMessage()">
                                 <option value="">Seleziona tipologia notificante</option>
-                                <option value="1">Parte istante</option>
+                                <option value="0">Parte istante</option>
                                 <option value="1">Procuratore</option>
-                                <option value="1">Ufficiale giudiziario</option>
+                                <option value="2">Ufficiale giudiziario</option>
                             </select>
                         </li>
                         <li>

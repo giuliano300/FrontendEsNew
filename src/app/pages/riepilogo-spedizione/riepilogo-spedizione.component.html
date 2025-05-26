@@ -13,8 +13,8 @@
             <div class="step-bar" [hidden]="!bulletin">
                 <ul>
                     <li style="width: 10%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 10%;" class="bg-color-green">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 16%;" class="bg-color-green">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 10%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;" class="bg-color-green">Invio {{tipoSpedizione}} con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 14%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;"  class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 8%;"  class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
@@ -27,8 +27,8 @@
             <div class="step-bar no-bollettino" [hidden]="bulletin">
                 <ul>
                     <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 12%;" class="bg-color-green">Invio singolo <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 16%;" class="bg-color-green">Invio singolo con bollettino<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 16%;" class="bg-color-green">Invio {{tipoSpedizione}} senza bollettino<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 15%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;"  class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;"  class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
@@ -65,7 +65,7 @@
     </div>
 
     <div class="group-button">
-        <a routerLink="/riepilogoSpedizione" class="bg-color-blue color-white">VAI ALLO STATO INVII</a>
+        <a [routerLink] = "ffwLink" class="bg-color-blue color-white">VAI ALLO STATO INVII</a>
     </div>
 
 

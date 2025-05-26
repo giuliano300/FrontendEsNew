@@ -1,0 +1,86 @@
+    <div class="generic-form">
+        <div class="row">
+            <div class="col-md-5">
+                <h4>Carica una nuova lista <em>(in formato .csv come da esempio)</em></h4>
+                <div class="file-upload">
+                    <!-- AREA DRAG & DROP -->
+                    <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="drop-zone" (click)="openFileSelector()">
+                                Trascina qui il file o clicca per selezionarlo
+                            </div>
+                        </ng-template>
+                    </ngx-file-drop>
+    
+                    <!-- BARRA DI CARICAMENTO -->
+                    <div class="progress-container" *ngIf="uploadProgress !== null">
+                        <div
+                        class="progress-bar"
+                        [style.width.%]="uploadProgress"
+                        [ngClass]="{ 'completed': uploadProgress === 100 }"
+                        >
+                        {{ uploadProgress }}%
+                        </div>
+                    </div>
+                </div>
+                <a class="download-csv" [hidden]="bulletin" href="/assets/file-demo/file-demo-senza-bollettino.csv" target="_blank"><img src="/assets/img/icn-csv.png" alt=""> il file di esempio in formato .csv</a>
+                <a class="download-csv" [hidden]="!bulletin" href="/assets/file-demo/file-demo-con-bollettino.csv" target="_blank"><img src="/assets/img/icn-csv.png" alt=""> il file di esempio in formato .csv</a>
+
+                <div *ngIf="errorMessage" class="error mt-3">
+                    {{ errorMessage }}
+                </div>                    
+                
+            </div>
+            <div class="col-md-7">
+                <h4>Risultato caricamento <em> (lista destinatari presenti nel file .csv)</em></h4>
+
+                <div class="result-upload">
+                    <div class="result-upload__top">
+                        <section (click)="getCheckRecipients(null)" [ngClass]="valid === null ? 'selected' : ''">
+                            <img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>{{nominativiCaricati}}</strong>
+                        </section>
+                        <section (click)="getCheckRecipients(true)" [ngClass]="valid ? 'selected' : ''">
+                            <img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>{{nominativiValidi}}</strong>
+                        </section>
+                        <section (click)="getCheckRecipients(false)" [ngClass]="valid === false ? 'selected' : ''">
+                            <img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>{{nominativiInErrore}}</strong>
+                        </section>
+                    </div>
+                    <ul>
+                        <li>
+                            <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
+                        </li>
+                        <li *ngFor="let r of checkRecipient" [ngClass]="r.valido ? '' : 'liError'" (click)="openModalWithData(r)">
+                            <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span class="error-upload">{{r.errore}}</span>
+                        </li>
+                        <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
+                            nessun nominativo presente
+                        </div>
+                        <div *ngIf="checking" class="preloader">
+                           <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row" [hidden]="notUploaded">
+        <div class="col-md-12">
+            <div class="msg-upload success">
+                <i class='bx bx-check'></i>
+                <h5>Il processo di caricamento della lista è terminato.</h5>
+                <p>
+                    Clicca su inserisci lista per salvare i nominativi validi oppure correggi gli errori evidenziati e ricarica la lista.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="formFinale" (ngSubmit)="onSubmit()">
+        <div class="group-button">
+            <a [routerLink]="backLink">INDIETRO</a>
+            <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
+        </div>
+    </form>

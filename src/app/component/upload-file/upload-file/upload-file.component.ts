@@ -27,7 +27,7 @@ export class UploadFileComponent {
   base64File: string = '';
   errorMessage: string = '';
   bulletin: boolean = false;
-  destinatariDec:any;
+  destinatariDec: any;
   backLink: string | null = null;
 
   constructor(
@@ -135,11 +135,14 @@ export class UploadFileComponent {
 
   ngOnInit(): void {
     Promise.all([
-      this.formStorage.getForm('step2')
-    ]).then(([step1]) => {
+      this.formStorage.getForm('step2'),
+      this.formStorage.getForm('destinatari')
+    ]).then(([step1, destinatari]) => {
       const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
       if(datiDecriptati.bollettino == 1)
         this.bulletin = true;
+
+      this.destinatariDec = JSON.parse(CryptoJS.AES.decrypt(destinatari, secretKey).toString(CryptoJS.enc.Utf8));
 
       switch(parseInt(datiDecriptati.prodotto)){
         case ProductTypes.ROL:
@@ -147,6 +150,9 @@ export class UploadFileComponent {
           break;
         case ProductTypes.LOL:
           this.backLink = "/invioSingoloLettera4";
+          break;
+        case ProductTypes.AGOL:
+          this.backLink = "/invioSingoloAgol4";
           break;
       }
       

@@ -39,6 +39,10 @@ export class Recipients {
   tag4?: string | null = null;
   tag5?: string | null = null;
   tag6?: string | null = null;
+  posteType?: string | null = null;
+  tipologiaNotificante?: number | null = null;
+  valoreNotificante?: string | null = null;
+  pec?: string | null = null;
   notified?: boolean | null = false;
   fromApi: boolean = false;
   tempGuid: string = FncUtils.generateGuid();

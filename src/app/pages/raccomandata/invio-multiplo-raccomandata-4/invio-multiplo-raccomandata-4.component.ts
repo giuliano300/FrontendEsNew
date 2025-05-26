@@ -2,17 +2,15 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
-import { HttpClient, HttpClientModule, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { API_URL, secretKey } from '../../../../main';
 import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
-import * as JSZip from 'jszip';
 import { Recipients } from '../../../classes/Recipients';
 import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 
-import { PDFDocument } from 'pdf-lib'
 import { PdfBase64List } from '../../../classes/PdfBase64List';
 
 
@@ -37,7 +35,7 @@ export class InvioMultiploRaccomandata4Component {
   nominativiCaricati: number = 0;
   nominativiValidi: number = 0;
   nominativiInErrore: number = 0;
-
+  bulletin: string = "senza bollettino";
 
   constructor(
     private fb: FormBuilder,
@@ -52,14 +50,19 @@ export class InvioMultiploRaccomandata4Component {
 
   ngOnInit(): void {
       Promise.all([
+        this.formStorage.getForm('step2'),
         this.formStorage.getForm('destinatari'),
-      ]).then(([step1]) => {
+      ]).then(([step1, step2]) => {
         if(!step1)
           this.router.navigate(['/']);
   
           const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-          this.recipients = datiDecriptati;
-          console.log(this.recipients);
+          if(datiDecriptati.bollettino === 1)
+            this.bulletin = "con bollettino";
+  
+          const recipients = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
+          this.recipients = recipients;
+          //console.log(this.recipients);
       })
   }
 

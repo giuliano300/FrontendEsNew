@@ -23,11 +23,13 @@ export class RiepilogoSpedizioneComponent {
   } 
 
   bulletin: boolean = false;
+  tipoSpedizione: string = "singola";
   productType: number | null = null;
   productName: string = "";
   numeroLotto: number = 0;
   numeroDestinatari: number = 0;
   dataCreazione: string  | null = null;
+  ffwLink: string = "";
   
   ngOnInit(): void {
 
@@ -44,18 +46,37 @@ export class RiepilogoSpedizioneComponent {
 
        switch(parseInt(datiDecriptati.prodotto)){
           case ProductTypes.ROL: 
+          case ProductTypes.MOL: 
             this.productName = "raccomandata";
+            this.ffwLink = "/statoInviiRaccomandate";
             break;
           case ProductTypes.LOL: 
+          case ProductTypes.COL: 
             this.productName = "lettera";
+            this.ffwLink = "/statoInviiLettere";
+            break;
+          case ProductTypes.TOL: 
+            this.productName = "telegramma";
+            this.ffwLink = "/statoInviiTelegrammi";
+            break;
+          case ProductTypes.AGOL: 
+            this.productName = "atti giudiziari";
+            this.ffwLink = "/statoInviiAgol";
+            break;
+          case ProductTypes.VOL: 
+            this.productName = "visure";
+            this.ffwLink = "/statoRichiesteVisure";
             break;
         }
+
+        if(step2.destinatari > 1)
+          this.tipoSpedizione = "multipla"
 
         this.numeroLotto = step2.operationId;
         this.numeroDestinatari = step2.destinatari;
         this.dataCreazione =  FncUtils.GetFormattedData(step2.data);
 
-      this.formStorage.clearAll();
+      //this.formStorage.clearAll();
     })
   }
 

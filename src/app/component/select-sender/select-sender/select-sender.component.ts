@@ -243,12 +243,18 @@ export class SelectSenderComponent {
 
       switch(parseInt(datiDecriptati.prodotto)){
         case ProductTypes.ROL:
+        case ProductTypes.MOL:
           this.backLink = "/invioSingoloRaccomandata2";
           this.ffwLink = "/invioSingoloRaccomandata4";
           break;
         case ProductTypes.LOL:
+        case ProductTypes.COL:
           this.backLink = "/invioSingoloLettera2";
           this.ffwLink = "/invioSingoloLettera4";
+          break;
+        case ProductTypes.AGOL:
+          this.backLink = "/invioSingoloAgol2";
+          this.ffwLink = "/invioSingoloAgol4";
           break;
       }
 

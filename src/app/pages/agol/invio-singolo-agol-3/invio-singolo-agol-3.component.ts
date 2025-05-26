@@ -1,110 +1,41 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
+import { Users } from '../../../interfaces/Users';
+import { SelectSenderComponent } from '../../../component/select-sender/select-sender/select-sender.component';
 import { bulletin } from '../../../../main';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
 
 
 @Component({
   selector: 'app-invio-singolo-agol-3',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
+  imports: [SelectSenderComponent],
   templateUrl: './invio-singolo-agol-3.component.html',
   styleUrl: './invio-singolo-agol-3.component.scss'
 })
 export class InvioSingoloAgol3Component {
 
+  constructor(private router: Router) {}  
+  user: Users | null  = null;
+  
   bulletin: string | null = "senza bollettino";
 
+ getThisUser(){
+  const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
 
-  constructor(private router: Router) {}
-  alertMessage = false;
-  alertText = '';
+    this.user! = JSON.parse(user!);
+  }
 
-  alertName = alertName;
-  alertComplName = alertComplName;
-  alertAddress = alertAddress;
-  alertComplAddress = alertComplAddress;
-  alertProvince = alertProvince;
-  alertState = alertState;
-
-
-  form = new FormGroup({
-    sel_mittente: new FormControl(''),
-    nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
-    indirizzo: new FormControl('', [Validators.required]),
-    cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
-    provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    comp_nominativo: new FormControl('', [Validators.required]),
-    comp_indirizzo: new FormControl('', [Validators.required]),
-    citta: new FormControl('', [Validators.required]),
-    stato: new FormControl('', [Validators.required]),
-    destinatario: new FormControl(true),
-    nominativo_ar: new FormControl(''),
-    comp_nominativo_ar: new FormControl(''),
-    indirizzo_ar: new FormControl(''),
-    comp_indirizzo_ar: new FormControl(''),
-    cap_ar: new FormControl(''),
-    provincia_ar: new FormControl(''),
-    citta_ar: new FormControl(''),
-    stato_ar: new FormControl(''),
-  });
 
   ngOnInit(): void {
-    this.form.get('destinatario')?.valueChanges.subscribe((checked) => {
-      if (!checked) {
-        this.setDestinatarioARValidators(true); // checkbox NON selezionato → attiva i campi AR
-      } else {
-        this.setDestinatarioARValidators(false); // checkbox selezionato → disattiva i campi AR
-      }
-    });
-  
-    // Applica lo stato iniziale alla creazione
-    this.setDestinatarioARValidators(!this.form.get('destinatario')?.value);
+    this.getThisUser();
 
-    const bul = localStorage.getItem('bulletin')!;
-    if(parseInt(bul) == bulletin.si)
-      this.bulletin = "con bollettino";
+      const bul = localStorage.getItem('bulletin')!;
+      if(parseInt(bul) == bulletin.si)
+        this.bulletin = "con bollettino";
     
   }
-
-  setDestinatarioARValidators(active: boolean): void {
-    const controls = [
-      'nominativo_ar',
-      'comp_nominativo_ar',
-      'indirizzo_ar',
-      'comp_indirizzo_ar',
-      'cap_ar',
-      'provincia_ar',
-      'citta_ar',
-      'stato_ar',
-    ];
-
-    controls.forEach(controlName => {
-      const control = this.form.get(controlName);
-      if (active) {
-        control?.setValidators([Validators.required]);
-      } else {
-        control?.clearValidators();
-      }
-      control?.updateValueAndValidity();
-    });
-  }
-
-
-  
-
-  onSubmit(): void {
-   
-    if (this.form.valid) {
-      this.router.navigate(['/invioSingoloAgol4']);
-    } else {
-      this.alertMessage = true;
-      this.alertText = 'Compila tutti i campi obbligatori correttamente.';
-    }
-  }
-
 
 }

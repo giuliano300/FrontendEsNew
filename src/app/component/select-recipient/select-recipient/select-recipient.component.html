@@ -116,6 +116,33 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
+
+            <div class="row" [hidden]="isNotAgol">
+                <div class="col-md-2"></div>
+                <div class="col-md-12">
+                    <h3 class="text-center color-blue mt-4 mb-2">Avviso di ricevimento digitale</h3>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+            <div class="row" [hidden]="isNotAgol">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <label for="ric_digitale" class="flex mb-2">
+                        Inserisci la pec se vuoi che l'avviso di ricevimento sia DIGITALE e NON carteceo
+                    </label>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row" [hidden]="isNotAgol">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <label>PEC</label>
+                    <input type="email" formControlName="pec" />
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
             <div class="row mt-3">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">

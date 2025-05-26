@@ -12,4 +12,5 @@ export interface UserRecipients {
   state: string;
   email?: string;
   mobile?: string;
+  pec?: string;
 }

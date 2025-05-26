@@ -24,11 +24,11 @@
                 <div class="col-md-6">
                     <section class="select-form-type">
                         <span>Seleziona il mittente dalla rubrica</span>
-                        <select formControlName="sel_mittente" (change)="removeErroMessage()">
-                            <option value="">-- Seleziona un mittente --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
+                        <select formControlName="sel_mittente" (change)="setFormSenderUser()">
+                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
+                             <option *ngFor="let option of userSenders" [value]="option.id">
+                                {{ option.businessName }}
+                            </option>  
                         </select>
                     </section>
                 </div>
@@ -72,13 +72,13 @@
                         <li>
                             <label for="TipoLetteraP1">
                                 P1
-                                <input id="TipoLetteraP1" type="radio" formControlName="tipoLettera" value="TipoLetteraP1" (change)="removeErroMessage()" />
+                                <input id="TipoLetteraP1" type="radio" formControlName="tipoLettera" value="Posta1" (change)="removeErroMessage()" />
                             </label>
                         </li>
                         <li>
                             <label for="TipoLetteraP4">
                                 P4
-                                <input id="TipoLetteraP4" type="radio" formControlName="tipoLettera" value="TipoLetteraP4" (change)="removeErroMessage()" />
+                                <input id="TipoLetteraP4" type="radio" formControlName="tipoLettera" value="Posta4" (change)="removeErroMessage()" />
                             </label>
                         </li>
                     </ul>
@@ -110,13 +110,13 @@
                         <li>
                             <label for="FronteRetroSI">
                                 SI
-                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="FronteRetroSI" (change)="removeErroMessage()" />
+                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="SI" (change)="removeErroMessage()" />
                             </label>
                         </li>
                         <li>
                             <label for="FronteRetroNO">
                                 NO
-                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
+                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="NO" (change)="removeErroMessage()" />
                             </label>
                         </li>
                     </ul>
