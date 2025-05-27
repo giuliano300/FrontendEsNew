@@ -28,7 +28,32 @@ export class StatoInviiComponent {
   id!: number;
   productName: string | null = null;
   
-  constructor(private router: Router, private operationService: OperationService, private route: ActivatedRoute) {
+  constructor(private router: Router, private operationService: OperationService, private route: ActivatedRoute) 
+  {
+  }
+
+  infoDettaglioInvii = infoDettaglioInvii;  
+
+
+  statoInvii: GetStatoInvii[] = [];
+
+  user: Users | null  = null;  
+
+  displayedColumns: string[] = ['date', 'numberOfRecipient', 'transferPercentage'];
+  dataSource = new MatTableDataSource<any>([]);
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngOnInit(): void {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.user! = JSON.parse(user!);
+
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id')!);
       switch(this.id){
@@ -54,29 +79,6 @@ export class StatoInviiComponent {
       this.getStatoInvii();
 
     })
-  }
-
-  infoDettaglioInvii = infoDettaglioInvii;  
-
-
-  statoInvii: GetStatoInvii[] = [];
-
-  user: Users | null  = null;  
-
-  displayedColumns: string[] = ['date', 'numberOfRecipient', 'transferPercentage'];
-  dataSource = new MatTableDataSource<any>([]);
-  
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  ngOnInit(): void {
-    const user = localStorage.getItem('user');
-    if (!user) {
-      this.router.navigate(['/']);
-      return;
-    }
-
-    this.user! = JSON.parse(user!);
 
   }
 
