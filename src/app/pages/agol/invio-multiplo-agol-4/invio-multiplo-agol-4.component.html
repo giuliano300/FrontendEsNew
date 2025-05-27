@@ -48,6 +48,11 @@
                             {{ uploadProgress }}%
                             </div>
                         </div>
+                        
+                        <div *ngIf="errorMessage" class="error mt-3">
+                            {{ errorMessage }}
+                        </div>                    
+
                     </div>
                     
                 </div>
@@ -56,49 +61,23 @@
     
                     <div class="result-upload">
                         <div class="result-upload__top">
-                            <section><img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>24</strong></section>
-                            <section><img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>20</strong></section>
-                            <section><img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>4</strong></section>
+                            <section><img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>{{nominativiCaricati}}</strong></section>
+                            <section><img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>{{nominativiValidi}}</strong></section>
+                            <section><img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>{{nominativiInErrore}}</strong></section>
                         </div>
                         <ul>
                             <li>
                                 <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
                             </li>
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
+                            <li *ngFor="let r of checkRecipient" [ngClass]="r.valido ? '' : 'liError'">
+                                <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span>{{r.errore}}</span>
                             </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
-    
-                            <li>
-                                <span>Mario Rossi</span><span>SI</span><span></span>
-                            </li>
+                            <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
+                                nessun file .zip ancora caricato
+                            </div>
+                            <div *ngIf="checking" class="preloader">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
     
                         </ul>
                     </div>
@@ -110,9 +89,9 @@
     
         <div class="group-button">
             <a routerLink="/invioMultiploAgol3">INDIETRO</a>
-            <input type="submit" value="AVANTI" />
+            <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
         </div>
     
-        </form>
+    </form>
     
 </div>

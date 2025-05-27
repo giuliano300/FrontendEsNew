@@ -42,6 +42,7 @@ export class Recipients {
   posteType?: string | null = null;
   tipologiaNotificante?: number | null = null;
   valoreNotificante?: string | null = null;
+  telegramText?: string | null = null;
   pec?: string | null = null;
   notified?: boolean | null = false;
   fromApi: boolean = false;

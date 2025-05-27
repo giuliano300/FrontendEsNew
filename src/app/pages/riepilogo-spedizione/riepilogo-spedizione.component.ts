@@ -30,7 +30,9 @@ export class RiepilogoSpedizioneComponent {
   numeroDestinatari: number = 0;
   dataCreazione: string  | null = null;
   ffwLink: string = "";
-  
+  isTelegram: boolean = false;
+  rrTelegramma?: string | null = null;
+
   ngOnInit(): void {
 
     Promise.all([
@@ -58,6 +60,8 @@ export class RiepilogoSpedizioneComponent {
           case ProductTypes.TOL: 
             this.productName = "telegramma";
             this.ffwLink = "/statoInviiTelegrammi";
+            this.isTelegram = false;
+            this.rrTelegramma = datiDecriptati.rrTelegramma ? "Con " : "Senza ";
             break;
           case ProductTypes.AGOL: 
             this.productName = "atti giudiziari";

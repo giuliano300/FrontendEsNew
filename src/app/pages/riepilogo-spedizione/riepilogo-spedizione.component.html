@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="step-bar" [hidden]="!bulletin">
+            <div class="step-bar" [hidden]="!bulletin || !isTelegram">
                 <ul>
                     <li style="width: 10%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -24,7 +24,7 @@
                 </ul>
             </div>
 
-            <div class="step-bar no-bollettino" [hidden]="bulletin">
+            <div class="step-bar no-bollettino" [hidden]="bulletin || !isTelegram">
                 <ul>
                     <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 12%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -36,6 +36,19 @@
                     <li style="width: 15%;" class="bg-color-green">Preventivo e spedizione</li>
                 </ul>
             </div>
+
+            <div class="step-bar no-bollettino" [hidden]="isTelegram">
+                <ul>
+                    <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 11%;" class="bg-color-green">Invio singolo<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 18%;" class="bg-color-green">{{rrTelegramma}} ricevuta di ritorno<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 20%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 13%;" class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 13%;" class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 13%;" class="bg-color-green">Preventivo e spedizione</li>
+                </ul>
+            </div>
+
         </div>
     </div>
 

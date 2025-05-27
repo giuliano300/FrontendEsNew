@@ -8,6 +8,18 @@ export enum ProductTypes {
     VOL = 7
   }
 
+export class ProductTypesClass {
+  static  productTypes: ProductTypes[] = [
+    ProductTypes.ROL,
+    ProductTypes.LOL,
+    ProductTypes.TOL,
+    ProductTypes.MOL,
+    ProductTypes.COL,
+    ProductTypes.AGOL,
+    ProductTypes.VOL
+  ];
+}
+
 export enum HaveBulletin{
   no = 0,
   si = 1

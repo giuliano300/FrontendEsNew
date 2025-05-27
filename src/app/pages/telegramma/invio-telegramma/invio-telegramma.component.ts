@@ -3,6 +3,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { ProductTypes } from '../../../interfaces/EnumTypes';
+import { FormStorageService } from '../../../services/form-storage.service';
+import { secretKey } from '../../../../main';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-invio-telegramma',
@@ -12,7 +16,9 @@ import { RouterLink } from '@angular/router';
 })
 export class InvioTelegrammaComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private formStorage: FormStorageService
+  ) {}
   alertMessage = false;
   alertText = '';
 
@@ -38,6 +44,15 @@ onSubmit(): void {
   }
 
   // Se tutti sono presenti, vai alla pagina
+
+  const datiDecriptati = {
+    prodotto: ProductTypes.TOL,
+    tipoRicevuta:  ricevutaRitorno!.toString() ? "SI" : "NO"
+  };
+
+  const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(datiDecriptati), secretKey).toString();
+  this.formStorage.saveForm('step2', encryptedAR);
+
   this.router.navigate(['/invioTelegramma2']);
 }
 

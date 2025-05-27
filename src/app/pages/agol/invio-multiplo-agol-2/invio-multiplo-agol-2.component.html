@@ -3,7 +3,7 @@
         <div class="col md-12 text-center mt-5">
             <h1>Scegli il tipo di comunicazione</h1>
             <p class="mt-4 textsize-4">
-                Scegli se la raccomandata deve essere corredata di bollettino.
+                Scegli se l' atto giudiziario deve essere corredata di bollettino.
             </p>
         </div>
     </div>
@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <div class="step-bar">
                 <ul>
-                    <li style="width: 12%;">Raccomandata <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 12%;">Agol <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 9%;">Invio multiplo <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 17%;">Invio multiplo {{bulletin}}<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
@@ -24,11 +24,11 @@
                 <div class="col-md-6">
                     <section class="select-form-type">
                         <span>Seleziona il mittente dalla rubrica</span>
-                        <select formControlName="sel_mittente" (change)="removeErroMessage()">
-                            <option value="">-- Seleziona un mittente --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
+                        <select formControlName="sel_mittente" (change)="setFormSenderUser()">
+                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
+                             <option *ngFor="let option of userSenders" [value]="option.id">
+                                {{ option.businessName }}
+                            </option>  
                         </select>
                     </section>
                 </div>
@@ -91,13 +91,13 @@
                         <li>
                             <label for="FronteRetroSI">
                                 SI
-                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="FronteRetroSI" (change)="removeErroMessage()" />
+                                <input id="FronteRetroSI" type="radio" formControlName="tipoStampa" value="SI" (change)="removeErroMessage()" />
                             </label>
                         </li>
                         <li>
                             <label for="FronteRetroNO">
                                 NO
-                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="FronteRetroNO" (change)="removeErroMessage()" />
+                                <input id="FronteRetroNO" type="radio" formControlName="tipoStampa" value="NO" (change)="removeErroMessage()" />
                             </label>
                         </li>
                     </ul>
@@ -110,9 +110,9 @@
                         <li>
                             <select formControlName="tipoNotificante" (change)="removeErroMessage()">
                                 <option value="">Seleziona tipologia notificante</option>
-                                <option value="1">Parte istante</option>
+                                <option value="0">Parte istante</option>
                                 <option value="1">Procuratore</option>
-                                <option value="1">Ufficiale giudiziario</option>
+                                <option value="2">Ufficiale giudiziario</option>
                             </select>
                         </li>
                         <li>
@@ -138,7 +138,7 @@
                                         NOMINATIVO
                                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                                     </label>
-                                    <input type="text" formControlName="nominativo_ar" />
+                                    <input type="text" formControlName="nominativo_ar" readonly class="readonly" />
                                 </li>
                                 <li>
                                     <label class="flex-start">
@@ -149,7 +149,18 @@
                                 </li>
                                 <li>
                                     <label>CAP</label>
-                                    <input type="text" formControlName="cap_ar" maxlength="5" />
+                                    <input
+                                        type="text"
+                                        formControlName="cap_ar"
+                                        maxlength="5"
+                                        [matAutocomplete]="autoCap"
+                                        class="custom-input"
+                                        />
+                                    <mat-autocomplete #autoCap="matAutocomplete" (optionSelected)="setInputCityProvince($event)">
+                                        <mat-option *ngFor="let cap of filteredCAPs | async" [value]="cap">
+                                            {{ cap }}
+                                        </mat-option>
+                                    </mat-autocomplete>                                
                                 </li>
                                 <li>
                                     <label class="flex-start">
@@ -178,7 +189,13 @@
                                 </li>
                                 <li>
                                     <label>CITTÀ</label>
-                                    <input type="text" formControlName="citta_ar" />
+                                    <input *ngIf="isOne" type="text" formControlName="citta_ar" readonly class="readonly" />
+                                    <select *ngIf="!isOne" formControlName="citta_ar" (change)="setProvince($event)" class="city">
+                                        <option value="">-- Seleziona una città --</option>
+                                        <option *ngFor="let option of comuniDaCap" [value]="option.denominazione_ita">
+                                            {{ option.denominazione_ita }}
+                                        </option>
+                                    </select>
                                 </li>
                                 <li>
                                     <label class="flex-start">

@@ -13,106 +13,10 @@
             <div class="step-bar">
                 <ul>
                     <li style="width: 10%;">Telegramma <i class='bx bxs-right-arrow-alt'></i></li>
-                    <li style="width: 12%;">Ricevuta di ritorno <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 17%;">{{rr}} ricevuta di ritorno <i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="generic-form">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="row">
-                <div class="col-md-12">
-                    <section class="select-form-type">
-                        <span>Seleziona un mittente dalla rubrica</span>
-                        <select formControlName="sel_mittente">
-                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
-                        </select>
-                    </section>
-                </div>
-            </div>  
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire un nuovo mittente</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-4">
-                    <ul>
-                        <li>
-                            <label class="flex-start">
-                                NOMINATIVO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="nominativo" />
-                        </li>
-                        <li>
-                            <label class="flex-start">
-                                INDIRIZZO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="indirizzo" />
-                        </li>
-                        <li>
-                            <label>CAP</label>
-                            <input type="text" formControlName="cap" maxlength="5" />
-                        </li>
-                        <li>
-                            <label class="flex-start">
-                                PROVINCIA
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="provincia" maxlength="2" />
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <ul>
-                        <li>
-                            <label class="flex-start">
-                                COMPLETAMENTO NOMINATIVO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="comp_nominativo" />
-                        </li>
-                        <li>
-                            <label class="flex-start">
-                                COMPLETAMENTO INDIRIZZO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="comp_indirizzo" />
-                        </li>
-                        <li>
-                            <label>CITTÀ</label>
-                            <input type="text" formControlName="citta" />
-                        </li>
-                        <li>
-                            <label class="flex-start">
-                                STATO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="stato" />
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-2"></div>
-            </div>
-
-
-            <div class="group-button">
-                <a routerLink="/invioTelegramma">INDIETRO</a>
-                <input type="submit" value="AVANTI" />
-            </div>
-
-            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
-            <div *ngIf="alertMessage" class="alert-message">
-                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
-            </div>
-            
-
-        </form>
-    </div>
+    <app-select-sender></app-select-sender>
 </div>

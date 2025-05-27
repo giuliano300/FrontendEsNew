@@ -256,6 +256,10 @@ export class SelectRecipientComponent {
           this.ffwLink = "/invioSingoloAgol5";
           this.isNotAgol = false;
           break;
+        case ProductTypes.TOL:
+          this.backLink = "/invioTelegramma2";
+          this.ffwLink = "/invioTelegramma4";
+          break;
       }
 
     });

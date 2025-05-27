@@ -106,6 +106,10 @@ export class UploadCsvMultiploComponent {
               this.backLink = "/invioMultiploLettera2";
               this.ffwLink = "/invioMultiploLettera4";
               break;
+            case ProductTypes.AGOL:
+              this.backLink = "/invioMultiploAgol2";
+              this.ffwLink = "/invioMultiploAgol4";
+              break;
           }
 
 
@@ -235,7 +239,9 @@ export class UploadCsvMultiploComponent {
           };
         });
 
-      } else {
+      } 
+      else 
+      {
         this.errorMessage = 'Non è stato caricato un file valido.';
       }
     }

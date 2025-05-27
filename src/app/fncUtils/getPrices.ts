@@ -1,3 +1,5 @@
+import { ProductTypes } from "../interfaces/EnumTypes";
+
 export class Prices {
   vatPrice: number = 0;
   totalPrice: number = 0;
@@ -13,10 +15,20 @@ function GetVat(amount: number): number {
 export function GetFilePrice(productType:number, numberOfPages: number, colori: boolean, tipoPosta: string = 'Posta4'): Prices 
 {
   let type = 'LOL';
-  if(productType == 1)
+  if(productType == ProductTypes.ROL)
     type = 'ROL';
+  if(productType == ProductTypes.TOL)
+    type = 'TOL';
 
   let totale = 0;
+
+  if(type == 'TOL'){
+    return {
+      vatPrice: 5.01,
+      totalPrice: 27.80,
+      price: 22.79
+    } as Prices;
+  }
 
   const count = numberOfPages;
 

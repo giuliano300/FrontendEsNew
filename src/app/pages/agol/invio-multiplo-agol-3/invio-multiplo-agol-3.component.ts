@@ -1,79 +1,48 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
-import { HttpClient, HttpClientModule, HttpEvent, HttpEventType } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { bulletin } from '../../../../main';
+
+// Import Angular Material modules necessari
+import { FormStorageService } from '../../../services/form-storage.service';
+import { Component } from '@angular/core';
+import { secretKey } from '../../../../main';
+import { UploadCsvMultiploComponent } from "../../../component/upload-csv-multiplo/upload-csv-multiplo.component";
+import * as CryptoJS from 'crypto-js';
 
 
 @Component({
   selector: 'app-invio-multiplo-agol-3',
-  imports: [CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink],
+  imports: [UploadCsvMultiploComponent],
   templateUrl: './invio-multiplo-agol-3.component.html',
   styleUrl: './invio-multiplo-agol-3.component.scss'
 })
 export class InvioMultiploAgol3Component {
 
-  bulletin: string | null = "senza bollettino";
-
-  form: FormGroup;
-  uploadProgress: number | null = null;
-  uploadCompleted: boolean = false;
+  bulletin: boolean = false;
+  bulletinText: string | null = "senza bollettino";
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private router: Router,
+        private formStorage: FormStorageService
   ) {
-    this.form = this.fb.group({
-      // eventuali altri controlli
-    });
+ 
   }
 
-  onFileDrop(files: NgxFileDropEntry[]) {
-    for (const droppedFile of files) {
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-
-        fileEntry.file((file: File) => {
-          const formData = new FormData();
-          formData.append('file', file, droppedFile.relativePath);
-
-          this.uploadProgress = 0;
-          this.uploadCompleted = false;
-
-          this.http.post('/api/upload', formData, {
-            reportProgress: true,
-            observe: 'events'
-          }).subscribe((event: HttpEvent<any>) => {
-            if (event.type === HttpEventType.UploadProgress && event.total) {
-              this.uploadProgress = Math.round((event.loaded / event.total) * 100);
-            } else if (event.type === HttpEventType.Response) {
-              console.log('Upload completato', event.body);
-              this.uploadProgress = 100;
-              this.uploadCompleted = true;
-            }
-          });
-        });
-      }
-    }
-  }
-
-    ngOnInit(): void {
+ngOnInit(): void {
+    
+    Promise.all([
+        this.formStorage.getForm('step2'),
+      ]).then(([step1]) => {
+        if(!step1)
+          this.router.navigate(['/']);
   
-      const bul = localStorage.getItem('bulletin')!;
-      if(parseInt(bul) == bulletin.si)
-        this.bulletin = "con bollettino";
-      
-    }
-  
+          const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
+          if(datiDecriptati.bollettino == 1){
+            this.bulletin = true;
+            this.bulletinText = "con bollettimo";
+          }
+          //console.log(datiDecriptati);
 
-  onSubmit() {
-    if (this.form.valid) {
-      this.router.navigate(['/invioMultiploAgol4']);
-    }
+      });
+
   }
 
 }

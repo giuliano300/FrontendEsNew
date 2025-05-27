@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormStorageService } from '../../services/form-storage.service';
 import { bulletin, secretKey } from '../../../main';
 import * as CryptoJS from 'crypto-js';
-import { FrontBack, HaveBulletin, PrintType, ProductTypes, ShippingTypes } from '../../interfaces/EnumTypes';
+import { FrontBack, HaveBulletin, PrintType, ProductTypes, ProductTypesClass, ShippingTypes } from '../../interfaces/EnumTypes';
 import { CommonModule } from '@angular/common';
 import { CompleteOperation } from '../../ViewModel/CompleteOperation';
 import { Users } from '../../interfaces/Users';
@@ -24,6 +24,7 @@ import { PdfBase64List } from '../../classes/PdfBase64List';
   styleUrl: './calcolo-preventivo.component.scss'
 })
 export class CalcoloPreventivoComponent {
+[x: string]: any;
 
   constructor(
     private router: Router,
@@ -52,6 +53,9 @@ export class CalcoloPreventivoComponent {
   tipoNotificante?: number | null = null;
   nomeNotificante: string = "";
 
+  hiddenRR:boolean = true;
+  isTelegram: boolean = false;
+
   //VARIABILI PAGINA
   Inviitotali: string = "0";
   ImportoNetto: string = "0";
@@ -61,6 +65,7 @@ export class CalcoloPreventivoComponent {
   ifIsCalcolable: boolean = false;
 
   bulletinw:string = "con bollettino";
+  rrTelegramma:string = "senza ";
 
   calcolaPreventivo(){
     Promise.all([
@@ -126,13 +131,16 @@ export class CalcoloPreventivoComponent {
       this.tipoNotificante = datiDecriptati.tipoNotificante;
       this.nomeNotificante = datiDecriptati.nomeNotificante;
 
-      if(this.havePrice!)
+      const have = this.havePrice();
+
+      if(have)
         this.calcolaPreventivo();
-      
+     
       switch(parseInt(datiDecriptati.prodotto)){
           case ProductTypes.ROL: 
           case ProductTypes.MOL: 
             this.productName = "raccomandata";
+            this.hiddenRR = false;
             if(datiDecriptati.tipoinvio == ShippingTypes.singola){
               this.routerLink = "/invioSingoloRaccomandata5";
               this.tipoInvio = "singolo";
@@ -167,6 +175,16 @@ export class CalcoloPreventivoComponent {
               this.tipoInvio = "multiplo";
             }
           break;     
+          case ProductTypes.TOL: 
+            this.productName = "telegramma";
+            this.routerLink = "/invioTelegramma4";
+            this.tipoInvio = "singolo";
+            this.hiddenRR = false;
+            this.isTelegram = true;
+            this.ricevutaRitorno = datiDecriptati.rrTelegramma ? "SI" : "NO";
+            this.rrTelegramma = datiDecriptati.rrTelegramma ? "Con " : "Senza ";
+            this.shippingTypes = ShippingTypes.singola;
+         break;     
       }
     });
   }
@@ -183,8 +201,9 @@ export class CalcoloPreventivoComponent {
       this.formStorage.getForm('destinatari'),
       this.formStorage.getForm('files-upload'),
       this.formStorage.getForm('bollettini'),
+      this.formStorage.getForm('messaggioTelegramma'),
     ]
-    ).then(([mittente, destinararioAR, destinatari, filesupload, bollettini]) => {
+    ).then(([mittente, destinararioAR, destinatari, filesupload, bollettini, messaggioTelegramma]) => {
 
       let sender: Senders = JSON.parse(CryptoJS.AES.decrypt(mittente, secretKey).toString(CryptoJS.enc.Utf8));
       let senderAR: Senders | null = null;
@@ -192,6 +211,13 @@ export class CalcoloPreventivoComponent {
         senderAR = JSON.parse(CryptoJS.AES.decrypt(destinararioAR, secretKey).toString(CryptoJS.enc.Utf8));
         senderAR!.AR = true;
       }
+
+      let messaggioTelegrammaDec = null;
+
+      if(messaggioTelegramma!= null) 
+        messaggioTelegrammaDec = JSON.parse(
+          CryptoJS.AES.decrypt(messaggioTelegramma, secretKey).toString(CryptoJS.enc.Utf8)
+        );
 
       const destinatariDec = JSON.parse(
         CryptoJS.AES.decrypt(destinatari, secretKey).toString(CryptoJS.enc.Utf8)
@@ -214,18 +240,21 @@ export class CalcoloPreventivoComponent {
 
       for(let i = 0; i < destinatariDec.length; i++){
 
-          const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
           let Recipient: Recipients = Object.assign(new Recipients(), destinatariDec[i]);
-
-          Recipient.fileName = fileTrovato!.name;
-          Recipient.attachedFile = fileTrovato!.base64;
-          Recipient.numberOfPages = fileTrovato!.pages;
-          Recipient.productType = this.productType!;
-          Recipient.logoId = this.logoId;
-          Recipient.format = this.format;
-          Recipient.posteType = this.tipoLettera;
-          Recipient.tipologiaNotificante = this.tipoNotificante;
-          Recipient.valoreNotificante = this.nomeNotificante;
+          if(this.productType != ProductTypes.TOL){
+            const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
+            Recipient.fileName = fileTrovato!.name;
+            Recipient.attachedFile = fileTrovato!.base64;
+            Recipient.numberOfPages = fileTrovato!.pages;
+            Recipient.productType = this.productType!;
+            Recipient.logoId = this.logoId;
+            Recipient.format = this.format;
+            Recipient.posteType = this.tipoLettera;
+            Recipient.tipologiaNotificante = this.tipoNotificante;
+            Recipient.valoreNotificante = this.nomeNotificante;
+          }
+          else
+            Recipient.telegramText = messaggioTelegrammaDec != null ? messaggioTelegrammaDec?.message : null;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
           Recipient.frontBack = (this.tipoStampa == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);

@@ -40,7 +40,7 @@ export class InvioMultiploRaccomandata2Component {
   alertComplAddress = alertComplAddress;
   alertProvince = alertProvince;
   alertState = alertState;
-  alertMailDest= alertMailDest;
+  alertMailDest = alertMailDest;
 
   //FILTRO CAP
   filteredCAPs: Observable<string[]> = of([]);

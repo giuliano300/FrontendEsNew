@@ -36,7 +36,6 @@ export class InvioMultiploRaccomandata3Component {
             this.bulletin = true;
             this.bulletinText = "con bollettimo";
           }
-
       });
 
   }
