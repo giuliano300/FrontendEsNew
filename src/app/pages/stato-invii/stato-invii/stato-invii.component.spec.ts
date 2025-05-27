@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RichiesteVisureComponent } from './richieste-visure.component';
+import { StatoInviiComponent } from './stato-invii.component';
 
-describe('RichiesteVisureComponent', () => {
-  let component: RichiesteVisureComponent;
-  let fixture: ComponentFixture<RichiesteVisureComponent>;
+describe('StatoInviiComponent', () => {
+  let component: StatoInviiComponent;
+  let fixture: ComponentFixture<StatoInviiComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RichiesteVisureComponent]
+      imports: [StatoInviiComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RichiesteVisureComponent);
+    fixture = TestBed.createComponent(StatoInviiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
