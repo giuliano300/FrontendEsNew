@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Inserisci un nuovo utente</h1>
+            <p class="mt-2 textsize-4">
+                Compila i campi del form per inserire un nuovo utente.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="contaienr-fluid">
+    <div class="generic-form mt-5">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label>TIPOLOGIA</label>
+                            <select formControlName="sel_tipo" >
+                                <option value="">-- Seleziona tipologia --</option>
+                                <option value="1">Visualizzazione e inserimento</option>
+                                <option value="2">Solo visualizzazione</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label>NOME</label>
+                            <input type="text" formControlName="nome" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>COGNOME</label>
+                            <input type="text" formControlName="cognome" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>CITTÀ</label>
+                            <input type="text" formControlName="citta" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>TELEFONO</label>
+                            <input type="phone" formControlName="telefono" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>EMAIL</label>
+                            <input type="email" formControlName="email" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>PASSWORD</label>
+                            <input type="password" formControlName="pwd" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="color-blue">SCEGLI I MITTENTI</h4>
+                    <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire le comunicazioni.</p>
+                    <div class="sender-list" formArrayName="selectedOptions">
+                        <div *ngFor="let option of options; let i = index">
+                            <label *ngFor="let option of options">
+                                <input
+                                type="checkbox"
+                                [value]="option"
+                                (change)="onCheckboxChange($event)"
+                                />
+                                {{ option }}
+                            </label>
+                            <div class="text-danger" *ngIf="form.get('selectedOptions')?.errors?.['required'] && form.get('selectedOptions')?.touched">
+                                Seleziona almeno un'opzione.
+                            </div>
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="group-button">
+                <input type="submit" value="SALVA" class="bg-color-green color-white" />
+            </div>
+
+            <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+            <div *ngIf="alertMessage" class="alert-message">
+                <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+            </div>
+            
+
+        </form>
+    </div>
+</div>

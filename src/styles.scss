@@ -879,6 +879,20 @@ small{
             font-size: 0.9rem;
             outline-color: $grey-middle;
         }
+        select{
+            width: 100%;
+            height: 50px;
+            border: 1px solid $grey-light;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            outline-color: $grey-middle;
+        }
+        input[type=file]{
+            width: 100%;
+            height: 50px;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
         textarea{
             width: 100%;
             height: 200px;

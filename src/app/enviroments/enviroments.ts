@@ -16,5 +16,6 @@ export const infoBtnOpenList = "Apri la lista";
 export const infoBtnDownload = "Scarica il file";
 export const infoCodiceFiscale = "Obbligatorio per il ritiro digitale";
 export const alertName2 = "Obbligatorio se la ragione sociale è vuota";
+export const alertLogo = "Non compare in nessuna comunicazione ma serve a te per recuperarlo";
 
 

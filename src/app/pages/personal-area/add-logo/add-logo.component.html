@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Aggiungi logo</h1>
+            <p class="mt-2 textsize-4">
+                In quest'area puoi inserire il tuo logo così da avere l'area mittente della tua comunicazione personalizzata.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-4 text-center">
+            <strong class="color-red">ATTENZIONE:</strong> <br>
+            <section class="textsize-6">
+                - Lo spazio dedicato al logo è di 95mm X 22mm. <br>
+                - Se il formato dell'immagine è superiore alla dimensione della sezione, l'immagine verrà ridimensionata, scalando in proporzione. <br>
+                - Se inferiore occuperà solo in parte lo spazio definito a partire dal margine sinistro della zona di posizionamento. <br>
+                - Easysender non opera alcun controllo di qualità sul file caricato.
+            </section>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="generic-form">
+                    <div class="col-md-12">
+                        <label class="flex-start">
+                            NOME LOGO
+                            <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertLogo}}" placement="right"></i>
+                        </label>
+                        <input type="text" formControlName="nome_logo" />
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <label>CARICA LOGO <em>(formato jpg, png, jpeg, gif)</em></label>
+                        <input type="file" formControlName="upl_logo" />
+                    </div>
+                    <div class="col-md-12">
+                        <input type="submit" value="SALVA" class="bg-color-green color-white button" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+    <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
+    <div *ngIf="alertMessage" class="alert-message">
+        <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
+    </div>
+
+</div>

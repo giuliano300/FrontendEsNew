@@ -69,6 +69,9 @@ import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizion
 import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
 import { AddReceiverComponent } from './pages/personal-area/add-receiver/add-receiver.component';
 import { StatoInviiComponent } from './pages/stato-invii/stato-invii/stato-invii.component';
+import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
+import { AddLogoComponent } from './pages/personal-area/add-logo/add-logo.component';
+import { AddUserComponent } from './pages/personal-area/add-user/add-user.component';
 
 export const routes: Routes = [
   {
@@ -401,6 +404,21 @@ export const routes: Routes = [
       {
         path: 'addReceiver',
         component: AddReceiverComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'dettaglioSpedizione/:name',
+        component: DettaglioSpedizioneComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'addLogo',
+        component: AddLogoComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'addUser',
+        component: AddUserComponent,
         canActivate: [AuthGuard]
       },
       {
