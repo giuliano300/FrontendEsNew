@@ -55,6 +55,7 @@ export class CalcoloPreventivoComponent {
 
   hiddenRR:boolean = true;
   isTelegram: boolean = false;
+  isVisura: boolean = false;
 
   //VARIABILI PAGINA
   Inviitotali: string = "0";
@@ -106,12 +107,16 @@ export class CalcoloPreventivoComponent {
 
     Promise.all([
       this.formStorage.getForm('step2'),
-    ]).then(([step1]) => {
+      this.formStorage.getForm('invii-totali')
+    ]).then(([step1, step2]) => {
       if(!step1)
         this.router.navigate(['/']);
 
       const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-     
+
+      const invii = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
+      this.Inviitotali = invii.numeroInvii;
+    
       if(datiDecriptati.bollettino == HaveBulletin.si)
         this.bulletin = true;
       else
@@ -172,6 +177,19 @@ export class CalcoloPreventivoComponent {
             else
             {
               this.routerLink = "/invioMultiploAgol4";      
+              this.tipoInvio = "multiplo";
+            }
+          break;     
+          case ProductTypes.VOL: 
+            this.productName = "Visure/Certificati";
+            this.isVisura = true;
+            if(datiDecriptati.tipoinvio == ShippingTypes.singola){
+              this.routerLink = "/visuraSingola3";
+              this.tipoInvio = "singolo";
+            }
+            else
+            {
+              this.routerLink = "/visuraMutipla3";      
               this.tipoInvio = "multiplo";
             }
           break;     
@@ -241,7 +259,7 @@ export class CalcoloPreventivoComponent {
       for(let i = 0; i < destinatariDec.length; i++){
 
           let Recipient: Recipients = Object.assign(new Recipients(), destinatariDec[i]);
-          if(this.productType != ProductTypes.TOL){
+          if(this.productType != ProductTypes.TOL && this.productType != ProductTypes.VOL){
             const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
             Recipient.fileName = fileTrovato!.name;
             Recipient.attachedFile = fileTrovato!.base64;

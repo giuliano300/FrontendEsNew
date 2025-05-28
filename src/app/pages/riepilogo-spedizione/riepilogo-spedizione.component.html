@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="step-bar" [hidden]="!bulletin || !isTelegram">
+            <div class="step-bar" [hidden]="!bulletin || !isTelegram || !isVisura">
                 <ul>
                     <li style="width: 10%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -24,7 +24,7 @@
                 </ul>
             </div>
 
-            <div class="step-bar no-bollettino" [hidden]="bulletin || !isTelegram">
+            <div class="step-bar no-bollettino" [hidden]="bulletin || !isTelegram || !isVisura">
                 <ul>
                     <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 12%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -37,7 +37,7 @@
                 </ul>
             </div>
 
-            <div class="step-bar no-bollettino" [hidden]="isTelegram">
+            <div class="step-bar no-bollettino" [hidden]="!isTelegram">
                 <ul>
                     <li style="width: 12%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 11%;" class="bg-color-green">Invio singolo<i class='bx bxs-right-arrow-alt'></i></li>
@@ -46,6 +46,16 @@
                     <li style="width: 13%;" class="bg-color-green">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 13%;" class="bg-color-green">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 13%;" class="bg-color-green">Preventivo e spedizione</li>
+                </ul>
+            </div>
+            <div class="step-bar no-bollettino" [hidden]="!isVisura">
+                <ul>
+                    <li style="width: 15%;" class="bg-color-green">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Invio {{tipoSpedizione}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 25%;" class="bg-color-green">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Richiedente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Intestatario<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;" class="bg-color-green">Preventivo e spedizione</li>
                 </ul>
             </div>
 

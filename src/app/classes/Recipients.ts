@@ -47,4 +47,9 @@ export class Recipients {
   notified?: boolean | null = false;
   fromApi: boolean = false;
   tempGuid: string = FncUtils.generateGuid();
+
+  //CAMPI VISURA
+  vat?: string;
+  ccia?: string;
+  reaNumber?: string;
 }

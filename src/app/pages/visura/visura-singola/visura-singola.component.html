@@ -61,20 +61,20 @@
                         <li>
                             <label for="DestinatarioSI">
                                 SI
-                                <input id="DestinatarioSI" type="radio" formControlName="tipoDestinatario" value="DestinatarioSI" (change)="removeErroMessage()" />
+                                <input id="DestinatarioSI" type="radio" formControlName="tipoDestinatario" value="SI" (change)="removeErroMessage()" />
                             </label>
                         </li>
                         <li>
                             <label for="DestinatarioNO">
                                 NO
-                                <input id="DestinatarioNO" type="radio" formControlName="tipoDestinatario" value="DestinatarioNO" (change)="removeErroMessage()" />
+                                <input id="DestinatarioNO" type="radio" formControlName="tipoDestinatario" value="NO" (change)="removeErroMessage()" />
                             </label>
                         </li>
                     </ul>
                 </div>
             </div>   
             <div class="group-button">
-                <a routerLink="/invioSingoloLettera">INDIETRO</a>
+                <a routerLink="/tipoVisura">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>
 

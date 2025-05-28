@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="step-bar" [hidden]="!bulletin || isTelegram">
+            <div class="step-bar" [hidden]="!bulletin || isTelegram || isVisura">
                 <ul>
                     <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 10%;">Invio {{tipoInvio}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -23,7 +23,7 @@
                 </ul>
             </div>
 
-            <div class="step-bar no-bollettino" [hidden]="bulletin || isTelegram">
+            <div class="step-bar no-bollettino" [hidden]="bulletin || isTelegram || isVisura">
                 <ul>
                     <li style="width: 12%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 11%;">Invio {{tipoInvio}} <i class='bx bxs-right-arrow-alt'></i></li>
@@ -43,6 +43,15 @@
                     <li style="width: 20%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 13%;">Mittente<i class='bx bxs-right-arrow-alt'></i></li>
                     <li style="width: 13%;">Destinatario<i class='bx bxs-right-arrow-alt'></i></li>
+                </ul>
+            </div>
+            <div class="step-bar no-bollettino" [hidden]="!isVisura">
+                <ul>
+                    <li style="width: 15%;">{{ productName | titlecase }} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;">Invio {{tipoInvio}} <i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 24%;">Configura {{productName}}<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;">Richiedente<i class='bx bxs-right-arrow-alt'></i></li>
+                    <li style="width: 15%;">Intestatario<i class='bx bxs-right-arrow-alt'></i></li>
                 </ul>
             </div>
         </div>

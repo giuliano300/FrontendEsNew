@@ -29,9 +29,11 @@ form: FormGroup;
     if (this.form.valid) {
       const tipoInvio = this.form.value.tipoInvio;
 
-      if (tipoInvio === 'invio-singolo') {
+      if (tipoInvio === 'invio-singolo') 
+      {
         this.router.navigate(['/visuraSingola']);
-      } else if (tipoInvio === 'invio-multiplo') {
+      } 
+      else if (tipoInvio === 'invio-multiplo') {
         this.router.navigate(['/visuraMultipla']);
       }
     } else {

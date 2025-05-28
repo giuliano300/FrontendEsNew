@@ -25,11 +25,11 @@
                 <div class="col-md-12">
                     <section class="select-form-type">
                         <span>Seleziona un richiedente dalla rubrica</span>
-                        <select formControlName="sel_mittente">
-                            <option value="" selected>-- Seleziona richiedente dalla rubrica --</option>
-                            <option value="1">Ewt</option>
-                            <option value="2">EasySender</option>
-                            <option value="3">Scialb</option>
+                        <select formControlName="sel_mittente" (change)="setFormSenderUser()">
+                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
+                             <option *ngFor="let option of userSenders" [value]="option.id">
+                                {{ option.businessName }}
+                            </option>      
                         </select>
                     </section>
                 </div>
@@ -45,10 +45,10 @@
                     <ul>
                         <li>
                             <label class="flex-start">
-                                NOME
+                                NOMINATIVO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="nome" />
+                            <input type="text" formControlName="nominativo" />
                         </li>
                         <li>
                             <label class="flex-start">
@@ -56,25 +56,6 @@
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                             </label>
                             <input type="text" formControlName="indirizzo" />
-                        </li>
-                        <li>
-                            <label>CITTÀ</label>
-                            <input type="text" formControlName="citta" />
-                        </li>
-                        <li>
-                            <label>TELEFONO</label>
-                            <input type="phone" formControlName="telefono" />
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <ul>
-                        <li>
-                            <label class="flex-start">
-                                COGNOME
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="cognome" />
                         </li>
                         <li>
                             <label>CAP</label>
@@ -87,9 +68,34 @@
                             </label>
                             <input type="text" formControlName="provincia" maxlength="2" />
                         </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
                         <li>
-                            <label>EMAIL</label>
-                            <input type="email" formControlName="email" />
+                            <label class="flex-start">
+                                COMPLEMENTO NOMINATIVO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="comp_nominativo" />
+                        </li>
+                        <li>
+                            <label class="flex-start">
+                                COMPLETAMENTO INDIRIZZO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="comp_indirizzo" />
+                        </li>
+                        <li>
+                            <label>CITTÀ</label>
+                            <input type="text" formControlName="citta" />
+                        </li>
+                        <li>
+                            <label class="flex-start">
+                                STATO
+                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
+                            </label>
+                            <input type="text" formControlName="stato" />
                         </li>
                     </ul>
                 </div>
@@ -100,11 +106,8 @@
                 <div class="col-md-8">
                     <ul>
                         <li>
-                            <label class="flex-start">
-                                STATO
-                                <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
-                            </label>
-                            <input type="text" formControlName="stato" />
+                            <label>EMAIL</label>
+                            <input type="email" formControlName="email" />
                         </li>
                     </ul>                        
                 </div>
@@ -133,25 +136,28 @@
                         <ul>
                             <li>
                                 <label class="flex-start">
-                                    NOME
+                                    NOMINATIVO
                                     <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="nome_2" />
+                                <input type="text" formControlName="nominativo_ar" />
                             </li>
                             <li>
                                 <label class="flex-start">
                                     INDIRIZZO
                                     <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="indirizzo_2" />
+                                <input type="text" formControlName="indirizzo_ar" />
                             </li>
                             <li>
-                                <label>CITTÀ</label>
-                                <input type="text" formControlName="citta_2" />
+                                <label>CAP</label>
+                                <input type="text" formControlName="cap_ar" maxlength="5" />
                             </li>
                             <li>
-                                <label>TELEFONO</label>
-                                <input type="phone" formControlName="telefono_2" />
+                                <label class="flex-start">
+                                    PROVINCIA
+                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
+                                </label>
+                                <input type="text" formControlName="provincia_ar" maxlength="2" />
                             </li>
                         </ul>
                     </div>
@@ -159,25 +165,28 @@
                         <ul>
                             <li>
                                 <label class="flex-start">
-                                    COGNOME
-                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
+                                    COMPLETAMENTO NOMINATIVO
+                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="cognome_2" />
-                            </li>
-                            <li>
-                                <label>CAP</label>
-                                <input type="text" formControlName="cap_2" maxlength="5" />
+                                <input type="text" formControlName="comp_nominativo_ar" />
                             </li>
                             <li>
                                 <label class="flex-start">
-                                    PROVINCIA
-                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
+                                    COMPLETAMENTO INDIRIZZO
+                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="provincia_2" maxlength="2" />
+                                <input type="text" formControlName="comp_indirizzo_ar" />
                             </li>
                             <li>
-                                <label>EMAIL</label>
-                                <input type="email" formControlName="email_2" />
+                                <label>CITTÀ</label>
+                                <input type="text" formControlName="citta_ar" />
+                            </li>
+                            <li>
+                                <label class="flex-start">
+                                    STATO
+                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
+                                </label>
+                                <input type="text" formControlName="stato_ar" />
                             </li>
                         </ul>
                     </div>
@@ -187,14 +196,11 @@
                     <div class="col-md-2"></div>
                     <div class="col-md-8">
                         <ul>
-                            <li>
-                                <label class="flex-start">
-                                    STATO
-                                    <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
-                                </label>
-                                <input type="text" formControlName="stato_2" />
+                             <li>
+                                <label>EMAIL</label>
+                                <input type="email" formControlName="email_ar" />
                             </li>
-                        </ul>                        
+                       </ul>                        
                     </div>
                     <div class="col-md-2"></div>
                 </div>

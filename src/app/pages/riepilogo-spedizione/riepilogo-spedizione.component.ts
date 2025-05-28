@@ -32,6 +32,7 @@ export class RiepilogoSpedizioneComponent {
   ffwLink: string = "";
   isTelegram: boolean = false;
   rrTelegramma?: string | null = null;
+  isVisura: boolean = false;
 
   ngOnInit(): void {
 
@@ -50,26 +51,27 @@ export class RiepilogoSpedizioneComponent {
           case ProductTypes.ROL: 
           case ProductTypes.MOL: 
             this.productName = "raccomandata";
-            this.ffwLink = "/statoInviiRaccomandate";
+            this.ffwLink = "/statoInvii/1";
             break;
           case ProductTypes.LOL: 
           case ProductTypes.COL: 
             this.productName = "lettera";
-            this.ffwLink = "/statoInviiLettere";
+            this.ffwLink = "/statoInvii/2";
             break;
           case ProductTypes.TOL: 
             this.productName = "telegramma";
-            this.ffwLink = "/statoInviiTelegrammi";
-            this.isTelegram = false;
+            this.ffwLink = "/statoInvii/3";
+            this.isTelegram = true;
             this.rrTelegramma = datiDecriptati.rrTelegramma ? "Con " : "Senza ";
             break;
           case ProductTypes.AGOL: 
             this.productName = "atti giudiziari";
-            this.ffwLink = "/statoInviiAgol";
+            this.ffwLink = "/statoInvii/4";
             break;
           case ProductTypes.VOL: 
-            this.productName = "visure";
-            this.ffwLink = "/statoRichiesteVisure";
+            this.productName = "visure/Certificati";
+            this.ffwLink = "/statoInvii/7";
+            this.isVisura = true;
             break;
         }
 
