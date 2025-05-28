@@ -5,6 +5,8 @@ import { CompleteOperation } from '../ViewModel/CompleteOperation';
 import { Observable } from 'rxjs';
 import { Operations } from '../classes/Operations';
 import { GetStatoInvii } from '../interfaces/GetStatoInvii';
+import { GetArchivioSpedizioniResponse } from '../interfaces/GetArchivioSpedizioniResponse';
+import { GetArchivioVisureResponse } from '../interfaces/GetArchivioVisureResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +23,45 @@ export class OperationService {
 
     getStatoInvii(userId:number, operationType: number): Observable<GetStatoInvii[]>{
       return this.http.get<GetStatoInvii[]>(this.apiUrl + "/GetStatoInvii?UserId=" + userId + "&OperationType=" + operationType);
+    }
+
+    getArchivioSpedizioni(
+      userId: number,
+      startDate?: string | null,
+      endDate?: string | null,
+      pageIndex: number = 0,
+      pageSize: number = 3
+    ): Observable<GetArchivioSpedizioniResponse> {
+      const params = new URLSearchParams({
+        UserId: userId.toString(),
+        startDate: startDate ?? '',
+        endDate: endDate ?? '',
+        pageIndex: pageIndex.toString(),
+        pageSize: pageSize.toString()
+      });
+
+      return this.http.get<GetArchivioSpedizioniResponse>(`${this.apiUrl}/GetArchivioSpedizioni?${params.toString()}`);
+    }
+
+    getArchivioVisure(
+      userId: number,
+      startDate?: string | null,
+      endDate?: string | null,
+      businessName?: string | null,
+      vat?: string | null,
+      pageIndex: number = 0,
+      pageSize: number = 3
+    ): Observable<GetArchivioVisureResponse> {
+      const params = new URLSearchParams({
+        UserId: userId.toString(),
+        startDate: startDate ?? '',
+        endDate: endDate ?? '',
+        businessName: businessName ?? '',
+        vat: vat ?? '',
+        pageIndex: pageIndex.toString(),
+        pageSize: pageSize.toString()
+      });
+
+      return this.http.get<GetArchivioVisureResponse>(`${this.apiUrl}/GetArchivioVisure?${params.toString()}`);
     }
 }

@@ -52,8 +52,6 @@ import { TipoVisuraComponent } from './pages/visura/tipo-visura/tipo-visura.comp
 import { VisuraSingolaComponent } from './pages/visura/visura-singola/visura-singola.component';
 import { VisuraSingola2Component } from './pages/visura/visura-singola-2/visura-singola-2.component';
 import { VisuraSingola3Component } from './pages/visura/visura-singola-3/visura-singola-3.component';
-import { VisuraMultiplaComponent } from './pages/visura/visura-multipla/visura-multipla.component';
-import { VisuraMultipla2Component } from './pages/visura/visura-multipla-2/visura-multipla-2.component';
 import { InvioPaccoComponent } from './pages/pacchi/invio-pacco/invio-pacco.component';
 import { InvioPacco2Component } from './pages/pacchi/invio-pacco-2/invio-pacco-2.component';
 import { AddSenderComponent } from './pages/personal-area/add-sender/add-sender.component';
@@ -320,16 +318,6 @@ export const routes: Routes = [
       {
         path: 'visuraSingola3',
         component: VisuraSingola3Component,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'visuraMultipla',
-        component: VisuraMultiplaComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'visuraMultipla2',
-        component: VisuraMultipla2Component,
         canActivate: [AuthGuard]
       },
       {

@@ -52,4 +52,5 @@ export class Recipients {
   vat?: string;
   ccia?: string;
   reaNumber?: string;
+  typeVisura?: number;
 }
