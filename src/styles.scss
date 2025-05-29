@@ -1278,5 +1278,20 @@ a.download-csv:link, a.download-csv:visited{
             color: $primary-color;
         }
     }
+    button.back{
+        color: $red-color;
+
+        i{
+            color: $red-color;
+        }
+
+        &:hover{
+            color: $black-color;
+
+        i{
+            color: $black-color;
+        }
+        }
+    }
 }
 

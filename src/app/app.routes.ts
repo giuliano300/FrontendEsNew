@@ -395,7 +395,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'dettaglioSpedizione/:name',
+        path: 'dettaglioSpedizione/:id',
         component: DettaglioSpedizioneComponent,
         canActivate: [AuthGuard]
       },

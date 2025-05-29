@@ -122,4 +122,17 @@ export class ArchivioVisureComponent {
 
     this.getArchivioVisure();
   }
+
+  downloadFile(doc:string){
+
+     const blob = FncUtils.getFileFromBase64(doc);
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'documento.pdf';
+      link.click();
+
+      window.URL.revokeObjectURL(link.href);
+
+  }
 }
