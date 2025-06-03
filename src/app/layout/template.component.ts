@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Users } from '../interfaces/Users';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-template',
@@ -11,7 +12,7 @@ import { Users } from '../interfaces/Users';
   styleUrls: ['./template.component.scss']
 })
 export class TemplateComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private userService: UsersService) {}
 
   user: Users | null  = null;
 
@@ -38,8 +39,12 @@ export class TemplateComponent {
       }
   
     this.user! = JSON.parse(user!);
-    
-    this.userName = this.user!.businessName;
+
+    this.userService.setUserName(this.user!.businessName);
+
+    this.userService.userName$.subscribe(name => {
+      this.userName = name
+    });
   }
 
   OpenMenu(){

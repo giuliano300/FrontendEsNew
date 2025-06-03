@@ -61,3 +61,10 @@ export enum Options
   rr = 2,
   
 }
+
+export enum UserTypes
+{
+  Administrator = 1,
+  Visualizzatore = 2,
+  Inseritore = 3
+}

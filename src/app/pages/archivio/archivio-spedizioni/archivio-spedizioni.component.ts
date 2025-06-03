@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoDettaglioInvii } from '../../../enviroments/enviroments';
-import { ActivatedRoute } from '@angular/router';
 import { OperationService } from '../../../services/operation.service';
 import { Users } from '../../../interfaces/Users';
 import { FncUtils } from '../../../fncUtils/fncUtils';
@@ -23,7 +22,7 @@ import { constPageIndex, constPageSize } from '../../../../main';
   styleUrl: './archivio-spedizioni.component.scss'
 })
 export class ArchivioSpedizioniComponent {
-  constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService) {}
+  constructor(private router: Router, private operationService: OperationService) {}
 
   infoDettaglioInvii = infoDettaglioInvii;
   user: Users | null  = null;  

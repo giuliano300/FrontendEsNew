@@ -120,6 +120,11 @@ small{
     color: #567FC5;
 }
 
+.button-red{
+    background-color: $red-color!important;
+    border-color: $red-color!important;
+}
+
 /* ! Helpers
 ---------------------------------------------------------*/
 
@@ -401,6 +406,12 @@ small{
     font-weight: 400;
     font-size: 16px;
 
+}
+
+.pwd-in{
+    font-size: 14px;
+    float: left;
+    margin:0px 0 10px;
 }
 
 .is-valid{

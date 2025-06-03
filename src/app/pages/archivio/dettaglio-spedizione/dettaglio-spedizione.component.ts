@@ -26,6 +26,7 @@ import { UserProducts } from '../../../interfaces/UserProducts';
 import { UserOptions } from '../../../interfaces/UserOptions';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
 
 
 @Component({
@@ -145,19 +146,11 @@ export class DettaglioSpedizioneComponent {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    // Metodo per aprire il modal e salvare il riferimento
-    openModal(content: any, id: number) {
-
-      console.log(id);
-
+    openModal(id: number) {
       this.recipientService.getDettaglioDestinatario(id)
-        .subscribe(response=>{
-        this.modalData = response;
-        const modalRef = this.modalService.open(content, { centered: true, backdrop: 'static', keyboard: true });
-        this.currentModalRef = modalRef;
-
-        // Gestione della chiusura "manuale" o tramite esc/click esterno
-        modalRef.result.catch(() => {}); // evita errori non gestiti
+        .subscribe(response => {
+          this.currentModalRef = this.modalService.open(ModalSpedizioneComponent, { size: 'lg' });
+          this.currentModalRef.componentInstance.modalData = response;
       })
     }
 

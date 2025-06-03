@@ -2,15 +2,15 @@ import { Component, ViewChild, ViewEncapsulation } from '@angular/core';import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { UserSenders } from '../../interfaces/UserSenders';
-import { UserSendersService } from '../../services/user-senders.service';
-import { Users } from '../../interfaces/Users';
+import { UserSenders } from '../../../interfaces/UserSenders';
+import { UserSendersService } from '../../../services/user-senders.service';
+import { Users } from '../../../interfaces/Users';
 import { Router } from '@angular/router';
-import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { infoBtnDelete, infoBtnEdit } from '../../enviroments/enviroments';
+import { infoBtnDelete, infoBtnEdit } from '../../../enviroments/enviroments';
 
 @Component({
   selector: 'app-user-senders',

@@ -9,7 +9,6 @@ import { PasswordChangeComponent } from './pages/passwordChange/password-change.
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RegistrationFinalStepComponent } from './pages/registrationFinalStep/registrationFinalStep.component';
 import { RegistrationEndComponent } from './pages/registrationEnd/registrationEnd.component';
-import { UserSendersComponent } from './pages/userSenders/user-senders.component';
 import { NuovaSpedizioneComponent } from './pages/nuova-spedizione/nuova-spedizione.component';
 import { TipoSpedizioneRaccomandataComponent } from './pages/raccomandata/tipo-spedizione/tipo-spedizione.component';
 import { InvioSingoloRaccomandataComponent } from './pages/raccomandata/invio-singolo-raccomandata/invio-singolo-raccomandata.component';
@@ -70,6 +69,7 @@ import { StatoInviiComponent } from './pages/stato-invii/stato-invii/stato-invii
 import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
 import { AddLogoComponent } from './pages/personal-area/add-logo/add-logo.component';
 import { AddUserComponent } from './pages/personal-area/add-user/add-user.component';
+import { UserSendersComponent } from './pages/personal-area/userSenders/user-senders.component';
 
 export const routes: Routes = [
   {
@@ -406,6 +406,11 @@ export const routes: Routes = [
       },
       {
         path: 'addUser',
+        component: AddUserComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'modUser/:id',
         component: AddUserComponent,
         canActivate: [AuthGuard]
       },
