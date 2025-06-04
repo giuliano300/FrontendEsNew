@@ -1,71 +1,191 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserSendersService } from '../../../services/user-senders.service';
+import { Users } from '../../../interfaces/Users';
+import { UserSenders } from '../../../interfaces/UserSenders';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { FncUtils } from '../../../fncUtils/fncUtils';
+import { UsersService } from '../../../services/users.service';
+import { inserisciText, modificaText } from '../../../enviroments/enviroments';
+import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
 
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatListModule, CapitalizePipe],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss'
 })
 export class AddUserComponent {
   alertMessage = false;
   alertText = '';
+  user: Users | null = null;
+  oldUser: Users | null = null;
 
-  options: string[] = ['EWT', 'Panificio', 'Mario Rossi', 'Tekmerion', 'Mimmo Carlino sas'];
-  selectedOptions: string[] = [];
+  options: UserSenders[] = [];
+  selectedOptions: number[] = [];
+  password = '';
+  showStrength = true;
+  FncUtils = FncUtils;
+  inserimento = false;
+  inserisciModificaText = inserisciText
+
+  selectedSenderIds: number[] = [];
 
   form: FormGroup;
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder, 
+    private userSenderService: UserSendersService, private userService: UsersService, 
+    private route: ActivatedRoute) {
     this.form = this.fb.group({
-      sel_tipo: ['', [Validators.required]],
-      nome: ['', [Validators.required]],
-      cognome: ['', [Validators.required]],
-      citta: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      userTypes: ['', [Validators.required]],
+      businessName: ['', [Validators.required, Validators.maxLength(44)]],
+      address: ['', [Validators.required]],
+      zipCode: ['', [Validators.required, Validators.maxLength(5)]],
+      province: ['', [Validators.required, Validators.maxLength(2)]],
+      city: ['', [Validators.required]],
+      mobile: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      pwd: ['', [Validators.required]],
-      selectedOptions: [[], [this.minSelectedOptions(1)]]
+      pwd: [''],
+      pec: [''],
+      id: ['']
     });
   }
 
-  onCheckboxChange(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    const value = checkbox.value;
-    const selected = this.selectedOptions;
-
-    if (checkbox.checked) {
-      if (!selected.includes(value)) {
-        selected.push(value);
-      }
-    } else {
-      const index = selected.indexOf(value);
-      if (index >= 0) {
-        selected.splice(index, 1);
-      }
+  ngOnInit(): void {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
     }
 
-    this.form.get('selectedOptions')?.setValue(selected);
-    this.form.get('selectedOptions')?.markAsTouched();
+    this.user! = JSON.parse(user!);
+
+    this.form.patchValue({
+      id: 0
+    });
+
+    this.route.paramMap.subscribe(params => {
+      if(!params.get('id')){
+        this.form.get('pwd')?.setValidators([Validators.required]);
+        this.form.get('pwd')?.updateValueAndValidity();
+        this.inserimento = true;
+        return;
+      }
+
+      this.inserisciModificaText = modificaText;
+
+      const id = parseInt(params.get('id')!);
+       this.userService.getUserById(id)
+        .subscribe((data: Users) => {
+        if (!data) {
+          console.log("errore nella risposta");
+        } 
+        else 
+          this.form.patchValue({
+            userTypes: data.userTypes || '',
+            businessName: data.businessName || '',
+            address: data.address || '',
+            zipCode: data.zipCode || '',
+            province: data.province || '',
+            city: data.city || '',
+            mobile: data.mobile || '',
+            email: data.email || '',
+            pec: data.pec || '',
+            id: data.id
+          });
+          this.selectedSenderIds = JSON.parse(data.arraySenderId!);  
+          this.selectedOptions = JSON.parse(data.arraySenderId!);
+      });
+    });
+
+
+    this.getUserSenders();
   }
+
+  getUserSenders(){
+    this.userSenderService.getUserSenders(this.user!.id!)
+    .subscribe((data: UserSenders[]) => {
+      if (!data || data.length === 0) {
+        console.log('Nessun dato disponibile');
+      } 
+      else 
+      {
+        this.options = data;
+      }
+    });
+  }
+
+  onCheckboxChange(event: MatSelectionListChange) {
+    this.selectedOptions = event.source.selectedOptions.selected.map(option => option.value);
+    //console.log(this.selectedOptions);
+  }
+
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.router.navigate(['/utentiList']);
-    } else {
+     const formValues = this.form.value;
+     const userData: Users = this.user!;
+      Object.assign(userData, {
+        userTypes: formValues.userTypes,
+        businessName: formValues.businessName,
+        address: formValues.address,
+        zipCode: formValues.zipCode,
+        province: formValues.province,
+        city: formValues.city,
+        mobile: formValues.mobile,
+        email: formValues.email,
+        password: formValues.pwd,
+        pec: formValues.pec,
+        parentId: this.user!.id
+      });
+
+      userData.arraySenderId =  JSON.stringify(this.selectedOptions);
+      userData.id = formValues.id;
+
+      if(userData.id == 0)
+      {
+        this.userService.setUser(userData)
+          .subscribe((data: Users) => {
+          if (!data) {
+            console.log('Nessun dato disponibile');
+          } 
+          this.router.navigate(['/utentiList']);
+        });
+      }
+      else
+      {
+        this.userService.updateUser(userData)
+          .subscribe((data: Users) => {
+          if (!data) {
+            console.log('Nessun dato disponibile');
+          } 
+          this.router.navigate(['/utentiList']);
+        });
+      }
+      
+    }
+    else 
+    {
       this.alertMessage = true;
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';
     }
   }
 
-  // Custom validator per verificare che almeno una checkbox sia selezionata
-  minSelectedOptions(min: number) {
-    return (control: FormControl) => {
-      const value = control.value;
-      return value && value.length >= min ? null : { required: true };
-    };
+
+  getPasswordClass(): string {
+    const strength = FncUtils.checkPasswordStrength(this.password);
+    return `pwd-in pwd-${strength}`;
   }
+  
+  get passwordStrength(): 'debole' | 'media' | 'forte' {
+    return FncUtils.checkPasswordStrength(this.password);
+  }
+
+  onPasswordInput() {
+    this.password = this.form.get('pwd')?.value || '';
+  }
+
 }

@@ -4,59 +4,135 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoBtnDownload } from '../../../enviroments/enviroments';
+import { Users } from '../../../interfaces/Users';
+import { constPageIndex, constPageSize } from '../../../../main';
+import { OperationService } from '../../../services/operation.service';
+import { FncUtils } from '../../../fncUtils/fncUtils';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-archivio-visure',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
   templateUrl: './archivio-visure.component.html',
   styleUrl: './archivio-visure.component.scss'
 })
 export class ArchivioVisureComponent {
 
-    constructor(private router: Router) {}
+  constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService) {}
+
+  infoBtnDownload = infoBtnDownload;
+  user: Users | null  = null;  
+  dataSource = new MatTableDataSource<any>([]);
+  startDate: string | null = null;
+  endDate: string | null = null;
+  nominativo: string | null = null;
+  piva: string | null = null;
+  totalRecords: number = 0;
+  constPageSize: number = constPageSize;
   
-    infoBtnDownload = infoBtnDownload;
-    
+
+  form = new FormGroup({
+    start_date: new FormControl(''),
+    end_date: new FormControl(''),
+    nominativo: new FormControl(''),
+    piva: new FormControl('')
+  });
   
-    form = new FormGroup({
-      start_date: new FormControl(''),
-      end_date: new FormControl(''),
-      nominativo: new FormControl(''),
-      piva: new FormControl(''),
-      prodotto: new FormControl(''),
-      esito: new FormControl(''),
+
+  ngOnInit() {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.user! = JSON.parse(user!);
+
+  }
+
+  getArchivioVisure(){
+    const pageIndex = this.paginator?.pageIndex || constPageIndex;
+    const pageSize = this.paginator?.pageSize || constPageSize;
+
+    this.operationService.getArchivioVisure(
+      this.user!.id!,
+      this.startDate,
+      this.endDate,
+      this.nominativo,
+      this.piva,
+      pageIndex,
+      pageSize
+    )
+    .subscribe((response) => {
+      this.totalRecords = response.totalCount;
+      this.dataSource.data = response.data;
     });
+  }
   
   
+  displayedColumns: string[] = ['productName', 'businessName', 'sender', 'vat', 'valid','date','price','code','state','doc'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    // Gestione cambio pagina
+    this.paginator.page.subscribe(() => {
+      this.getArchivioVisure();
+    });
+
+    this.getArchivioVisure();
+  }
+
+  goToDetail(row: any) {
+    // Per esempio: vai a /dettaglio/[nome]
+    this.router.navigate(['/dettaglioSpedizione', row.id]);
+  }
   
-    displayedColumns: string[] = ['product', 'receiver','owner','piva','result','acceptance', 'price','code', 'status', 'actions'];
-    dataSource = new MatTableDataSource(USER_DATA);
-    
-      @ViewChild(MatPaginator) paginator!: MatPaginator;
-      @ViewChild(MatSort) sort!: MatSort;
-    
-    
-    
-      ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }
-    
-      applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-      }
-  
+  getDate(date:string): string{
+    return FncUtils.GetFormattedData(date);
+  }
+
+  filterResults(){
+    this.startDate = this.form.value.start_date || null;
+    this.endDate = this.form.value.end_date || null;
+    this.nominativo = this.form.value.nominativo || null;
+    this.piva = this.form.value.piva || null;
+    if (this.paginator) 
+        this.paginator.firstPage();
+
+    this.getArchivioVisure();  
+  }
+
+  filterRemove() {
+    this.startDate = null;
+    this.endDate = null;
+    this.nominativo = null;
+    this.piva = null;
+    this.form.get('nominativo')?.setValue('');
+    this.form.get('piva')?.setValue('');
+
+    if (this.paginator)
+      this.paginator.firstPage();
+
+    this.getArchivioVisure();
+  }
+
+  downloadFile(doc:string){
+
+     const blob = FncUtils.getFileFromBase64(doc);
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'documento.pdf';
+      link.click();
+
+      window.URL.revokeObjectURL(link.href);
+
+  }
 }
-
-
-const USER_DATA = [
-  { product:'VISURA', receiver:'EWT srl', owner:'Mario Rossi', piva:'00123444555', result:'ok', acceptance:'15/05/2025', price:31.25, code:'ab012345cd', status:'Completato' },
-  { product:'VISURA', receiver:'ComunicoScialb', owner:'Domenici Carlino', piva:'MMOCRL29A16F839C', result:'ok', acceptance:'10/05/2025', price:15, code:'AV555666444', status:'Completato' },
-  { product:'CERTIFICATO', receiver:'I Colombi sas', owner:'Carlo Bianchi', piva:'000578933664', result:'ok', acceptance:'21/03/2025', price:18.36, code:'AD342FGCV', status:'Completato' },
-];
-

@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
-            <h1>Inserisci un nuovo utente</h1>
+            <h1>{{inserisciModificaText | capitalize }}  un utente</h1>
             <p class="mt-2 textsize-4">
-                Compila i campi del form per inserire un nuovo utente.
+                Compila i campi del form e {{inserisciModificaText }} un utente.
             </p>
         </div>
     </div>
@@ -14,69 +14,76 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="row mb-2">
+                    <div class="row mb-3">
                         <div class="col-md-4">
                             <label>TIPOLOGIA</label>
-                            <select formControlName="sel_tipo" >
+                            <select formControlName="userTypes" >
                                 <option value="">-- Seleziona tipologia --</option>
-                                <option value="1">Visualizzazione e inserimento</option>
                                 <option value="2">Solo visualizzazione</option>
+                                <option value="3">Visualizzazione e inserimento</option>
                             </select>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-3">
                         <div class="col-md-4">
-                            <label>NOME</label>
-                            <input type="text" formControlName="nome" />
+                            <label>RAGIONE SOCIALE / NOME E COGNOME</label>
+                            <input type="text" formControlName="businessName" />
                         </div>
                         <div class="col-md-4">
-                            <label>COGNOME</label>
-                            <input type="text" formControlName="cognome" />
+                            <label>INDIRIZZO</label>
+                            <input type="text" formControlName="address" />
                         </div>
                         <div class="col-md-4">
                             <label>CITTÀ</label>
-                            <input type="text" formControlName="citta" />
+                            <input type="text" formControlName="city" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label>CAP</label>
+                            <input type="text" formControlName="zipCode" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>PROVINCIA</label>
+                            <input type="text" formControlName="province" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>PEC</label>
+                            <input type="text" formControlName="pec" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-md-4">
                             <label>TELEFONO</label>
-                            <input type="phone" formControlName="telefono" />
+                            <input type="phone" formControlName="mobile" />
                         </div>
                         <div class="col-md-4">
                             <label>EMAIL</label>
                             <input type="email" formControlName="email" />
                         </div>
                         <div class="col-md-4">
-                            <label>PASSWORD</label>
-                            <input type="password" formControlName="pwd" />
+                            <label>PASSWORD <span *ngIf="!inserimento">(inserisci la password se vuoi cambiarla)</span></label>
+                            <input type="password" formControlName="pwd" (input)="onPasswordInput()" />
+                            <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
+                                Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <h4 class="color-blue">SCEGLI I MITTENTI</h4>
-                    <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire le comunicazioni.</p>
-                    <div class="sender-list">
-                        <div *ngFor="let option of options">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    [value]="option"
-                                    (change)="onCheckboxChange($event)"
-                                />
-                                {{ option }}
-                            </label>
-                            <div class="text-danger" *ngIf="form.get('selectedOptions')?.errors?.['required'] && form.get('selectedOptions')?.touched">
-                                Seleziona almeno un'opzione.
-                            </div>
-                        </div>                    
-                    </div>
+                    <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni.</p>
+                    <mat-selection-list class="sender-selection" (selectionChange)="onCheckboxChange($event)">
+                        <mat-list-option *ngFor="let option of options" [value]="option.id" [selected]="selectedSenderIds.includes(option.id!)">
+                            {{ option.businessName }}
+                        </mat-list-option>
+                    </mat-selection-list>
                 </div>
             </div>
 
 
             <div class="group-button">
-                <input type="submit" value="SALVA" class="bg-color-green color-white" />
+                <input type="submit" value="SALVA" class="bg-color-green color-white" [disabled]="form.invalid || form.invalid || selectedOptions.length == 0" />
             </div>
 
             <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
@@ -84,7 +91,7 @@
                 <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
             </div>
             
-
+            <input type="hidden" formControlName = "id">
         </form>
     </div>
 </div>

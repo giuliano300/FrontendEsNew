@@ -1,6 +1,7 @@
 export interface Users {
   id?: number;
   parentId?: number;
+  userTypes?: number;
   guid: string;
   businessName: string;
   vatNumber: string;
@@ -12,6 +13,9 @@ export interface Users {
   pec: string;
   usernamePoste: string;
   passwordPoste: string;
+  province?: string;
+  mobile?: string;
+  arraySenderId?: string;
   enabled: boolean;
   deleted: boolean;
 }

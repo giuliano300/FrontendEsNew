@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Users } from '../interfaces/Users';
+import { UsersService } from '../services/users.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -15,14 +16,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class TemplateComponent {
   constructor(
     private router: Router, 
+    private userService: UsersService,
     private modalService: NgbModal
-  ) {}
+    ) {}
 
   screenTooSmall = false;
   user: Users | null  = null;
   userName: string | null = null;
   currentModalRef: any;
-
   
   logout(){
     localStorage.removeItem('authToken');
@@ -57,8 +58,8 @@ export class TemplateComponent {
   checkScreenSize() {
     this.screenTooSmall = window.innerWidth < 1200;
   }
-  
-  OpenMenu(){
+
+ OpenMenu(){
     document.querySelector('.side-menu')!.classList.add('open');
     document.querySelector('.menu-overlay')!.classList.add('visible');
     document.querySelector('.menu-overlay')!.classList.remove('hidden');
