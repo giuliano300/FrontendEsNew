@@ -3,15 +3,16 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState, inserisciText, modificaText } from '../../../enviroments/enviroments';
 import { Users } from '../../../interfaces/Users';
 import { UserSendersService } from '../../../services/user-senders.service';
 import { UserSenders } from '../../../interfaces/UserSenders';
+import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
 
 
 @Component({
   selector: 'app-add-sender',
-  imports: [ReactiveFormsModule, CommonModule, NgbModule],
+  imports: [ReactiveFormsModule, CommonModule, NgbModule, CapitalizePipe],
   templateUrl: './add-sender.component.html',
   styleUrl: './add-sender.component.scss'
 })
@@ -29,6 +30,7 @@ export class AddSenderComponent {
     alertComplAddress = alertComplAddress;
     alertProvince = alertProvince;
     alertState = alertState;
+    inserisciModificaText = inserisciText;
 
     constructor(private router: Router, private fb: FormBuilder, private userSenderService: UserSendersService, private route: ActivatedRoute) {
       this.form = this.fb.group({
@@ -67,6 +69,8 @@ export class AddSenderComponent {
           return;
         }
   
+        this.inserisciModificaText = modificaText
+
         const id = parseInt(params.get('id')!);
           this.userSenderService.getUserSender(id)
           .subscribe((data: UserSenders) => {

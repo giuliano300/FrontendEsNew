@@ -8,11 +8,13 @@ import { UserSenders } from '../../../interfaces/UserSenders';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { UsersService } from '../../../services/users.service';
+import { inserisciText, modificaText } from '../../../enviroments/enviroments';
+import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
 
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatListModule],
+  imports: [ReactiveFormsModule, CommonModule, MatListModule, CapitalizePipe],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss'
 })
@@ -28,6 +30,7 @@ export class AddUserComponent {
   showStrength = true;
   FncUtils = FncUtils;
   inserimento = false;
+  inserisciModificaText = inserisciText
 
   selectedSenderIds: number[] = [];
 
@@ -71,6 +74,8 @@ export class AddUserComponent {
         this.inserimento = true;
         return;
       }
+
+      this.inserisciModificaText = modificaText;
 
       const id = parseInt(params.get('id')!);
        this.userService.getUserById(id)
