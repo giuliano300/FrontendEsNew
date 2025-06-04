@@ -1,63 +1,86 @@
-<header class="container-header">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
+<div *ngIf="screenTooSmall" class="unsupported-screen">
+  <div class="unsupported-message">
+    <img src="/assets/img/img-not-supported.png" alt="dispositivo non supportato">
+    <h2>Dispositivo non supportato</h2>
+    <p>Per utilizzare il portale è necessario uno schermo con risoluzione almeno <strong>1280px</strong>.</p>
+  </div>
+</div>
 
-          <div class="header">
 
-            <div class="header__logo">
-              <a routerLink="/dashboard">
-                <img src="/assets/img/logo.png" >
-              </a>
-            </div>
-    
-            <ul class="header__menu">
-              <li><a routerLink="/dashboard">Home</a></li>
-              <li><a routerLink="/nuovaSpedizione">Nuova spedizione</a></li>
-              <li class="has-chid">
-                <a>Stato invii</a>
-                <ul>
-                    <li><a routerLink="/statoInvii/1">Stato invii Raccomandate</a></li>
-                    <li><a routerLink="/statoInvii/2">Stato invii Lettere</a></li>
-                    <li><a routerLink="/statoInvii/3">Stato invii Telegrammi</a></li>
-                    <li><a routerLink="/statoInvii/6">Stato invii Agol</a></li>
-                    <li><a routerLink="/statoInvii/7">Stato richieste Visure/Certificati</a></li>
-                </ul>
-              </li>
-              <li class="has-chid">
-                <a>Archivio</a>
-                <ul>
-                    <li><a routerLink="/archivioSpedizioni">Archivio spedizioni</a></li>
-                    <li><a routerLink="/archivioVisure">Archivio visure/certificati</a></li>
-                </ul>
-              </li>
-              <li class="has-chid">
-                    <a>Report</a>
-                    <ul>
-                        <li><a routerLink="/reportSpedizioni">Report spedizioni</a></li>
-                        <li><a routerLink="/reportSpedizioniBollettini">Report spedizioni con bollettini</a></li>
-                    </ul>
-              </li>
-            </ul>
+<div *ngIf="!screenTooSmall">
 
-            <ul class="header__quick">
-                <li>
-                    <p>Ciao, <strong>{{userName}}</strong></p>
+  <header class="container-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+
+            <div class="header">
+
+              <div class="header__logo">
+                <a routerLink="/dashboard">
+                  <img src="/assets/img/logo.png" >
+                </a>
+              </div>
+      
+              <ul class="header__menu">
+                <li><a routerLink="/dashboard">Home</a></li>
+                <li><a routerLink="/nuovaSpedizione">Nuova spedizione</a></li>
+                <li class="has-chid">
+                  <a>Stato invii</a>
+                  <ul>
+                      <li><a routerLink="/statoInvii/1">Stato invii Raccomandate</a></li>
+                      <li><a routerLink="/statoInvii/2">Stato invii Lettere</a></li>
+                      <li><a routerLink="/statoInvii/3">Stato invii Telegrammi</a></li>
+                      <li><a routerLink="/statoInvii/6">Stato invii Agol</a></li>
+                      <li><a routerLink="/statoInvii/7">Stato richieste Visure/Certificati</a></li>
+                  </ul>
                 </li>
-                <li>
-                  <a id="open-side-menu" (click)="OpenMenu()">
-                    <img src="/assets/img/icn-usr-menu.png" />
-                  </a>
-              </li>
+                <li class="has-chid">
+                  <a>Archivio</a>
+                  <ul>
+                      <li><a routerLink="/archivioSpedizioni">Archivio spedizioni</a></li>
+                      <li><a routerLink="/archivioVisure">Archivio visure/certificati</a></li>
+                  </ul>
+                </li>
+                <li class="has-chid">
+                      <a>Report</a>
+                      <ul>
+                          <li><a routerLink="/reportSpedizioni">Report spedizioni</a></li>
+                          <li><a routerLink="/reportSpedizioniBollettini">Report spedizioni con bollettini</a></li>
+                      </ul>
+                </li>
+                <li class="has-chid">
+                      <a>Utility</a>
+                      <ul>
+                          <li><a routerLink="/sincBipiol">Sincronizzazione Bipiol</a></li>
+                          <li><a routerLink="/rendicontazioneFatture">Rendicontazione fatture</a></li>
+                          <li><a routerLink="/stampaUnione">Stampa & Unione</a></li>
+                          <li><a routerLink="/unionePdf">Unione PDF</a></li>
+                          <li><a routerLink="/comprimiPdf">Comprimi PDF</a></li>
+                          <li><a routerLink="/fileEsempio">File di esempio</a></li>
+                      </ul>
+                </li>
+                <li><a routerLink="/comunicazioni">Comunicazioni</a></li>
+              </ul>
 
-            </ul>
+              <ul class="header__quick">
+                  <li class="welcome">
+                      <p>Ciao, <strong>{{userName}}</strong></p>
+                  </li>
+                  <li>
+                    <a id="open-side-menu" (click)="OpenMenu()">
+                      <img src="/assets/img/icn-usr-menu.png" />
+                    </a>
+                </li>
 
+              </ul>
+
+          </div>
+            
+          </div>
         </div>
-          
-        </div>
+
       </div>
-
-    </div>
   </header>
 
 
@@ -86,12 +109,17 @@
 
   </div>
 
-  <div class="menu-overlay"></div>
+  <div class="menu-overlay" (click)="CloseMenu()"></div>
   
   <main>
     <router-outlet></router-outlet>
   </main>
 
+  <div class="label-support" (click)="openModal(support)">
+      <img src="/assets/img/icn-assistenza.png" alt="hai bisogno di assistenza?">
+      <span>Hai bisogno di assistenza?</span>
+  </div>
+  
   <footer>
 
     <section>
@@ -103,3 +131,65 @@
     </section>
 
   </footer>
+
+</div>
+
+
+
+<!-- MODAL ASSISTENZA-->
+<ng-template #support>
+  <div class="modal-header">
+    <h4 class="modal-title flex-start">
+      Hai bisogno di assistenza?
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-support">
+      <div class="generic-form">
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <p>
+              Compila il form e fornisci una descrizione chiara del problema, includendo messaggi di errore e le operazioni che stavi svolgendo. Questo ci aiuterà a risolvere la tua richiesta rapidamente.
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Tipo di assistenza</label>
+            <select formControlName="sel_assistenza">
+              <option value="">-- Seleziona --</option>
+              <option value="tecnica">Assistenza Tecnica</option>
+              <option value="commerciale">Assistenza Commerciale</option>
+              <option value="amministrativa">Assistenza Amministrativa</option>
+            </select>
+          </div>
+          <div class="col-md-6"></div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Nome e Cognome</label>
+            <input type="text" formControlName="name">
+          </div>
+          <div class="col-md-6">
+            <label>Telefono</label>
+            <input type="text" formControlName="telephone">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label>Messaggio</label>
+            <textarea formControlName="message"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <input type="submit" class="button bg-color-green color-white" formControlName="send" value="Invia">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+

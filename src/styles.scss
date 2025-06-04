@@ -923,6 +923,33 @@ small{
     }
 
 
+    .sender-list{
+        width: 100%;
+        border: 1px solid $grey-light;
+        background-color: $white-color;
+        padding: 15px;
+        margin-top: 20px;
+
+        label{
+            font-size: 0.9rem!important;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type=checkbox]{
+            margin-right:5px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .text-danger{
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+    }
+
+
     .filter{
         width: 100%;
         margin-top: 40px;
@@ -1280,3 +1307,29 @@ a.download-csv:link, a.download-csv:visited{
     }
 }
 
+.utility-steps{
+    width: 100%;
+
+    ul{
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    li{
+        width: 100%;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+
+        strong{
+            background-color: $primary-color;
+            color: $white-color;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+@use '../../../../_variables.scss' as *;
+
+.file-list{
+    width: 100%;
+    margin-top: 20px;
+    font-size: 0.9rem;
+
+    ul{
+        width: 100%;
+    }
+
+    li{
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color:$primary-color;
+        transition: all .3s cubic-bezier(.215, .61, .355, 1);
+
+        &:hover{
+            padding: 10px 15px;
+            transition: all .3s cubic-bezier(.215, .61, .355, 1);
+        }
+    }
+
+    a{
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+        color:$white-color;
+
+        i{
+            font-size: 1.3rem;
+        }
+    }
+
+}

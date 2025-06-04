@@ -1,1 +1,79 @@
-<p>errori-notificati works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Errori notificati</h1>
+            <p class="mt-2 textsize-4">
+                In quest'area trovi la lista degli invii non riusciti per problemi con la validazione di poste. <br>
+                <strong class="color-red textsize-5 mt-2">Ricordati di segnalarci il problema per poter apportare eventuali modifiche alla spedizione.</strong>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+
+                    <!-- Colonna Accettazione -->
+                    <ng-container matColumnDef="acceptance">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Accettazione </th>
+                        <td mat-cell *matCellDef="let element"> {{element.acceptance}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Nominativo -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef > nominativo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Indirizzo -->
+                    <ng-container matColumnDef="address">
+                        <th mat-header-cell *matHeaderCellDef> indirizzo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+                    </ng-container>
+                
+                    <!-- Colonna CAP -->
+                    <ng-container matColumnDef="cap">
+                        <th mat-header-cell *matHeaderCellDef > Cap </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cap}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Città -->
+                    <ng-container matColumnDef="city">
+                        <th mat-header-cell *matHeaderCellDef > CITTÀ </th>
+                        <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Provincia -->
+                    <ng-container matColumnDef="province">
+                        <th mat-header-cell *matHeaderCellDef > Provincia </th>
+                        <td mat-cell *matCellDef="let element"> {{element.province}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Stato -->
+                    <ng-container matColumnDef="state">
+                        <th mat-header-cell *matHeaderCellDef > Stato </th>
+                        <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+                    </ng-container>
+
+                    <!-- Colonna Stato -->
+                    <ng-container matColumnDef="error">
+                        <th mat-header-cell *matHeaderCellDef > Errore </th>
+                        <td mat-cell *matCellDef="let element" class="color-red textsize-6 text-bold"> {{element.error}} </td>
+                    </ng-container>
+
+                    <!-- Header e righe -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>                            
+                                
+              
+            </table>
+              
+              <!-- Paginazione -->
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+
+        </div>
+    </div>
+</div>

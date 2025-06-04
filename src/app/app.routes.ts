@@ -72,6 +72,14 @@ import { StatoInviiComponent } from './pages/stato-invii/stato-invii/stato-invii
 import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
 import { AddLogoComponent } from './pages/personal-area/add-logo/add-logo.component';
 import { AddUserComponent } from './pages/personal-area/add-user/add-user.component';
+import { ComprimiPdfComponent } from './pages/utility/comprimi-pdf/comprimi-pdf.component';
+import { FileEsempioComponent } from './pages/utility/file-esempio/file-esempio.component';
+import { RendicontazioneFattureComponent } from './pages/utility/rendicontazione-fatture/rendicontazione-fatture.component';
+import { SincBipiolComponent } from './pages/utility/sinc-bipiol/sinc-bipiol.component';
+import { StampaUnioneComponent } from './pages/utility/stampa-unione/stampa-unione.component';
+import { UnionePdfComponent } from './pages/utility/unione-pdf/unione-pdf.component';
+import { VideoTutorialComponent } from './pages/utility/video-tutorial/video-tutorial.component';
+import { ComunicazioniComponent } from './pages/comunicazioni/comunicazioni.component';
 
 export const routes: Routes = [
   {
@@ -419,6 +427,46 @@ export const routes: Routes = [
       {
         path: 'addUser',
         component: AddUserComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'comprimiPdf',
+        component: ComprimiPdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'fileEsempio',
+        component: FileEsempioComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'rendicontazioneFatture',
+        component: RendicontazioneFattureComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'sincBipiol',
+        component: SincBipiolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'stampaUnione',
+        component: StampaUnioneComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'unionePdf',
+        component: UnionePdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'videoTutorial',
+        component: VideoTutorialComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'comunicazioni',
+        component: ComunicazioniComponent,
         canActivate: [AuthGuard]
       },
       {

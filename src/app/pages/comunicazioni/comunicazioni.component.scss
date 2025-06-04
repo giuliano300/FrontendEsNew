@@ -1,0 +1,56 @@
+@use '../../../_variables.scss' as *;
+
+
+.comunicazioni-list{
+    width: 100%;
+    margin-top: 30px;
+
+    section{
+        width: 100%;
+        border:1px solid $grey-light;
+        background-color: $white-color;
+        padding: 15px;
+        height: 180px;
+        margin-bottom: 30px;
+    }
+
+    h4{
+        font-size: 1.2rem;
+        margin:12px 0 8px 0;
+    }
+
+    p{
+        font-size: 0.8rem;
+    }
+
+    span{
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        padding: 3px 5px;
+    }
+
+    .es-label{
+        background-color: $primary-color;
+        color: $white-color;
+    }
+    .poste-label{
+        background-color: #FBE158;
+        color: $secondary-color;
+    }
+
+    a{
+        font-size: 0.8rem;
+        color: $primary-color;
+        font-weight: $font-semi-bold;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        margin-top: 6px;
+
+        i{
+            font-size: 1rem;
+            margin-right: 3px;
+        }
+    }
+
+}

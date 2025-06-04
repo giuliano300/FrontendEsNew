@@ -1,31 +1,19 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-visura-multipla-2',
-  imports: [CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink],
-  templateUrl: './visura-multipla-2.component.html',
-  styleUrl: './visura-multipla-2.component.scss'
+  selector: 'app-unione-pdf',
+  imports: [CommonModule, NgxFileDropModule],
+  templateUrl: './unione-pdf.component.html',
+  styleUrl: './unione-pdf.component.scss'
 })
-export class VisuraMultipla2Component {
-  form: FormGroup;
-  uploadProgress: number | null = null;
-  uploadCompleted: boolean = false;
+export class UnionePdfComponent {
+    uploadProgress: number | null = null;
+    uploadCompleted: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
-  ) {
-    this.form = this.fb.group({
-      // eventuali altri controlli
-    });
-  }
+   constructor(private http: HttpClient){}
 
   onFileDrop(files: NgxFileDropEntry[]) {
     for (const droppedFile of files) {
@@ -55,11 +43,4 @@ export class VisuraMultipla2Component {
       }
     }
   }
-
-  onSubmit() {
-    if (this.form.valid) {
-      this.router.navigate(['/calcoloPreventivo']);
-    }
-  }
-
 }

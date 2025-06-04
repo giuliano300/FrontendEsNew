@@ -14,23 +14,20 @@ export class AddUserComponent {
   alertMessage = false;
   alertText = '';
 
-  options: string[] = ['Opzione A', 'Opzione B', 'Opzione C'];
+  options: string[] = ['EWT', 'Panificio', 'Mario Rossi', 'Tekmerion', 'Mimmo Carlino sas'];
   selectedOptions: string[] = [];
 
   form: FormGroup;
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.form = this.fb.group({
-      nominativo: ['', [Validators.required, Validators.maxLength(44)]],
-      indirizzo: ['', [Validators.required]],
-      cap: ['', [Validators.required, Validators.maxLength(5)]],
-      provincia: ['', [Validators.required, Validators.maxLength(2)]],
-      comp_nominativo: ['', [Validators.required]],
-      comp_indirizzo: ['', [Validators.required]],
+      sel_tipo: ['', [Validators.required]],
+      nome: ['', [Validators.required]],
+      cognome: ['', [Validators.required]],
       citta: ['', [Validators.required]],
-      stato: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
       email: ['', [Validators.required]],
+      pwd: ['', [Validators.required]],
       selectedOptions: [[], [this.minSelectedOptions(1)]]
     });
   }
@@ -57,7 +54,7 @@ export class AddUserComponent {
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.router.navigate(['/userSenders']);
+      this.router.navigate(['/utentiList']);
     } else {
       this.alertMessage = true;
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';

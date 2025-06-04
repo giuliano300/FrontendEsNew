@@ -56,13 +56,13 @@
                 <div class="col-md-4">
                     <h4 class="color-blue">SCEGLI I MITTENTI</h4>
                     <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire le comunicazioni.</p>
-                    <div class="sender-list" formArrayName="selectedOptions">
-                        <div *ngFor="let option of options; let i = index">
-                            <label *ngFor="let option of options">
+                    <div class="sender-list">
+                        <div *ngFor="let option of options">
+                            <label>
                                 <input
-                                type="checkbox"
-                                [value]="option"
-                                (change)="onCheckboxChange($event)"
+                                    type="checkbox"
+                                    [value]="option"
+                                    (change)="onCheckboxChange($event)"
                                 />
                                 {{ option }}
                             </label>

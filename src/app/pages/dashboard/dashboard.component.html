@@ -31,13 +31,15 @@
             </div>
         </div>
         <div class="col-lg-2 mt-3">
-            <div class="box">
+            <div class="box" (click)="openModal(utility)">
                 <img src="/assets/img/utility.png">Utility
             </div>
         </div>
         <div class="col-lg-2 mt-3">
             <div class="box">
+              <a routerLink="/comunicazioni">
                 <img src="/assets/img/comunicazioni.png">Comunicazioni
+              </a>
             </div>
         </div>
     </div>
@@ -109,6 +111,50 @@
       <li><a (click)="navigateAndClose('/reportSpedizioniBollettini')">
         <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Report&nbsp;Spedizioni con bollettini
       </a></li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- MODAL UTILITY-->
+<ng-template #utility>
+  <div class="modal-header">
+    <h4 class="modal-title flex-start">
+      <img src="/assets/img/utility.png" style="width: 50px;"> Utility
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <ul>
+      <li>
+        <a (click)="navigateAndClose('/sincBipiol')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Sincronizzazione&nbsp;Bipiol
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateAndClose('/rendicontazioneFatture')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Rendicontazione&nbsp;fatture
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateAndClose('/stampaUnione')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Stampa&nbsp;&&nbsp;Unione
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateAndClose('/unionePdf')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Unione&nbsp;PDF
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateAndClose('/comprimiPdf')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;Comprimi&nbsp;PDF
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateAndClose('/fileEsempio')">
+          <i class='bx bxs-right-arrow-alt'></i>&nbsp;&nbsp;File&nbsp;di&nbsp;Esempio
+        </a>
+      </li>
     </ul>
   </div>
 </ng-template>

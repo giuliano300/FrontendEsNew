@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Users } from '../interfaces/Users';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-template',
@@ -11,11 +13,16 @@ import { Users } from '../interfaces/Users';
   styleUrls: ['./template.component.scss']
 })
 export class TemplateComponent {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router, 
+    private modalService: NgbModal
+  ) {}
 
+  screenTooSmall = false;
   user: Users | null  = null;
-
   userName: string | null = null;
+  currentModalRef: any;
+
   
   logout(){
     localStorage.removeItem('authToken');
@@ -37,11 +44,20 @@ export class TemplateComponent {
         return;
       }
   
-    this.user! = JSON.parse(user!);
-    
+    this.user! = JSON.parse(user!);    
     this.userName = this.user!.businessName;
+
+    // Controllo risoluzione iniziale
+    this.checkScreenSize();
+
+    // Listener per resize
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
   }
 
+  checkScreenSize() {
+    this.screenTooSmall = window.innerWidth < 1200;
+  }
+  
   OpenMenu(){
     document.querySelector('.side-menu')!.classList.add('open');
     document.querySelector('.menu-overlay')!.classList.add('visible');
@@ -53,5 +69,23 @@ export class TemplateComponent {
     document.querySelector('.menu-overlay')!.classList.remove('visible');
     document.querySelector('.menu-overlay')!.classList.add('hidden');
   }
+
+
+    // Metodo per aprire il modal e salvare il riferimento
+    openModal(content: any) {
+      const modalRef = this.modalService.open(content, { centered: true, backdrop: 'static', keyboard: true });
+      this.currentModalRef = modalRef;
+
+      // Gestione della chiusura "manuale" o tramite esc/click esterno
+      modalRef.result.catch(() => {}); // evita errori non gestiti
+    }
+
+    // Metodo per navigare e chiudere il modal
+      navigateAndClose(route: string) {
+        if (this.currentModalRef) {
+          this.currentModalRef.close();
+        }
+        this.router.navigate([route]);
+      }
 
 }

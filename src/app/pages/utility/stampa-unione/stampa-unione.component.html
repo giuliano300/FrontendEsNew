@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="row">
+        <div class="col md-12 text-center mt-4">
+            <h1>Stampa e unione</h1>
+            <p class="mt-2 textsize-4 mt-3 mb-4">
+                Inserisci un file zip contenente il csv da cui estrarre i nominativi <br>
+                e il documento word con le variabili da personalizzare
+            </p>
+        </div>
+    </div>
+
+
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="generic-form">
+                <h4>Carica un file <em>(in formato .zip)</em></h4>
+                <div class="file-upload">
+                    <!-- AREA DRAG & DROP -->
+                    <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                        <div class="drop-zone" (click)="openFileSelector()">
+                            Trascina qui il file o clicca per selezionarlo
+                        </div>
+                        </ng-template>
+                    </ngx-file-drop>
+    
+                    <!-- BARRA DI CARICAMENTO -->
+                    <div class="progress-container" *ngIf="uploadProgress !== null">
+                        <div
+                            class="progress-bar"
+                            [style.width.%]="uploadProgress"
+                            [ngClass]="{ 'completed': uploadProgress === 100 }"
+                            >
+                            {{ uploadProgress }}%
+                        </div>
+                    </div>
+                </div>
+                <a routerLink="/" class="button bg-color-green color-white mt-3"><i class='bx bx-download'></i> SCARICA FILE</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="utility-steps">
+                <h5>Processo di caricamento file stampa/unione.</h5>
+                <ul>
+                    <li><strong>1</strong><span>Carica il file zip contenente sia il .csv che il .doc o .docx.</span></li>
+                    <li><strong>2</strong><span>Attendi la validazione dei documenti.</span></li>
+                    <li><strong>3</strong><span>Scarica i dati dei bollettini pagati.</span></li>
+                    <li><strong>4</strong><span>Clicca su scarica file per scaricare i file .pdf<br>
+                        <em class="textsize-6">(raggruppati in un unico file .zip)</em></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
