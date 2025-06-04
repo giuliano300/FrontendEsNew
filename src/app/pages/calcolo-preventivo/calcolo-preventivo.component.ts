@@ -51,7 +51,6 @@ export class CalcoloPreventivoComponent {
   tipoLettera?: string | null = null;
   tipoInvio: string = "";
   tipoNotificante?: number | null = null;
-  selDocumento?: number | null = null;
   nomeNotificante: string = "";
 
   hiddenRR:boolean = true;
@@ -184,9 +183,15 @@ export class CalcoloPreventivoComponent {
           case ProductTypes.VOL: 
             this.productName = "Visure/Certificati";
             this.isVisura = true;
-            this.routerLink = "/visuraSingola3";
-            this.tipoInvio = "singolo";
-            this.selDocumento = datiDecriptati.sel_documento;
+            if(datiDecriptati.tipoinvio == ShippingTypes.singola){
+              this.routerLink = "/visuraSingola3";
+              this.tipoInvio = "singolo";
+            }
+            else
+            {
+              this.routerLink = "/visuraMutipla3";      
+              this.tipoInvio = "multiplo";
+            }
           break;     
           case ProductTypes.TOL: 
             this.productName = "telegramma";
@@ -266,12 +271,8 @@ export class CalcoloPreventivoComponent {
             Recipient.tipologiaNotificante = this.tipoNotificante;
             Recipient.valoreNotificante = this.nomeNotificante;
           }
-          
-          if(this.productType == ProductTypes.TOL)
+          else
             Recipient.telegramText = messaggioTelegrammaDec != null ? messaggioTelegrammaDec?.message : null;
-          
-          if(this.productType == ProductTypes.VOL)
-            Recipient.typeVisura = this.selDocumento!;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
           Recipient.frontBack = (this.tipoStampa == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);

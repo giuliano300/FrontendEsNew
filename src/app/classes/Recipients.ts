@@ -28,8 +28,6 @@ export class Recipients {
   vatPrice?: number | null = 0;
   totalPrice?: number | null = 0 ;
   attachedFile?: string | null = null;
-  attachedFileRR?: string | null = null;
-  attachedFileRA?: string | null = null;
   fileName?: string | null = null;
   pathRecoveryFile?: string | null = null;
   pathGEDUrl?: string | null = null;
@@ -54,5 +52,4 @@ export class Recipients {
   vat?: string;
   ccia?: string;
   reaNumber?: string;
-  typeVisura?: number;
 }

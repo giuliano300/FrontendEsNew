@@ -47,8 +47,6 @@ export class LoginComponent {
             this.user! = data.user;
             localStorage.setItem('authToken', data.token);
             localStorage.setItem('user', JSON.stringify(this.user!));
-            localStorage.setItem('userOptions', JSON.stringify(data.options));
-            localStorage.setItem('userProducts', JSON.stringify(data.products));
             this.router.navigate(['/dashboard']);
           }
         });

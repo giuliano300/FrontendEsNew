@@ -3,12 +3,11 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState,infoCodiceFiscale,alertName2, inserisciText } from '../../../enviroments/enviroments';
-import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
+import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState,infoCodiceFiscale,alertName2 } from '../../../enviroments/enviroments';
 
 @Component({
   selector: 'app-add-receiver',
-  imports: [ReactiveFormsModule, CommonModule, NgbModule, CapitalizePipe],
+  imports: [ReactiveFormsModule, CommonModule, NgbModule],
   templateUrl: './add-receiver.component.html',
   styleUrl: './add-receiver.component.scss'
 })
@@ -25,7 +24,6 @@ export class AddReceiverComponent {
     alertState = alertState;
     infoCodiceFiscale = infoCodiceFiscale;
     alertName2 = alertName2;
-    inserisciModificaText = inserisciText
     
     form = new FormGroup({
       rag_soc: new FormControl('', [Validators.required]),

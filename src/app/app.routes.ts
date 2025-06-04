@@ -9,6 +9,7 @@ import { PasswordChangeComponent } from './pages/passwordChange/password-change.
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RegistrationFinalStepComponent } from './pages/registrationFinalStep/registrationFinalStep.component';
 import { RegistrationEndComponent } from './pages/registrationEnd/registrationEnd.component';
+import { UserSendersComponent } from './pages/userSenders/user-senders.component';
 import { NuovaSpedizioneComponent } from './pages/nuova-spedizione/nuova-spedizione.component';
 import { TipoSpedizioneRaccomandataComponent } from './pages/raccomandata/tipo-spedizione/tipo-spedizione.component';
 import { InvioSingoloRaccomandataComponent } from './pages/raccomandata/invio-singolo-raccomandata/invio-singolo-raccomandata.component';
@@ -51,6 +52,8 @@ import { TipoVisuraComponent } from './pages/visura/tipo-visura/tipo-visura.comp
 import { VisuraSingolaComponent } from './pages/visura/visura-singola/visura-singola.component';
 import { VisuraSingola2Component } from './pages/visura/visura-singola-2/visura-singola-2.component';
 import { VisuraSingola3Component } from './pages/visura/visura-singola-3/visura-singola-3.component';
+import { VisuraMultiplaComponent } from './pages/visura/visura-multipla/visura-multipla.component';
+import { VisuraMultipla2Component } from './pages/visura/visura-multipla-2/visura-multipla-2.component';
 import { InvioPaccoComponent } from './pages/pacchi/invio-pacco/invio-pacco.component';
 import { InvioPacco2Component } from './pages/pacchi/invio-pacco-2/invio-pacco-2.component';
 import { AddSenderComponent } from './pages/personal-area/add-sender/add-sender.component';
@@ -69,7 +72,14 @@ import { StatoInviiComponent } from './pages/stato-invii/stato-invii/stato-invii
 import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
 import { AddLogoComponent } from './pages/personal-area/add-logo/add-logo.component';
 import { AddUserComponent } from './pages/personal-area/add-user/add-user.component';
-import { UserSendersComponent } from './pages/personal-area/userSenders/user-senders.component';
+import { ComprimiPdfComponent } from './pages/utility/comprimi-pdf/comprimi-pdf.component';
+import { FileEsempioComponent } from './pages/utility/file-esempio/file-esempio.component';
+import { RendicontazioneFattureComponent } from './pages/utility/rendicontazione-fatture/rendicontazione-fatture.component';
+import { SincBipiolComponent } from './pages/utility/sinc-bipiol/sinc-bipiol.component';
+import { StampaUnioneComponent } from './pages/utility/stampa-unione/stampa-unione.component';
+import { UnionePdfComponent } from './pages/utility/unione-pdf/unione-pdf.component';
+import { VideoTutorialComponent } from './pages/utility/video-tutorial/video-tutorial.component';
+import { ComunicazioniComponent } from './pages/comunicazioni/comunicazioni.component';
 
 export const routes: Routes = [
   {
@@ -113,11 +123,6 @@ export const routes: Routes = [
       {
         path: 'userSenders',
         component: UserSendersComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'modSender/:id',
-        component: AddSenderComponent,
         canActivate: [AuthGuard]
       },
       {
@@ -326,6 +331,16 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'visuraMultipla',
+        component: VisuraMultiplaComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'visuraMultipla2',
+        component: VisuraMultipla2Component,
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'invioPacco',
         component: InvioPaccoComponent,
         canActivate: [AuthGuard]
@@ -400,7 +415,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'dettaglioSpedizione/:id',
+        path: 'dettaglioSpedizione/:name',
         component: DettaglioSpedizioneComponent,
         canActivate: [AuthGuard]
       },
@@ -412,6 +427,46 @@ export const routes: Routes = [
       {
         path: 'addUser',
         component: AddUserComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'comprimiPdf',
+        component: ComprimiPdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'fileEsempio',
+        component: FileEsempioComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'rendicontazioneFatture',
+        component: RendicontazioneFattureComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'sincBipiol',
+        component: SincBipiolComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'stampaUnione',
+        component: StampaUnioneComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'unionePdf',
+        component: UnionePdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'videoTutorial',
+        component: VideoTutorialComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'comunicazioni',
+        component: ComunicazioniComponent,
         canActivate: [AuthGuard]
       },
       {

@@ -24,10 +24,6 @@ export class UserSendersService {
     return this.http.post<UserSenders>(this.apiUrl, userSender);
   }
 
-  updateUserSender(userSender:UserSenders): Observable<UserSenders>{
-    return this.http.put<UserSenders>(this.apiUrl + "/" + userSender.id, userSender);
-  }
-
   deleteUserSender(id: number): Observable<any> {
     return this.http.delete(this.apiUrl + "/" + id)
       .pipe(

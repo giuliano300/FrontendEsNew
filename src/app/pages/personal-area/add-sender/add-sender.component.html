@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
-            <h1>{{inserisciModificaText | capitalize }} un mittente</h1>
+            <h1>Inserisci un nuovo mittente</h1>
             <p class="mt-2 textsize-4">
-                Compila i campi del form e {{inserisciModificaText}} un mittente nella rubrica.
+                Compila i campi del form per inserire un nuovo mittente nella rubrica.
             </p>
         </div>
     </div>
@@ -17,21 +17,21 @@
                                 NOMINATIVO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="businessName" />
+                            <input type="text" formControlName="nominativo" />
                         </li>
                         <li>
                             <label class="flex-start">
                                 COMPLETAMENTO INDIRIZZO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="complementAddress" />
+                            <input type="text" formControlName="comp_indirizzo" />
                         </li>
                         <li>
                             <label class="flex-start">
                                 PROVINCIA
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="province" maxlength="2" />
+                            <input type="text" formControlName="provincia" maxlength="2" />
                         </li>
                     </ul>
                 </div>
@@ -42,18 +42,18 @@
                                 COMPLETAMENTO NOMINATIVO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="complementNames" />
+                            <input type="text" formControlName="comp_nominativo" />
                         </li>
                         <li>
                             <label>CAP</label>
-                            <input type="text" formControlName="zipCode" maxlength="5" />
+                            <input type="text" formControlName="cap" maxlength="5" />
                         </li>
                         <li>
                             <label class="flex-start">
                                 STATO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="state" />
+                            <input type="text" formControlName="stato" />
                         </li>
                     </ul>
                 </div>
@@ -64,15 +64,15 @@
                                 INDIRIZZO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="address" />
+                            <input type="text" formControlName="indirizzo" />
                         </li>
                         <li>
                             <label>CITTÀ</label>
-                            <input type="text" formControlName="city" />
+                            <input type="text" formControlName="citta" />
                         </li>
                         <li>
                             <label>TELEFONO</label>
-                            <input type="phone" formControlName="mobile" />
+                            <input type="phone" formControlName="telefono" />
                         </li>
                     </ul>
                 </div>
@@ -96,7 +96,6 @@
                 <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
             </div>
             
-            <input type="hidden" formControlName = "id">
 
         </form>
     </div>

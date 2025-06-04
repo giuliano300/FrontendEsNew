@@ -35,27 +35,27 @@
             <div class="row">
                 <div class="col-md-3">
                     <label>PRODOTTO POSTALE</label>
-                    <select formControlName="product">
-                        <option [ngValue]="null">-- SELEZIONA PRODOTTO --</option>
-                        <option [ngValue]="1">RACCOMANDATA</option>
-                        <option [ngValue]="2">LETTERA</option>
-                        <option [ngValue]="3">TELEGRAMMA</option>
-                        <option [ngValue]="7">VISURA/CERTIFICATO</option>
-                    </select>               
-                </div>
-                <div class="col-md-3">
-                    <label>ESITO</label>
-                    <select formControlName="esito">
-                        <option value="">-- ESITO --</option>
-                        <option value="true">OK</option>
-                        <option value="false">ERRORE</option>
+                    <select name="prodotto">
+                        <option value="">-- SELEZIONA PRODOTTO --</option>
+                        <option value="raccomandata">RACCOMANDATA</option>
+                        <option value="lettera">LETTERA</option>
+                        <option value="telegramma">TELEGRAMMA</option>
+                        <option value="visura">VISURA/CERTIFICATO</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" name="search" value="CERCA" (click)="filterResults()">
+                    <label>ESITO</label>
+                    <select name="esito">
+                        <option value="">-- ESITO --</option>
+                        <option value="ok">OK</option>
+                        <option value="errore">ERRORE</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" name="remove" (click)="removeFilter()" class="button-red" value="RIMUOVI FILTRI">
+                    <input type="submit" name="search" value="CERCA">
+                </div>
+                <div class="col-md-3">
+                    <input type="submit" name="export" value="ESPORTA CSV">
                 </div>
             </div>
         </div>
@@ -69,46 +69,46 @@
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
                     <!-- Colonna Id Lotto -->
-                    <ng-container matColumnDef="operationId">
+                    <ng-container matColumnDef="id_lotto">
                         <th mat-header-cell *matHeaderCellDef > id lotto </th>
-                        <td mat-cell *matCellDef="let element"> {{element.operationId}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.id_lotto}} </td>
                     </ng-container>
 
                     <!-- Colonna Prodotto -->
-                    <ng-container matColumnDef="productName">
+                    <ng-container matColumnDef="product">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> prodotto </th>
-                        <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.product}} </td>
                     </ng-container>
                 
                     <!-- Colonna Mittente -->
-                    <ng-container matColumnDef="senderName">
+                    <ng-container matColumnDef="sender">
                         <th mat-header-cell *matHeaderCellDef > mittente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.senderName}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.sender}} </td>
                     </ng-container>
 
                     <!-- Colonna Destinatario -->
-                    <ng-container matColumnDef="businessName">
+                    <ng-container matColumnDef="receiver">
                         <th mat-header-cell *matHeaderCellDef > destinatario </th>
-                        <td mat-cell *matCellDef="let element"> {{element.businessName}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.receiver}} </td>
                     </ng-container>
 
                     <!-- Colonna ACCETTAZIONE -->
-                    <ng-container matColumnDef="insertDate">
+                    <ng-container matColumnDef="acceptance">
                         <th mat-header-cell *matHeaderCellDef > ACCETTAZIONE </th>
-                        <td mat-cell *matCellDef="let element"> {{getDate(element.insertDate)}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.acceptance}} </td>
                     </ng-container>
 
                     <!-- Colonna Costo -->
-                    <ng-container matColumnDef="price">
+                    <ng-container matColumnDef="cost">
                         <th mat-header-cell *matHeaderCellDef > costo </th>
-                        <td mat-cell *matCellDef="let element"> {{element.price.toFixed(2).replace('.', ',')}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
                     </ng-container>
 
                     <!-- Colonna File -->
-                    <ng-container matColumnDef="doc">
+                    <ng-container matColumnDef="file">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <button  mat-button class="mat-button-download" (click)="downloadFile(element.doc)"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
+                        <button mat-button class="mat-button-download"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
                     </td>
                     </ng-container>
 
@@ -119,11 +119,9 @@
                     </ng-container>
 
                     <!-- Colonna STATO -->
-                    <ng-container matColumnDef="state">
+                    <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef > STATO </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <a (click)="openModal(element.recipientId)">{{element.state}}</a>
-                        </td>
+                        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                     </ng-container>
 
 
@@ -135,16 +133,7 @@
             </table>
               
               <!-- Paginazione -->
-            <mat-paginator [hidden]="!dataSource.data || dataSource.data.length === 0"
-                [length]="totalRecords"
-                [pageSize]="constPageSize"
-                [pageSizeOptions]="[5, 10, 25, 50]"
-                showFirstLastButtons>
-            </mat-paginator>
-
-            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
-                Nessun dato disponibile.
-            </div>
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
 
         </div>
     </div>

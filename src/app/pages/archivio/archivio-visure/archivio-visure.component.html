@@ -11,7 +11,7 @@
 
 
 <div class="filter">
-    <form [formGroup]="form" (ngSubmit)="filterResults()">
+    <form [formGroup]="form">
         <div class="container">
             <div class="row mb-3">
                 <div class="col-md-3">
@@ -30,11 +30,29 @@
                     <label>INTESTATARIO</label>
                     <input type="text" formControlName="nominativo" />
                 </div>
-                <div class="col-md-9">
-                    <input type="button" value="X Rimuovi filtri" name="reset" (click)="filterRemove()">
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label>PRODOTTO</label>
+                    <select name="prodotto">
+                        <option value="">-- SELEZIONA PRODOTTO --</option>
+                        <option value="visura">VISURA</option>
+                        <option value="certificato">CERTIFICATO</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label>ESITO</label>
+                    <select name="esito">
+                        <option value="">-- ESITO --</option>
+                        <option value="ok">OK</option>
+                        <option value="errore">ERRORE</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <input type="submit" name="search" value="CERCA">
+                </div>
+                <div class="col-md-3">
+                    <input type="submit" name="export" value="ESPORTA CSV">
                 </div>
             </div>
         </div>
@@ -49,40 +67,40 @@
 
 
                     <!-- Colonna Prodotto -->
-                    <ng-container matColumnDef="productName">
+                    <ng-container matColumnDef="product">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> prodotto </th>
-                        <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.product}} </td>
                     </ng-container>
 
 
                     <!-- Colonna Richiedente -->
-                    <ng-container matColumnDef="sender">
+                    <ng-container matColumnDef="receiver">
                         <th mat-header-cell *matHeaderCellDef > richiedente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.sender}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.receiver}} </td>
                     </ng-container>
 
                     <!-- Colonna Intestatario -->
-                    <ng-container matColumnDef="businessName">
+                    <ng-container matColumnDef="owner">
                         <th mat-header-cell *matHeaderCellDef > Intestatario </th>
-                        <td mat-cell *matCellDef="let element"> {{element.businessName}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.owner}} </td>
                     </ng-container>
 
                     <!-- Colonna CF/PIVA -->
-                    <ng-container matColumnDef="vat">
+                    <ng-container matColumnDef="piva">
                         <th mat-header-cell *matHeaderCellDef > CF/P.IVA </th>
-                        <td mat-cell *matCellDef="let element"> {{element.vat}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.piva}} </td>
                     </ng-container>
 
                     <!-- Colonna ESITO -->
-                    <ng-container matColumnDef="valid">
+                    <ng-container matColumnDef="result">
                         <th mat-header-cell *matHeaderCellDef > ESITO </th>
-                        <td mat-cell *matCellDef="let element"> {{element.valid ? "OK": "KO"}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.result}} </td>
                     </ng-container>
 
                     <!-- Colonna ACCETTAZIONE -->
-                    <ng-container matColumnDef="date">
+                    <ng-container matColumnDef="acceptance">
                         <th mat-header-cell *matHeaderCellDef > ACCETTAZIONE </th>
-                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.acceptance}} </td>
                     </ng-container>
 
                     <!-- Colonna prezzo -->
@@ -98,16 +116,16 @@
                     </ng-container>
 
                     <!-- Colonna STATO -->
-                    <ng-container matColumnDef="state">
+                    <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef > STATO </th>
-                        <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                     </ng-container>
 
                     <!-- Colonna Azioni -->
-                    <ng-container matColumnDef="doc">
+                    <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center;"> documento </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <button mat-button class="mat-button-download" (click)="downloadFile(element.doc)"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
+                        <button mat-button class="mat-button-download"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
                     </td>
                     </ng-container>
 
@@ -118,16 +136,8 @@
               
             </table>
               
-            <mat-paginator [hidden]="!dataSource.data || dataSource.data.length === 0"
-                [length]="totalRecords"
-                [pageSize]="constPageSize"
-                [pageSizeOptions]="[5, 10, 25, 50]"
-                showFirstLastButtons>
-            </mat-paginator>
-
-            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
-                Nessun dato disponibile.
-            </div>
+              <!-- Paginazione -->
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
 
         </div>
     </div>

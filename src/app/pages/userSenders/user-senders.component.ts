@@ -2,20 +2,19 @@ import { Component, ViewChild, ViewEncapsulation } from '@angular/core';import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { UserSenders } from '../../../interfaces/UserSenders';
-import { UserSendersService } from '../../../services/user-senders.service';
-import { Users } from '../../../interfaces/Users';
+import { UserSenders } from '../../interfaces/UserSenders';
+import { UserSendersService } from '../../services/user-senders.service';
+import { Users } from '../../interfaces/Users';
 import { Router } from '@angular/router';
-import { DeleteDialogComponent } from '../../../component/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { infoBtnDelete, infoBtnEdit } from '../../../enviroments/enviroments';
-import { CommonModule } from '@angular/common';
+import { infoBtnDelete, infoBtnEdit } from '../../enviroments/enviroments';
 
 @Component({
   selector: 'app-user-senders',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule, CommonModule],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule],
   templateUrl: './user-senders.component.html',
   styleUrl: './user-senders.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -32,7 +31,7 @@ export class UserSendersComponent {
 
   constructor(private userSenderService: UserSendersService, private router: Router, private dialog: MatDialog) {}
 
-  displayedColumns: string[] = ['businessName', 'address', 'zipCode', 'city', 'province', 'state', 'modifica','elimina'];
+  displayedColumns: string[] = ['businessName', 'address', 'zipCode', 'city', 'province', 'state', 'actions'];
   dataSource = new MatTableDataSource<UserSenders>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

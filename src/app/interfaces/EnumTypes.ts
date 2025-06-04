@@ -20,16 +20,6 @@ export class ProductTypesClass {
   ];
 }
 
-export const ProductTypeDescriptions: { [key in ProductTypes]: string } = {
-  [ProductTypes.ROL]: 'ROL',
-  [ProductTypes.LOL]: 'LOL',
-  [ProductTypes.TOL]: 'TOL',
-  [ProductTypes.MOL]: 'MOL',
-  [ProductTypes.COL]: 'COL',
-  [ProductTypes.AGOL]: 'AGOL',
-  [ProductTypes.VOL]: 'VOL'
-};
-
 export enum HaveBulletin{
   no = 0,
   si = 1
@@ -53,18 +43,4 @@ export enum RR{
 export enum FrontBack{
   SoloFronte = 0,
   FronteRetro = 1
-}
-
-export enum Options
-{
-  hidePrice = 1,
-  rr = 2,
-  
-}
-
-export enum UserTypes
-{
-  Administrator = 1,
-  Visualizzatore = 2,
-  Inseritore = 3
 }

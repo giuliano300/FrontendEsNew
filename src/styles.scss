@@ -120,11 +120,6 @@ small{
     color: #567FC5;
 }
 
-.button-red{
-    background-color: $red-color!important;
-    border-color: $red-color!important;
-}
-
 /* ! Helpers
 ---------------------------------------------------------*/
 
@@ -406,12 +401,6 @@ small{
     font-weight: 400;
     font-size: 16px;
 
-}
-
-.pwd-in{
-    font-size: 14px;
-    float: left;
-    margin:0px 0 10px;
 }
 
 .is-valid{
@@ -1314,21 +1303,6 @@ a.download-csv:link, a.download-csv:visited{
             font-size: 1.3rem;
             margin-right: 5px;
             color: $primary-color;
-        }
-    }
-    button.back{
-        color: $red-color;
-
-        i{
-            color: $red-color;
-        }
-
-        &:hover{
-            color: $black-color;
-
-        i{
-            color: $black-color;
-        }
         }
     }
 }

@@ -17,10 +17,6 @@ export const bulletinFields = [
   'causale', 'anno', 'iban'
 ];
 
-export const constPageIndex = 0;
-export const constPageSize = 20;
-
-
 export enum sendType{
   singolo = 1,
   mutiplo = 2

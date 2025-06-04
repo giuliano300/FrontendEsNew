@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Users } from '../interfaces/Users';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-template',
@@ -11,7 +13,10 @@ import { Users } from '../interfaces/Users';
   styleUrls: ['./template.component.scss']
 })
 export class TemplateComponent {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router, 
+    private modalService: NgbModal
+  ) {}
 
   screenTooSmall = false;
   user: Users | null  = null;
@@ -39,9 +44,18 @@ export class TemplateComponent {
         return;
       }
   
-    this.user! = JSON.parse(user!);
-    
+    this.user! = JSON.parse(user!);    
     this.userName = this.user!.businessName;
+
+    // Controllo risoluzione iniziale
+    this.checkScreenSize();
+
+    // Listener per resize
+    window.addEventListener('resize', this.checkScreenSize.bind(this));
+  }
+
+  checkScreenSize() {
+    this.screenTooSmall = window.innerWidth < 1200;
   }
   
   OpenMenu(){
