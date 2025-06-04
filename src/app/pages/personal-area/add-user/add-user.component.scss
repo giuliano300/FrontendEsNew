@@ -1,0 +1,11 @@
+@use '../../../../variables' as *;
+.sender-selection{
+    background-color:rgba(255,255,255,0.4);
+    padding: 0;
+    margin: 10px 0;
+}
+
+.mdc-list-item--with-trailing-checkbox.mdc-list-item {
+    padding: 25px 16px 25px 25px;
+    border-bottom: solid 1px #eee;
+}

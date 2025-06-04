@@ -11,20 +11,16 @@
 
 
 <div class="filter">
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="filterResults()">
         <div class="container">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label>DATA INIZIO</label>
                     <input type="date" formControlName="start_date" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label>DATA FINE</label>
                     <input type="date" formControlName="end_date" />
-                </div>
-                <div class="col-md-3">
-                    <label>NOMINATIVO</label>
-                    <input type="text" formControlName="nominativo" />
                 </div>
                 <div class="col-md-3">
                     <input type="submit" name="filter" value="FILTRA">
@@ -32,7 +28,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <input type="button" value="X Rimuovi filtri" name="reset">
+                    <input type="button" value="X Rimuovi filtri" name="reset" (click)="filterRemove()">
                 </div>
             </div>
         </div>
@@ -49,26 +45,26 @@
                     <!-- Colonna data -->
                     <ng-container matColumnDef="date">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Data e ora creazione</th>
-                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                        <td mat-cell *matCellDef="let element"> {{getDate(element.date)}} </td>
                     </ng-container>
 
                     <!-- Colonna Prodotto -->
-                    <ng-container matColumnDef="product">
+                    <ng-container matColumnDef="productName">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> prodotto postale - formato </th>
-                        <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
                     </ng-container>
 
 
                     <!-- Colonna Destinatari -->
-                    <ng-container matColumnDef="receiver">
+                    <ng-container matColumnDef="numberOfRecipient">
                         <th mat-header-cell *matHeaderCellDef > numero destinatari </th>
-                        <td mat-cell *matCellDef="let element"> {{element.receiver}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.numberOfRecipient}} </td>
                     </ng-container>
 
                     <!-- Colonna prezzo -->
-                    <ng-container matColumnDef="price">
+                    <ng-container matColumnDef="totalPrice">
                         <th mat-header-cell *matHeaderCellDef > prezzo € </th>
-                        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.totalPrice}} </td>
                     </ng-container>
 
 
@@ -84,11 +80,19 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>                            
                                 
-              
+                    
             </table>
               
-              <!-- Paginazione -->
-              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+            <mat-paginator [hidden]="!dataSource.data || dataSource.data.length === 0"
+                [length]="totalRecords"
+                [pageSize]="constPageSize"
+                [pageSizeOptions]="[5, 10, 25, 50]"
+                showFirstLastButtons>
+            </mat-paginator>
+
+            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
+                Nessun dato disponibile.
+            </div>
 
         </div>
     </div>

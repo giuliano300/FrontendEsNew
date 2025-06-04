@@ -20,64 +20,78 @@
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <div class="row mb-2">
                     <div class="col-md-4">
-                        <label>NOME</label>
-                        <input type="text" formControlName="nome" />
+                        <label>Ragione sociale / Nome e cognome</label>
+                        <input type="text" formControlName="businessName" />
                     </div>
                     <div class="col-md-4">
-                        <label>COGNOME</label>
-                        <input type="text" formControlName="cognome" />
+                        <label>Partita IVA</label>
+                        <input type="text" formControlName="vatNumber" />
                     </div>
                     <div class="col-md-4">
-                        <label>RAGIONE SOCIALE</label>
-                        <input type="text" formControlName="rag_soc" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label>INDIRIZZO</label>
-                        <input type="text" formControlName="indirizzo" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>CAP</label>
-                        <input type="text" formControlName="cap" maxlength="5" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>CITTÀ</label>
-                        <input type="text" formControlName="citta" />
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label>PROVINCIA</label>
-                        <input type="text" formControlName="prov" maxlength="2" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>TELEFONO</label>
-                        <input type="phone" formControlName="telefono" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>EMAIL</label>
+                        <label>Email</label>
                         <input type="email" formControlName="email" />
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <input type="submit" class="button bg-color-green color-white" value="SALVA DATI">
+
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label>PEC</label>
+                        <input type="email" formControlName="pec" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Indirizzo</label>
+                        <input type="text" formControlName="address" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>CAP</label>
+                        <input type="text" formControlName="zipCode" maxlength="5" />
                     </div>
                 </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label>Città</label>
+                        <input type="text" formControlName="city" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Provincia</label>
+                        <input type="text" formControlName="province" maxlength="2" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Telefono</label>
+                        <input type="text" formControlName="mobile" />
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-12">
-                        <div *ngIf="alertMessage" class="alert-message">
-                            <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span> 
-                        </div>
+                    <input type="submit" class="button bg-color-green color-white" [disabled]="form.invalid" value="SALVA DATI" />
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="alertMessage">
+                    <div class="col-md-12">
+                    <div class="alert-message">
+                        <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="updateOk">
+                    <div class="col-md-12">
+                    <div class="alert-message">
+                        <span><i class='bx bx-check-circle color-green'></i>  Modifica effettuata con successo</span>
+                    </div>
                     </div>
                 </div>
             </form>
         </div>
+
+        <!-- SEZIONE CAMBIO PASSWORD -->
         <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="color-blue mb-4">MODIFICA PASSWORD</h5>
+                <h5 class="color-blue mb-4">MODIFICA PASSWORD</h5>
                 </div>
             </div>
             <form [formGroup]="form_pwd" (ngSubmit)="onSubmitPwd()">
@@ -85,12 +99,17 @@
                     <div class="col-md-12">
                         <label>VECCHIA PASSWORD</label>
                         <input type="password" formControlName="old_pwd" />
+                        <span *ngIf="errorMessagePwd"><i class='bx bxs-error color-orange'></i> La password inserita non corrisponde con la precedente</span>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <label>NUOVA PASSWORD</label>
-                        <input type="password" formControlName="new_pwd" />
+                        <input type="password" formControlName="new_pwd" [(ngModel)]="new_pwd" />
+                        <div *ngIf="new_pwd && showStrength" [ngClass]="getPasswordClass()">
+                            Forza password: <strong>{{ FncUtils.checkPasswordStrength(new_pwd) }}</strong>
+                        </div>
+
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -101,13 +120,16 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="submit" class="button bg-color-green color-white" value="AGGIORNA PASSWORD">
+                        <input type="submit" class="button bg-color-green color-white" [disabled]="form_pwd.invalid || passwordStrength !== 'forte'" value="AGGIORNA PASSWORD" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div *ngIf="alertMessagePwd" class="alert-message">
-                            <span><i class='bx bxs-error color-orange'></i> {{ alertTextPwd }}</span> 
+                            <span><i class='bx bxs-error color-orange'></i> {{ alertTextPwd }}</span>
+                        </div>
+                        <div class="row" *ngIf="updatePwdOk" class="alert-message">
+                            <span><i class='bx bx-check-circle color-green'></i>  Modifica effettuata con successo</span>
                         </div>
                     </div>
                 </div>

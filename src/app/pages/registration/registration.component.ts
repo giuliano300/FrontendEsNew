@@ -12,6 +12,7 @@ import { italianVatValidator } from '../../fncUtils/italian-vat.validator';
 import { FncUtils } from '../../fncUtils/fncUtils';
 import { Users } from '../../interfaces/Users';
 import { v4 as uuidv4 } from 'uuid';
+import { UserTypes } from '../../interfaces/EnumTypes';
 
 @Component({
   selector: 'app-registration',
@@ -79,7 +80,8 @@ export class RegistrationComponent {
         parentId: 0,
         guid: uuidv4(),
         enabled: true,
-        deleted: false
+        deleted: false,
+        userTypes: UserTypes.Administrator
       };
 
       this.userService.setUser(user)

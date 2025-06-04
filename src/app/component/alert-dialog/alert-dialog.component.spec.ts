@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VisuraMultipla2Component } from './visura-multipla-2.component';
+import { AlertDialogComponent } from './alert-dialog.component';
 
-describe('VisuraMultipla2Component', () => {
-  let component: VisuraMultipla2Component;
-  let fixture: ComponentFixture<VisuraMultipla2Component>;
+describe('AlertDialogComponent', () => {
+  let component: AlertDialogComponent;
+  let fixture: ComponentFixture<AlertDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VisuraMultipla2Component]
+      imports: [AlertDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(VisuraMultipla2Component);
+    fixture = TestBed.createComponent(AlertDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
