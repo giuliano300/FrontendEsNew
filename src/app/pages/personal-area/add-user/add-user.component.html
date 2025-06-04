@@ -62,7 +62,7 @@
                             <input type="email" formControlName="email" />
                         </div>
                         <div class="col-md-4">
-                            <label>PASSWORD</label>
+                            <label>PASSWORD <span *ngIf="!inserimento">(inserisci la password se vuoi cambiarla)</span></label>
                             <input type="password" formControlName="pwd" (input)="onPasswordInput()" />
                             <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
                                 Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>

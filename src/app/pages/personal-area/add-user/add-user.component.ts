@@ -27,6 +27,7 @@ export class AddUserComponent {
   password = '';
   showStrength = true;
   FncUtils = FncUtils;
+  inserimento = false;
 
   selectedSenderIds: number[] = [];
 
@@ -44,7 +45,7 @@ export class AddUserComponent {
       city: ['', [Validators.required]],
       mobile: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      pwd: ['', [Validators.required]],
+      pwd: [''],
       pec: [''],
       id: ['']
     });
@@ -64,6 +65,13 @@ export class AddUserComponent {
     });
 
     this.route.paramMap.subscribe(params => {
+      if(!params.get('id')){
+        this.form.get('pwd')?.setValidators([Validators.required]);
+        this.form.get('pwd')?.updateValueAndValidity();
+        this.inserimento = true;
+        return;
+      }
+
       const id = parseInt(params.get('id')!);
        this.userService.getUserById(id)
         .subscribe((data: Users) => {
@@ -124,7 +132,7 @@ export class AddUserComponent {
         city: formValues.city,
         mobile: formValues.mobile,
         email: formValues.email,
-        pwd: formValues.pwd,
+        password: formValues.pwd,
         pec: formValues.pec,
         parentId: this.user!.id
       });

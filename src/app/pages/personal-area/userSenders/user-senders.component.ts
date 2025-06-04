@@ -11,10 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoBtnDelete, infoBtnEdit } from '../../../enviroments/enviroments';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-senders',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule, CommonModule],
   templateUrl: './user-senders.component.html',
   styleUrl: './user-senders.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -31,7 +32,7 @@ export class UserSendersComponent {
 
   constructor(private userSenderService: UserSendersService, private router: Router, private dialog: MatDialog) {}
 
-  displayedColumns: string[] = ['businessName', 'address', 'zipCode', 'city', 'province', 'state', 'actions'];
+  displayedColumns: string[] = ['businessName', 'address', 'zipCode', 'city', 'province', 'state', 'modifica','elimina'];
   dataSource = new MatTableDataSource<UserSenders>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

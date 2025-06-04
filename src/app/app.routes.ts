@@ -116,6 +116,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'modSender/:id',
+        component: AddSenderComponent,
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'tipoSpedizioneRaccomandata',
         component: TipoSpedizioneRaccomandataComponent,
         canActivate: [AuthGuard]
