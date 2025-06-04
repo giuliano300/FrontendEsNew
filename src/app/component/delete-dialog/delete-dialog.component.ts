@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { UserSendersService } from '../../services/user-senders.service';
 import { UsersService } from '../../services/users.service';
 import { UserRecipientsService } from '../../services/user-recipients.service';
+import { UserLogosService } from '../../services/user-logos.service';
 
 @Component({
   selector: 'app-delete-dialog',
@@ -17,7 +18,8 @@ export class DeleteDialogComponent {
     public dialogRef: MatDialogRef<DeleteDialogComponent>,
     private userSenderService: UserSendersService, 
     private usersService: UsersService,
-    private userRecipientService : UserRecipientsService
+    private userRecipientService : UserRecipientsService,
+    private userLogoService : UserLogosService
   ) {}
 
   onCancel(): void {
@@ -51,6 +53,17 @@ export class DeleteDialogComponent {
         break;
       case "userRecipient":
         this.userRecipientService.deleteUserRecipient(this.data.id).subscribe({
+          next: (response) => {
+            console.log('Destinatario eliminato con successo:', response);
+            this.dialogRef.close(true);
+          },
+          error: (error) => {
+            console.error('Errore nell\'eliminazione del destinatario:', error);
+          }
+        });
+        break;
+      case "userLogos":
+        this.userLogoService.deleteUserLogos(this.data.id).subscribe({
           next: (response) => {
             console.log('Destinatario eliminato con successo:', response);
             this.dialogRef.close(true);

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { GetDettaglioDestinatario } from '../interfaces/GetDettaglioDestinatario';
 import { HttpClient } from '@angular/common/http';
 import { GetReportSpedizioniResponse } from '../interfaces/GetReportSpedizioniResponse';
+import { Recipients } from '../classes/Recipients';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,19 @@ export class RecipientService {
           id: id.toString()
         })
         return this.http.get<GetDettaglioDestinatario>(`${this.apiUrl}/GetDettaglioDestinatario?${params.toString()}`);
+      }
+
+
+    getErroriNotificati(
+        userId: number,
+        notify: boolean
+      ): Observable<Recipients[]>
+      {
+        const params = new URLSearchParams({
+          userId: userId.toString(),
+          notify: notify.toString()
+        })
+        return this.http.get<Recipients[]>(`${this.apiUrl}?${params.toString()}`);
       }
 
 

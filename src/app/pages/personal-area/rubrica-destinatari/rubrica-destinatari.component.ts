@@ -13,10 +13,11 @@ import { Users } from '../../../interfaces/Users';
 import { UserRecipientsService } from '../../../services/user-recipients.service';
 import { DeleteDialogComponent } from '../../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-rubrica-destinatari',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule,RouterLink],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule,RouterLink, CommonModule],
   templateUrl: './rubrica-destinatari.component.html',
   styleUrl: './rubrica-destinatari.component.scss'
 })

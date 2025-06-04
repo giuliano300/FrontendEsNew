@@ -70,6 +70,7 @@ export class UtentiComponent {
     });
 
   }
+  
   onDelete(element: any): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',

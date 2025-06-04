@@ -15,4 +15,18 @@ export class UserLogosService {
    getUserLogos(userId: number): Observable<UserLogos[]> {
     return this.http.get<UserLogos[]>(this.apiUrl + "?userId=" + userId);
   }
+
+  setUserLogos(userSender: UserLogos): Observable<UserLogos>{
+    return this.http.post<UserLogos>(this.apiUrl, userSender);
+  }
+
+  deleteUserLogos(id: number): Observable<any> {
+    return this.http.delete(this.apiUrl + "/" + id)
+      .pipe(
+        catchError(error => {
+          console.error('Errore durante l\'eliminazione:', error);
+          throw error;  // Rilancia l'errore
+        })
+      );
+  }
 }

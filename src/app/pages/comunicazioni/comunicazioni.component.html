@@ -12,65 +12,21 @@
 <div class="comunicazioni-list">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-4" *ngFor="let item of notifications">
                 <section>
-                    <span class="es-label">EASYSENDER</span>
-                    <h4>EasySender 4.0</h4>
+                    <span 
+                    [ngClass]="item.notificationType === NotificationType.FromPoste ? 'poste-label' : 'es-label'">
+                    {{ item.notificationType === NotificationType.FromPoste ? 'Da Poste Italiane' : 'Da Easysender' }}
+                    </span>                    
+                    <h4>{{item.title}}</h4>
                     <p class="text-truncate">
-                        Dal 20 giugno 2024 sarà disponibile la nuova versione di Easysender: un design moderno e una navigazione semplice ed intuitiva. Questo aggiornamento rappresenta un passo significativo, con innovazioni
+                        {{item!.description}}                    
                     </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
+                    <a (click)="openModal(comunicazione, item)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
                 </section>
             </div>
-            <div class="col-md-4">
-                <section>
-                    <span class="poste-label">POSTE ITALIANE</span>
-                    <h4>Comunicazione reper corrispondenza</h4>
-                    <p class="text-truncate">
-                        COMUNICAZIONE RECUPERO CORRISPONDENZA Ai sensi del Regolamento Generale sulla Protezione dei Dati in sigla GDPR (regolamento n. 2016/679 in materia di tutela della privacy) è inibito a far data dal 1 luglio 2020 qualsiasi servizio di archiviazione e conservazione del materiale inviato senza preventiva e dedicata autorizzazione; 
-                    </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
-                </section>
-            </div>
-            <div class="col-md-4">
-                <section>
-                    <span class="es-label">EASYSENDER</span>
-                    <h4>Nuovo Modulo PAGO PA per Utility e Pubbliche amministrazioni</h4>
-                    <p class="text-truncate">
-                        Dal 20 giugno 2024 sarà disponibile la nuova versione di Easysender: un design moderno e una navigazione semplice ed intuitiva. Questo aggiornamento rappresenta un passo significativo, con innovazioni
-                    </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
-                </section>
-            </div>
-            <div class="col-md-4">
-                <section>
-                    <span class="es-label">EASYSENDER</span>
-                    <h4>Nuovo Modulo PAGO PA per Utility e Pubbliche amministrazioni</h4>
-                    <p class="text-truncate">
-                        Dal 20 giugno 2024 sarà disponibile la nuova versione di Easysender: un design moderno e una navigazione semplice ed intuitiva. Questo aggiornamento rappresenta un passo significativo, con innovazioni
-                    </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
-                </section>
-            </div>
-            <div class="col-md-4">
-                <section>
-                    <span class="es-label">EASYSENDER</span>
-                    <h4>Nuovo Modulo PAGO PA per Utility e Pubbliche amministrazioni</h4>
-                    <p class="text-truncate">
-                        Dal 20 giugno 2024 sarà disponibile la nuova versione di Easysender: un design moderno e una navigazione semplice ed intuitiva. Questo aggiornamento rappresenta un passo significativo, con innovazioni
-                    </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
-                </section>
-            </div>
-            <div class="col-md-4">
-                <section>
-                    <span class="es-label">EASYSENDER</span>
-                    <h4>Nuovo Modulo PAGO PA per Utility e Pubbliche amministrazioni</h4>
-                    <p class="text-truncate">
-                        Dal 20 giugno 2024 sarà disponibile la nuova versione di Easysender: un design moderno e una navigazione semplice ed intuitiva. Questo aggiornamento rappresenta un passo significativo, con innovazioni
-                    </p>
-                    <a (click)="openModal(comunicazione)"><i class='bx bx-chevrons-right'></i> leggi tutto</a>
-                </section>
+            <div class="col-md-12 text-center" *ngIf="notifications.length === 0">
+                Nessuna comunicazione inserita
             </div>
         </div>
     </div>
@@ -83,11 +39,11 @@
 <ng-template #comunicazione>
   <div class="modal-header">
     <h4 class="modal-title flex-start">
-        Nuovo Modulo PAGO PA per Utility e Pubbliche amministrazioni
+        {{selectedNotification?.title}}
     </h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="currentModalRef.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    Modulo PAGO PA: un modo semplice e immediato per gestire e rendicontare i pagamenti. Direttamente dalla piattaforma potrai generare e conciliare gli IUV e i bollettini emessi in pochi clic. Contattaci per maggiori informazioni.
+    {{selectedNotification?.description}}
   </div>
 </ng-template>

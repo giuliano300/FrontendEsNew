@@ -68,3 +68,9 @@ export enum UserTypes
   Visualizzatore = 2,
   Inseritore = 3
 }
+
+export enum NotificationType
+{
+  FromPoste = 1,
+  FromEs = 2
+}

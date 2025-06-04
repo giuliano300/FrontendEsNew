@@ -125,6 +125,10 @@ small{
     border-color: $red-color!important;
 }
 
+.no-border{
+    border: none!important;
+}
+
 /* ! Helpers
 ---------------------------------------------------------*/
 
@@ -913,7 +917,7 @@ small{
             outline-color: $grey-middle;
         }
 
-        input.ng-invalid.ng-touched{
+        input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, select.ng-invalid.ng-touched{
             border: 2px solid $red-color;
          }
 

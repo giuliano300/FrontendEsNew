@@ -28,11 +28,11 @@
                             NOME LOGO
                             <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertLogo}}" placement="right"></i>
                         </label>
-                        <input type="text" formControlName="nome_logo" />
+                        <input type="text" formControlName="name" />
                     </div>
                     <div class="col-md-12 mt-2">
                         <label>CARICA LOGO <em>(formato jpg, png, jpeg, gif)</em></label>
-                        <input type="file" formControlName="upl_logo" />
+                        <input type="file" formControlName="logo" #fileInput />
                     </div>
                     <div class="col-md-12">
                         <input type="submit" value="SALVA" class="bg-color-green color-white button" />

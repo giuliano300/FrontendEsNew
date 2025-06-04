@@ -146,48 +146,50 @@
   </div>
   <div class="modal-body">
     <div class="modal-support">
-      <div class="generic-form">
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <p>
-              Compila il form e fornisci una descrizione chiara del problema, includendo messaggi di errore e le operazioni che stavi svolgendo. Questo ci aiuterà a risolvere la tua richiesta rapidamente.
-            </p>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="generic-form">
+          <div class="row mb-3 no-border">
+            <div class="col-md-12">
+              <p>
+                Compila il form e fornisci una descrizione chiara del problema, includendo messaggi di errore e le operazioni che stavi svolgendo. Questo ci aiuterà a risolvere la tua richiesta rapidamente.
+              </p>
+            </div>
+          </div>
+          <div class="row mb-3 no-border">
+            <div class="col-md-6">
+              <label>Tipo di assistenza</label>
+              <select formControlName="sel_assistenza">
+                <option value="">-- Seleziona --</option>
+                <option value="tecnica">Assistenza Tecnica</option>
+                <option value="commerciale">Assistenza Commerciale</option>
+                <option value="amministrativa">Assistenza Amministrativa</option>
+              </select>
+            </div>
+            <div class="col-md-6"></div>
+          </div>
+          <div class="row mb-3 no-border">
+            <div class="col-md-6">
+              <label>Nome e Cognome</label>
+              <input type="text" formControlName="name">
+            </div>
+            <div class="col-md-6">
+              <label>Telefono</label>
+              <input type="text" formControlName="telephone">
+            </div>
+          </div>
+          <div class="row mb-3 no-border">
+            <div class="col-md-12">
+              <label>Messaggio</label>
+              <textarea formControlName="message"></textarea>
+            </div>
+          </div>
+          <div class="row no-border">
+            <div class="col-md-12">
+              <input type="submit" class="button bg-color-green color-white" value="Invia">
+            </div>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Tipo di assistenza</label>
-            <select formControlName="sel_assistenza">
-              <option value="">-- Seleziona --</option>
-              <option value="tecnica">Assistenza Tecnica</option>
-              <option value="commerciale">Assistenza Commerciale</option>
-              <option value="amministrativa">Assistenza Amministrativa</option>
-            </select>
-          </div>
-          <div class="col-md-6"></div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Nome e Cognome</label>
-            <input type="text" formControlName="name">
-          </div>
-          <div class="col-md-6">
-            <label>Telefono</label>
-            <input type="text" formControlName="telephone">
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <label>Messaggio</label>
-            <textarea formControlName="message"></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <input type="submit" class="button bg-color-green color-white" formControlName="send" value="Invia">
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 </ng-template>
