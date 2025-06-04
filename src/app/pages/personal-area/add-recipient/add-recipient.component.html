@@ -9,83 +9,83 @@
     </div>
     <div class="generic-form mt-5">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="row mb-2">
-                <div class="col-md-4">
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <label class="flex-start">
-                        RAGIONE SOCIALE
+                        RAGIONE SOCIALE / NOME E COGNOME
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="rag_soc" />
+                    <input type="text" formControlName="businessName" />
                 </div>
-                <div class="col-md-4">
-                    <label class="flex-start">
-                        NOME
-                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName2}}" placement="right"></i>
-                    </label>
-                    <input type="text" formControlName="nome" />
-                </div>
-                <div class="col-md-4">
-                    <label class="flex-start">
-                        COGNOME
-                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName2}}" placement="right"></i>
-                    </label>
-                    <input type="text" formControlName="cognome" />
-                </div>
-            </div>
-            <div class="row mb-2">
                 <div class="col-md-6">
                     <label class="flex-start">
                         COMPLETAMENTO NOMINATIVO
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplName}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="comp_nominativo" />
-                </div>
-                <div class="col-md-6">
-                    <label class="flex-start">
-                        CODICE FISCALE
-                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{infoCodiceFiscale}}" placement="right"></i>
-                    </label>
-                    <input type="text" formControlName="cod_fisc" />
+                    <input type="text" formControlName="complementNames" />
                 </div>
             </div>
-            <div class="row mb-2">
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <label class="flex-start">
                         INDIRIZZO
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="indirizzo" />
+                    <input type="text" formControlName="address" />
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
                         COMPLETAMENTO INDIRIZZO
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertComplAddress}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="comp_indirizzo" />
+                    <input type="text" formControlName="complementAddress" />
                 </div>
                 <div class="col-md-4">
                     <label>CAP</label>
-                    <input type="text" formControlName="cap" maxlength="5" />
+                    <input type="text" formControlName="zipCode" maxlength="5" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <label>CITTÀ</label>
-                    <input type="text" formControlName="citta" />
+                    <input type="text" formControlName="city" />
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
                         PROVINCIA
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="provincia" maxlength="2" />
+                    <input type="text" formControlName="province" maxlength="2" />
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
                         STATO
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                     </label>
-                    <input type="text" formControlName="stato" />
+                    <input type="text" formControlName="state" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="flex-start">
+                        CODICE FISCALE
+                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{infoCodiceFiscale}}" placement="right"></i>
+                    </label>
+                    <input type="text" formControlName="fiscalCode" />
+                </div>
+                <div class="col-md-4">
+                    <label class="flex-start">
+                        EMAIL
+                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{infoCodiceFiscale}}" placement="right"></i>
+                    </label>
+                    <input type="email" formControlName="email" />
+                </div>
+                <div class="col-md-4">
+                    <label class="flex-start">
+                        Telefono
+                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{infoCodiceFiscale}}" placement="right"></i>
+                    </label>
+                    <input type="text" formControlName="mobile" />
                 </div>
             </div>
 

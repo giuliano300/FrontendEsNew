@@ -21,10 +21,14 @@ export class UserRecipientsService {
       return this.http.get<UserRecipients>(this.apiUrl + "/" + id);
     }
   
-    setUserRecipient(userSender:UserRecipients): Observable<UserRecipients>{
-      let x = JSON.stringify(userSender!);
-      return this.http.post<UserRecipients>(this.apiUrl, userSender);
+    setUserRecipient(userRecipients:UserRecipients): Observable<UserRecipients>{
+      return this.http.post<UserRecipients>(this.apiUrl, userRecipients);
     }
+
+    updateUserRecipient(userRecipients:UserRecipients): Observable<UserRecipients>{
+      return this.http.put<UserRecipients>(this.apiUrl + "/" + userRecipients.id, userRecipients);
+    }
+
   
     deleteUserRecipient(id: number): Observable<any> {
       return this.http.delete(this.apiUrl + "/" + id)

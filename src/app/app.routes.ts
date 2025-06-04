@@ -64,7 +64,7 @@ import { RubricaDestinatariComponent } from './pages/personal-area/rubrica-desti
 import { UtentiComponent } from './pages/personal-area/utenti/utenti.component';
 import { ArchivioSpedizioniComponent } from './pages/archivio/archivio-spedizioni/archivio-spedizioni.component';
 import { ArchivioVisureComponent } from './pages/archivio/archivio-visure/archivio-visure.component';
-import { AddReceiverComponent } from './pages/personal-area/add-receiver/add-receiver.component';
+import { AddRecipientComponent } from './pages/personal-area/add-recipient/add-recipient.component';
 import { StatoInviiComponent } from './pages/stato-invii/stato-invii/stato-invii.component';
 import { DettaglioSpedizioneComponent } from './pages/archivio/dettaglio-spedizione/dettaglio-spedizione.component';
 import { AddLogoComponent } from './pages/personal-area/add-logo/add-logo.component';
@@ -403,8 +403,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'addReceiver',
-        component: AddReceiverComponent,
+        path: 'addRecipient',
+        component: AddRecipientComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'modRecipient/:id',
+        component: AddRecipientComponent,
         canActivate: [AuthGuard]
       },
       {

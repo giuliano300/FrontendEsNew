@@ -8,7 +8,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoBtnEdit, infoBtnDelete } from '../../../enviroments/enviroments';
 import { RouterLink } from '@angular/router';
-
+import { UserRecipients } from '../../../interfaces/UserRecipients';
+import { Users } from '../../../interfaces/Users';
+import { UserRecipientsService } from '../../../services/user-recipients.service';
+import { DeleteDialogComponent } from '../../../component/delete-dialog/delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-rubrica-destinatari',
@@ -18,35 +22,74 @@ import { RouterLink } from '@angular/router';
 })
 export class RubricaDestinatariComponent {
 
-        constructor(private router: Router) {}
-      
-        infoBtnEdit = infoBtnEdit;
-        infoBtnDelete = infoBtnDelete;
-             
-      
-      
-        displayedColumns: string[] = ['name','address', 'cap','city', 'province', 'state', 'edit', 'delete'];
-        dataSource = new MatTableDataSource(USER_DATA);
-        
-          @ViewChild(MatPaginator) paginator!: MatPaginator;
-          @ViewChild(MatSort) sort!: MatSort;
-        
-        
-        
-          ngAfterViewInit() {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }
-        
-          applyFilter(event: Event) {
-            const filterValue = (event.target as HTMLInputElement).value;
-            this.dataSource.filter = filterValue.trim().toLowerCase();
-          }
+  constructor(private router: Router, private userRecipientService: UserRecipientsService, private dialog: MatDialog) {}
+
+  infoBtnEdit = infoBtnEdit;
+  infoBtnDelete = infoBtnDelete;
+
+    UserRecipients: UserRecipients[] = [];
   
+    user: Users | null  = null;
+  
+          
+  displayedColumns: string[] = ['businessName', 'address', 'zipCode', 'city', 'province', 'state', 'modifica','elimina'];
+  dataSource = new MatTableDataSource<UserRecipients>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngOnInit(): void {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.user! = JSON.parse(user!);
+
+    this.getUserRecipients();
+  }
+
+  getUserRecipients(){
+    this.userRecipientService.getUserRecipients(this.user!.id!)
+    .subscribe((data: UserRecipients[]) => {
+      if (!data || data.length === 0) {
+        console.log('Nessun dato disponibile');
+      } else {
+        this.dataSource.data = data;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    });
+  }
+
+  onDelete(element: any): void {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      data: { 
+        name: element.businessName,
+        type: 'userRecipient',
+        id: element.id
+       }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          this.getUserRecipients();
+      }
+    });
+
+  }
+
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }
-
-const USER_DATA = [
-  { name:'Mario Rossi', address:'Viale Michelangelo, 50', cap:'80129', city: 'Napoli', province:'NA', state:'Italia' },
-  { name:'Domenico Carlino', address:'Via Scafa, 30', cap:'81100', city: 'Caiazzo', province:'CE', state:'Italia' },
-];
-

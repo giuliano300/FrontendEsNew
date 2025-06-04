@@ -73,10 +73,6 @@ export class UserSendersComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  onEdit(element: any): void {
-    console.log('Modifica elemento:', element);
-    // Qui puoi aprire un dialog, navigare ad una pagina, ecc.
-  }
   
   onDelete(element: any): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {

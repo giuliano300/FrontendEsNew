@@ -13,4 +13,5 @@ export interface UserRecipients {
   email?: string;
   mobile?: string;
   pec?: string;
+  fiscalCode?: string;
 }
