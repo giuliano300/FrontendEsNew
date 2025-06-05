@@ -35,7 +35,15 @@
                         </div>
                     </div>
                 </div>
-                <a routerLink="/" class="button bg-color-green color-white mt-3"><i class='bx bx-download'></i> SCARICA FILE</a>
+                <div class="error error-upload mt-3" *ngIf="erroreMessage">
+                    {{erroreMessage}}
+                </div>
+                <div class="valid mt-3" *ngIf="validMessage">
+                    {{validMessage}}
+                </div>
+                <div class="preload mt-3 text-center" *ngIf="preload">
+                    <i class='bx bx-loader bx-spin'></i><br>Attendere validazione in corso...
+                </div>
             </div>
         </div>
         <div class="col-md-6">
