@@ -5,6 +5,7 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityService } from '../../../services/utility.service';
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
+import { ZipResponse } from '../../../interfaces/ZipResponse';
 
 @Component({
   selector: 'app-stampa-unione',
@@ -74,23 +75,27 @@ export class StampaUnioneComponent {
               this.preload = true;
 
               this.utilityService.GetStampaEunione(zipContent)
-                .subscribe((base64Csv: string) => {
+                .subscribe((zipStampaUnione: ZipResponse) => {
                   
                   this.preload = false;
 
-                  if (!base64Csv) {
+                  if (!zipStampaUnione) {
                     this.erroreMessage = "Nessun dato disponibile";
                     return;
                   }
 
-                  // Decodifica Base64 in Uint8Array
-                  const csvBytes = Uint8Array.from(atob(base64Csv), c => c.charCodeAt(0));
-                  const blobFinale = new Blob([csvBytes], { type: 'text/csv;charset=utf-8;' });
-                  const url = window.URL.createObjectURL(blobFinale);
+                  if (!zipStampaUnione.success) {
+                    this.erroreMessage = zipStampaUnione.errorMessage!;
+                    return;
+                  }
 
+                  // Decodifica Base64 in Uint8Array
+                  const zipBytes = Uint8Array.from(atob(zipStampaUnione.base64Zip!), c => c.charCodeAt(0));
+                  const blobFinale = new Blob([zipBytes], { type: 'application/zip' }); 
+                  const url = window.URL.createObjectURL(blobFinale);
                   const a = document.createElement('a');
                   a.href = url;
-                  a.download = 'sync-bipiol.csv';
+                  a.download = 'stampa-unione.zip';
                   a.click();
 
                   window.URL.revokeObjectURL(url);

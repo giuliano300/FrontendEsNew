@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
-            <h1>Comprimi PDF</h1>
+            <h1>Unisci PDF</h1>
             <p class="mt-2 textsize-4 mt-3 mb-4">
-                Utility di compressione dei flie .pdf
+                Utility di unione dei flie .pdf
             </p>
         </div>
     </div>
@@ -11,42 +11,50 @@
 
     <div class="row mt-5">
         <div class="col-md-6">
+            <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
             <div class="generic-form">
                 <label>SCEGLIERE DOVE UNIRE IL PDF</label>
-                <select name="sel_unione" class="mb-3">
-                    <option value="">-- Seleziona --</option>
-                    <option value="1">Prima pagina</option>
-                    <option value="2">Ultima pagina</option>
+                <select formControlName="sel_unione" class="mb-3">
+                <option value="">-- Seleziona --</option>
+                <option value="1">Prima pagina</option>
+                <option value="2">Ultima pagina</option>
                 </select>
+
                 <label>CARICA UN FILE <em>(in formato .zip)</em></label>
                 <div class="file-upload">
-                    <!-- AREA DRAG & DROP -->
-                    <ngx-file-drop (onFileDrop)="onFileDrop($event)">
-                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                        <div class="drop-zone" (click)="openFileSelector()">
-                            Trascina qui il file o clicca per selezionarlo
-                        </div>
-                        </ng-template>
-                    </ngx-file-drop>
-    
-                    <!-- BARRA DI CARICAMENTO -->
-                    <div class="progress-container" *ngIf="uploadProgress !== null">
-                        <div
-                            class="progress-bar"
-                            [style.width.%]="uploadProgress"
-                            [ngClass]="{ 'completed': uploadProgress === 100 }"
-                            >
-                            {{ uploadProgress }}%
-                        </div>
+                <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                    <div class="drop-zone" (click)="openFileSelector()">
+                        Trascina qui il file o clicca per selezionarlo
+                    </div>
+                    </ng-template>
+                </ngx-file-drop>
+
+                <div class="progress-container" *ngIf="uploadProgress !== null">
+                    <div class="progress-bar" [style.width.%]="uploadProgress" [ngClass]="{ 'completed': uploadProgress === 100 }">
+                    {{ uploadProgress }}%
                     </div>
                 </div>
-                <label class="mt-3">CARICA UN FILE <em>(in formato .pdf)</em></label>
-                <input type="file" name="upl_pdf">
-                <div class="flex-between">
-                    <input type="submit" class="button bg-color-blue color-white mt-3" value="COMPRIMI PDF">
-                    <a routerLink="/" class="button bg-color-green color-white mt-3"><i class='bx bx-download'></i> SCARICA FILE</a>
                 </div>
+
+                <label class="mt-3">CARICA UN FILE <em>(in formato .pdf)</em></label>
+                <input type="file" #uplPdf required />
+
+                <div class="flex-between">
+                    <input type="submit" class="button bg-color-blue color-white mt-3" value="UNISCI PDF" />
+                </div>
+                <div class="error error-upload mt-3" *ngIf="erroreMessage">
+                    {{erroreMessage}}
+                </div>
+                <div class="valid mt-3" *ngIf="validMessage">
+                    {{validMessage}}
+                </div>
+                <div class="preload mt-3 text-center" *ngIf="preload">
+                    <i class='bx bx-loader bx-spin'></i><br>Attendere unione dei file in corso...
+                </div>
+
             </div>
+            </form>
         </div>
         <div class="col-md-6">
             <div class="utility-steps">
@@ -56,7 +64,7 @@
                     <li><strong>2</strong><span>Nel riquadro tratteggiato carica il file zip contenente <br>il/i pdf che formeranno la base.</span></li>
                     <li><strong>3</strong><span>Carica il singolo pdf da unire nell'area sottostante.</span></li>
                     <li><strong>4</strong><span>Se entrambi i file sono corretti cliccare su Unisci Pdf.</span></li>
-                    <li><strong>5</strong><span>Dopo l'unione clicca su scarica il file per scaricare il file zip contenente i pdf uniti.</span></li>
+                    <li><strong>5</strong><span>Dopo l'unione controlla in download il file zip scaricato<br> contenente i pdf uniti.</span></li>
                 </ul>
             </div>
         </div>

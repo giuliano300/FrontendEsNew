@@ -293,7 +293,7 @@ export class CalcoloPreventivoComponent {
       }
 
 
-      operationName = 'Invio ' +  this.productName + (this.shippingTypes == ShippingTypes.singola ? ' singolo' : ' multiplo ') + (this.bulletin  ? ' con bollettino' : '');
+      operationName = 'Spedizione' +  this.productName + (this.shippingTypes == ShippingTypes.singola ? ' singola' : ' multipla ') + (this.bulletin  ? ' con bollettino' : '');
 
       o = {
         operation: {
@@ -315,8 +315,8 @@ export class CalcoloPreventivoComponent {
         senderAR: senderAR,
       };
 
-      var test = JSON.stringify(o);
-      console.log(test);
+      //var test = JSON.stringify(o);
+      //console.log(test);
       this.operationService.setOperation(o)
       .subscribe((data: Operations) => {
         if (!data) {
@@ -332,7 +332,7 @@ export class CalcoloPreventivoComponent {
 
           this.send = false;
           if(res.operationId == 0)
-            this.errorMessage= "Si è verificato un errore nella creazione della spedizione.";
+            this.errorMessage = "Si è verificato un errore nella creazione della spedizione.";
           else
           {
             this.formStorage.saveForm("riepilogo", res);

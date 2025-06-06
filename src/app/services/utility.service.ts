@@ -3,6 +3,9 @@ import { API_URL } from '../../main';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ZipStampaUnioneRequest } from '../interfaces/ZipStampaUnioneRequest';
+import { ZipResponse } from '../interfaces/ZipResponse';
+import { PdfUnioneRequest } from '../interfaces/PdfUnioneRequest';
+import { PdfUnioneResponse } from '../interfaces/PdfUnioneResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +23,18 @@ export class UtilityService {
     );
   }
 
-  GetStampaEunione(zipStampaUnioneRequest: ZipStampaUnioneRequest): Observable<string> {
-    return this.http.post(this.apiUrl + "StampaUnione/process", 
-      JSON.stringify(zipStampaUnioneRequest),  // invia la stringa come JSON
-      { headers: { 'Content-Type': 'application/json' }, responseType: 'text' }
+  GetStampaEunione(zipStampaUnioneRequest: ZipStampaUnioneRequest): Observable<ZipResponse> {
+    return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/Process", zipStampaUnioneRequest);
+  }
+
+  GetUnisciPdf(pdfUnioneRequest: PdfUnioneRequest): Observable<PdfUnioneResponse> {
+    return this.http.post<PdfUnioneResponse>(
+      this.apiUrl + "StampaUnione/UnisciPdf",
+      pdfUnioneRequest
     );
+  }
+
+  GetComprimiPdf(zipStampaUnioneRequest: ZipStampaUnioneRequest): Observable<ZipResponse> {
+    return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/ComprimiPdf", zipStampaUnioneRequest);
   }
 }
