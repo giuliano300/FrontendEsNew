@@ -9,7 +9,7 @@ export class Bulletins {
   numeroContoCorrente: string = "";
   intestatoA: string = "";
   importoEuro: string = "";
-  iban: string = "";
+  iban?: string = "";
   eseguitoDaNominativo: string = "";
   eseguitoDaIndirizzo: string = "";
   eseguitoDaLocalita: string = "";

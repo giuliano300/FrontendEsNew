@@ -292,7 +292,6 @@ export class UploadCsvMultiploComponent {
     // Ascolta l'evento dataSaved
       modalRef.componentInstance.dataSaved.subscribe((updatedData: any) => {
         this.recipientBulletin = updatedData;
-        this.recipientBulletin;
         modalRef.componentInstance.validChange.subscribe((v: any) => {
           if(v.valid && v.isChange){
 
@@ -306,7 +305,9 @@ export class UploadCsvMultiploComponent {
                 r => r.tempRecipientGuid === this.recipientBulletin.recipient.tempGuid
               );
 
-              b = this.recipientBulletin.bulletin;
+              if (b) {
+                Object.assign(b, this.recipientBulletin.bulletin);
+              }            
             }
 
             obj!.valido = true;

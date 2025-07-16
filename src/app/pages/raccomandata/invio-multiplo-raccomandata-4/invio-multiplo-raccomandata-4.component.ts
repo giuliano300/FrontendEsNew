@@ -51,18 +51,17 @@ export class InvioMultiploRaccomandata4Component {
   ngOnInit(): void {
       Promise.all([
         this.formStorage.getForm('step2'),
-        this.formStorage.getForm('destinatari'),
+        this.formStorage.getForm('destinatari')
       ]).then(([step1, step2]) => {
         if(!step1)
           this.router.navigate(['/']);
   
           const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-          if(datiDecriptati.bollettino === 1)
+          if(datiDecriptati.bollettino == 1)
             this.bulletin = "con bollettino";
   
           const recipients = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
           this.recipients = recipients;
-          //console.log(this.recipients);
       })
   }
 

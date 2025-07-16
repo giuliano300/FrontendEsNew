@@ -46,6 +46,7 @@ export class CompilaBollettinoComponent {
     eseguito_localita: new FormControl('', [Validators.required]),
     codice_cliente: new FormControl('', [Validators.required]),
     causale: new FormControl('', [Validators.required]),
+    iban: new FormControl(''),
   });
 
 
@@ -96,6 +97,7 @@ export class CompilaBollettinoComponent {
         codiceCliente: this.form.value.codice_cliente,
         causale: this.form.value.causale,
         productType: this.productType,
+        iban: this.form.value.iban,
         tempRecipientGuid: this.recipients![0].tempGuid
       });
 

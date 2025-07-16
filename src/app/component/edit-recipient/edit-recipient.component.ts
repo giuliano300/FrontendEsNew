@@ -179,9 +179,6 @@ export class EditRecipientComponent {
        filter((value: string | null): value is string => !!value && value.length >= 2),
        map(value => this._filterCAP(value, capsUnici))
      );
-
-    console.log("attivo");
-
    }
  
    private _filterCAP(value: string, caps: string[]): string[] {

@@ -59,7 +59,8 @@ export enum Options
 {
   hidePrice = 1,
   rr = 2,
-  
+  Ged = 3,
+  GedPoset = 4
 }
 
 export enum UserTypes
