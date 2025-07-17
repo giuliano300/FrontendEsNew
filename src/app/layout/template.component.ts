@@ -49,6 +49,7 @@ export class TemplateComponent {
     localStorage.removeItem('productType');    
     localStorage.removeItem('sendType');    
     localStorage.removeItem('bulletin');    
+    localStorage.removeItem('userTourPage');    
 
     this.router.navigate(['/']);
   }

@@ -49,6 +49,7 @@ export class LoginComponent {
             localStorage.setItem('user', JSON.stringify(this.user!));
             localStorage.setItem('userOptions', JSON.stringify(data.options));
             localStorage.setItem('userProducts', JSON.stringify(data.products));
+            localStorage.setItem('userTourPage', JSON.stringify(data.tour));
             this.router.navigate(['/dashboard']);
           }
         });

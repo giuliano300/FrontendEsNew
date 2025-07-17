@@ -75,3 +75,9 @@ export enum NotificationType
   FromPoste = 1,
   FromEs = 2
 }
+
+export enum TourPage
+{
+  dashboard = 1,
+  nuovaSpedizione = 2
+}

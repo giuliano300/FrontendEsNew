@@ -3,6 +3,9 @@ import { RouterLink } from '@angular/router';
 import { FormStorageService } from '../../services/form-storage.service';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../interfaces/EnumTypes';
+import { TourSeen } from '../../interfaces/TourSeen';
+import { TourSeenService } from '../../services/tourSeen.service';
 
 
 @Component({
@@ -12,16 +15,14 @@ import { Placement as PopperPlacement } from '@popperjs/core';
   styleUrl: './nuova-spedizione.component.scss'
 })
 export class NuovaSpedizioneComponent {
-    constructor(private formStorage: FormStorageService, private shepherdService: ShepherdService ) {}
+    constructor(private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
     
+    page: number = TourPage.nuovaSpedizione;
     
     ngOnInit() {
         this.formStorage.clearAll();
 
-        //if(!localStorage.getItem("tour")){
-          this.startTour();
-          //localStorage.setItem("tour", "true");
-        //}
+        this.getTourInThisPage();
     }
 
 
@@ -59,8 +60,27 @@ export class NuovaSpedizioneComponent {
     // Ritarda il primo step
     setTimeout(() => {
       this.shepherdService.start();
+      this.completeTour();
     }, 300);
 
   }
+
+
+    //COPIARE SENZA TOCCARE
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+  
+    ///////////////////////////
+  
 
 }
