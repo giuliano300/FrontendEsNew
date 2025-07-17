@@ -9,6 +9,8 @@ import { Users } from '../../../interfaces/Users';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-2',
@@ -20,7 +22,7 @@ export class InvioSingoloRaccomandata2Component {
 
   bulletin: string | null = "senza bollettino";
   
-  constructor(private router: Router, private userLogosService: UserLogosService, private formStorage: FormStorageService ) {}
+  constructor(private router: Router, private userLogosService: UserLogosService, private formStorage: FormStorageService, private shepherdService: ShepherdService ) {}
   alertMessage = false;
   alertText = '';
 
@@ -56,6 +58,11 @@ ngOnInit() {
     this.bulletin = "con bollettino";
 
   this.getUserLogos();
+
+    //if(!localStorage.getItem("tour")){
+      this.startTour();
+      //localStorage.setItem("tour", "true");
+    //}
 }
 
 getUserLogos(){
@@ -114,6 +121,72 @@ onSubmit(): void {
   removeErroMessage(): void {
     this.alertMessage = false;
     this.alertText = '';
+  }
+
+  startTour() {
+    const steps = [
+      {
+        id: 'singleraccomandata',
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirà nel frontespizio della tua comunicazione.",
+        attachTo: {
+          element: '.step-1',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'singleraccomandata2',
+        text: "Imposta la raccomandata selezionando il formato, la stampa (fronte o fronte/retro) e la ricevuta di ritorno, se desiderata.",
+        attachTo: {
+          element: '.step-2',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'singleraccomandata3',
+        text: "Clicca su <strong>'AVANTI'</strong> per continuare, oppure su <strong>'INDIETRO'</strong> per tornare allo step precedente.",
+        attachTo: {
+          element: '.step-end',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Fine', action: () => this.shepherdService.complete() }
+        ]
+      }
+    ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+    }, 300);
+
   }
 
 

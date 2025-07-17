@@ -21,7 +21,7 @@
     <div class="product-setting">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 step-1">
                     <section class="select-form-type">
                         <span>Seleziona il logo <em>(se vuoi...)</em></span>
                         <select formControlName="sel_logo" (change)="removeErroMessage()">
@@ -33,7 +33,7 @@
                     </section>
                 </div>
             </div>  
-            <div class="row">
+            <div class="row step-2">
                 <div class="col-md-3">
                     <h3>
                         <img src="/assets/img/icn-formato.png" alt="Formato"> Formato
@@ -111,7 +111,7 @@
                     </ul>
                 </div>
             </div>   
-            <div class="group-button">
+            <div class="group-button step-end">
                 <a routerLink="/invioSingoloRaccomandata">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>

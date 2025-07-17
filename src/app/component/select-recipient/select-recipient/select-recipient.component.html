@@ -1,7 +1,7 @@
     <div class="generic-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 step-1">
                     <section class="select-form-type">
                         <span>Seleziona un destinatario dalla rubrica</span>
                         <select formControlName="sel_destinatario" (change)="setFormRecipientUser()">
@@ -12,7 +12,7 @@
                         </select>
                     </section>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 step-2">
                     <section class="select-form-type">
                         <span>Spedizione italia o estero</span>
                         <select formControlName="sel_spedizione" (change)="onStatoChange($event)">
@@ -27,6 +27,8 @@
                     <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire i dati del destinatario</h3>
                 </div>
             </div>
+
+            <div class="step-3">
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-4">
@@ -153,9 +155,11 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
+            </div>
 
 
-            <div class="group-button">
+
+            <div class="group-button step-end">
                 <a [routerLink] ="backLink">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>

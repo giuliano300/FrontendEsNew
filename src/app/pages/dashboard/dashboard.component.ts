@@ -17,49 +17,122 @@ export class DashboardComponent {
   constructor(private modalService: NgbModal, private router: Router, private shepherdService: ShepherdService) {}
 
 
-  ngOnInit() {
-    //if(!localStorage.getItem("tour")){
-      this.startTour();
-      //localStorage.setItem("tour", "true");
-    //}
-  }
+    ngOnInit() {
+      //if(!localStorage.getItem("tour")){
+        this.startTour();
+        //localStorage.setItem("tour", "true");
+      //}
+    }
 
-  startTour() {
-
-  const steps = [
+    startTour() {
+    const steps = [
       {
         id: 'dashboard',
-        text: 'Questa è la dashboard principale.',
+        text: 'Avvia una <strong>nuova spedizione</strong> direttamente da qui.',
         attachTo: {
-          element: '.test',
-          on: 'bottom' as PopperPlacement 
+          element: '.step-1',
+          on: 'bottom' as PopperPlacement
         },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
         buttons: [
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
       {
-        id: 'dashboard',
-        text: 'Questa è la dashboard principale.',
+        id: 'dashboard2',
+        text: 'Controlla lo <strong>stato degli invii</strong> dei tuoi prodotti postali in tempo reale.',
         attachTo: {
-          element: '.test2',
-          on: 'top' as PopperPlacement 
+          element: '.step-2',
+          on: 'bottom' as PopperPlacement
         },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
         buttons: [
-          { text: 'fine', action: () => this.shepherdService.complete() }
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'dashboard3',
+        text: 'Consulta lo <strong>storico delle spedizioni</strong> effettuate.',
+        attachTo: {
+          element: '.step-3',
+          on: 'bottom' as PopperPlacement
+        },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'dashboard4',
+        text: 'Visualizza i <strong>report dettagliati</strong> delle spedizioni effettuate.',
+        attachTo: {
+          element: '.step-4',
+          on: 'bottom' as PopperPlacement
+        },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'dashboard5',
+        text: 'Accedi alla sezione <strong>Utility di Easysender</strong> per sincronizzare Bipiol, unire o comprimere PDF, stampare e scaricare file di esempio. ',
+        attachTo: {
+          element: '.step-5',
+          on: 'bottom' as PopperPlacement
+        },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'dashboardend',
+        text: 'Leggi le comunicazioni ufficiali di <strong>Easysender e Poste Italiane</strong>.',
+        attachTo: {
+          element: '.step-end',
+          on: 'bottom' as PopperPlacement
+        },
+        modalOverlayOpeningPadding: 14,
+        modalOverlayOpeningRadius: 5,
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Fine', action: () => this.shepherdService.complete() }
         ]
       }
 
     ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
     this.shepherdService.defaultStepOptions = {
       scrollTo: true,
       cancelIcon: { enabled: true },
       classes: 'shepherd-theme-arrows'
     };
 
+    // Carica e avvia il tour
     this.shepherdService.addSteps(steps);
-    this.shepherdService.start();
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+    }, 300);
+
   }
+
 
   // Metodo per aprire il modal e salvare il riferimento
   openModal(content: any) {

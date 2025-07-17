@@ -2,7 +2,7 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-md-12">
-                    <section class="select-form-type">
+                    <section class="select-form-type step-1">
                         <span>Seleziona un mittente dalla rubrica</span>
                         <select formControlName="sel_mittente" (change)="setFormSenderUser()">
                             <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
@@ -18,7 +18,7 @@
                     <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire un nuovo mittente</h3>
                 </div>
             </div>
-            <div class="row">
+            <div class="row step-2">
                 <div class="col-md-2"></div>
                 <div class="col-md-4">
                     <ul>
@@ -178,7 +178,7 @@
                 </div>
             </div>
 
-            <div class="group-button">
+            <div class="group-button step-end">
                 <a [routerLink]="backLink">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>

@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="select-type-send">
+    <div class="select-type-send step-1">
       <div class="item">
         <input id="invio-singolo" type="radio" formControlName="tipoInvio" value="invio-singolo" (change)="removeErroMessage()" />
         <label for="invio-singolo">
@@ -12,7 +12,7 @@
       </div>
     </div>
     
-    <div class="group-button">
+    <div class="group-button step-2">
         <a routerLink="/nuovaSpedizione">INDIETRO</a>
         <input type="submit" value="AVANTI" />
     </div>

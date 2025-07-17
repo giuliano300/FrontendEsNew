@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-            <div class="file-upload">
+            <div class="file-upload step-1">
                 <label><strong>CARICA UN SINGOLO FILE</strong>&nbsp;<em>(in formato .pdf)</em></label>
                 <!-- AREA DRAG & DROP -->
                 <ngx-file-drop (onFileDrop)="onFileDrop($event)">
@@ -36,7 +36,7 @@
         <div class="col-md-2"></div>
     </div>
 
-    <div class="group-button">
+    <div class="group-button step-end">
         <a [routerLink]="backLink">INDIETRO</a>
         <input type="submit" value="AVANTI" [disabled]="uploadProgress! < 100" />
     </div>

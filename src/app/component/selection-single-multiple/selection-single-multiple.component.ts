@@ -3,6 +3,8 @@ import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ProductTypes } from '../../interfaces/EnumTypes';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
 
 
 @Component({
@@ -13,7 +15,7 @@ import { ProductTypes } from '../../interfaces/EnumTypes';
 })
 export class SelectionSingleMultipleComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private shepherdService: ShepherdService) {}
 
   alertMessage = false;
 
@@ -28,7 +30,10 @@ export class SelectionSingleMultipleComponent {
   });
 
   ngOnInit(): void{
-
+    //if(!localStorage.getItem("tour")){
+      this.startTour();
+      //localStorage.setItem("tour", "true");
+    //}
   }
 
   onSubmit(): void {
@@ -69,5 +74,59 @@ export class SelectionSingleMultipleComponent {
   removeErroMessage(){
     this.alertMessage = false;
   }
+
+  startTour() {
+    const steps = [
+      {
+        id: 'singlemultiple',
+        text: 'Scegli il tipo di invio: <strong>singolo o multiplo</strong>.',
+        attachTo: {
+          element: '.step-1',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'singlemultiple2',
+        text: "Clicca su <strong>'AVANTI'</strong> per continuare, oppure su <strong>'INDIETRO'</strong> per tornare allo step precedente.",
+        attachTo: {
+          element: '.step-2',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Fine', action: () => this.shepherdService.complete() }
+        ]
+      }
+    ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+    }, 300);
+
+  }
+
+
 
 }

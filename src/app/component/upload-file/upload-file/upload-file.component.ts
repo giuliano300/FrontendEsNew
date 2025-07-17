@@ -10,6 +10,8 @@ import { secretKey } from '../../../../main';
 import * as CryptoJS from 'crypto-js';
 import { PDFDocument } from 'pdf-lib'
 import { ProductTypes } from '../../../interfaces/EnumTypes';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
 
 @Component({
   selector: 'app-upload-file',
@@ -34,7 +36,8 @@ export class UploadFileComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private formStorage: FormStorageService
+    private formStorage: FormStorageService,
+    private shepherdService: ShepherdService
   ) {
     this.form = this.fb.group({
       // eventuali altri controlli
@@ -157,6 +160,11 @@ export class UploadFileComponent {
       }
       
     });
+
+      //if(!localStorage.getItem("tour")){
+        this.startTour();
+        //localStorage.setItem("tour", "true");
+      //}
   }
 
   onSubmit() {
@@ -166,6 +174,58 @@ export class UploadFileComponent {
       else
         this.router.navigate(['/calcoloPreventivo']);
     }
+  }
+
+      startTour() {
+    const steps = [
+      {
+        id: 'singleraccomandata',
+        text: "Trascina oppure clicca per carica il file in formato .pdf",
+        attachTo: {
+          element: '.step-1',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'singleraccomandata3',
+        text: "Clicca su <strong>'AVANTI'</strong> per continuare, oppure su <strong>'INDIETRO'</strong> per tornare allo step precedente.",
+        attachTo: {
+          element: '.step-end',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Fine', action: () => this.shepherdService.complete() }
+        ]
+      }
+    ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+    }, 300);
+
   }
 
 }
