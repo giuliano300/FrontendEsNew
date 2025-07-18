@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { InvioSingoloRaccomandata2Component } from './invio-singolo-raccomandata-2.component';
+
 
 describe('InvioSingoloRaccomandata2Component', () => {
   let component: InvioSingoloRaccomandata2Component;

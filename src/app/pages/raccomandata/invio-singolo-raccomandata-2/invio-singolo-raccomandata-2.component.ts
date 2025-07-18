@@ -11,6 +11,9 @@ import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-invio-singolo-raccomandata-2',
@@ -20,9 +23,11 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 })
 export class InvioSingoloRaccomandata2Component {
 
+  page: number = TourPage.raccomandataSingola2;
+
   bulletin: string | null = "senza bollettino";
   
-  constructor(private router: Router, private userLogosService: UserLogosService, private formStorage: FormStorageService, private shepherdService: ShepherdService ) {}
+  constructor(private router: Router, private userLogosService: UserLogosService, private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService ) {}
   alertMessage = false;
   alertText = '';
 
@@ -59,10 +64,7 @@ ngOnInit() {
 
   this.getUserLogos();
 
-    //if(!localStorage.getItem("tour")){
-      this.startTour();
-      //localStorage.setItem("tour", "true");
-    //}
+  this.getTourInThisPage();
 }
 
 getUserLogos(){
@@ -136,6 +138,7 @@ onSubmit(): void {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -150,6 +153,7 @@ onSubmit(): void {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -189,5 +193,26 @@ onSubmit(): void {
 
   }
 
+    //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+  
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+  
+    ///////////////////////////
+  
+  
 
 }

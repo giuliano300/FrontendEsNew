@@ -38,8 +38,8 @@ export class DashboardComponent {
           modalOverlayOpeningRadius: 5,
           classes: 'margin-step-y', 
           buttons: [
-            { text: 'Avanti', action: () => this.shepherdService.next() },
-            { text: 'Chiudi', action: () => this.shepherdService.complete(), classes:"close" }
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
           ]
         },
         {
@@ -53,6 +53,7 @@ export class DashboardComponent {
           modalOverlayOpeningRadius: 5,
           classes: 'margin-step-y', 
           buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
             { text: 'Avanti', action: () => this.shepherdService.next() }
           ]
         },
@@ -67,6 +68,7 @@ export class DashboardComponent {
           modalOverlayOpeningRadius: 5,
           classes: 'margin-step-y', 
           buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
             { text: 'Avanti', action: () => this.shepherdService.next() }
           ]
         },
@@ -81,6 +83,7 @@ export class DashboardComponent {
           modalOverlayOpeningRadius: 5,
           classes: 'margin-step-y', 
           buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
             { text: 'Avanti', action: () => this.shepherdService.next() }
           ]
         },
@@ -95,6 +98,7 @@ export class DashboardComponent {
           modalOverlayOpeningRadius: 5,
           classes: 'margin-step-y', 
           buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
             { text: 'Avanti', action: () => this.shepherdService.next() }
           ]
         },
@@ -136,11 +140,12 @@ export class DashboardComponent {
 
   }
 
+  
+  //COPIARE SENZA TOCCARE
   restartTour(){
     this.startTour();
   }
   
-  //COPIARE SENZA TOCCARE
   completeTour()
   {
     this.shepherdService.tourObject?.on('complete', () => {

@@ -1354,3 +1354,37 @@ a.download-csv:link, a.download-csv:visited{
         }
     }
 }
+
+
+.restart-tour{
+    width: 210px;
+    position: fixed;
+    z-index: 900;
+    bottom:20%;
+    left:-150px;
+    background-color:$primary-color;
+    color: $white-color;
+    border-radius: 0 5px 5px 0;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all .3s cubic-bezier(.215, .61, .355, 1);
+
+    &:hover{
+        left: 0;
+        transition: all .3s cubic-bezier(.215, .61, .355, 1);
+    }
+
+    i{
+        font-size: 1.6rem;
+    }
+
+    a{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:0;
+    }
+}

@@ -66,7 +66,12 @@ export class NuovaSpedizioneComponent {
   }
 
 
+
     //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+
     completeTour()
     {
       this.shepherdService.tourObject?.on('complete', () => {

@@ -79,5 +79,9 @@ export enum NotificationType
 export enum TourPage
 {
   dashboard = 1,
-  nuovaSpedizione = 2
+  nuovaSpedizione = 2,
+  sigleMultiple= 3,
+  withWithoutBulletin= 4,
+  raccomandataSingola2= 5
+
 }
