@@ -107,6 +107,18 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
+            <div class="row mb-3" [hidden]="isNotAgol">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <label class="flex-start">
+                        CRON
+                        <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertCron}}" placement="right"></i>
+                    </label>
+                    <input type="text" formControlName="cron" />
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
@@ -118,6 +130,7 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
+
 
             <div class="row" [hidden]="isNotAgol">
                 <div class="col-md-2"></div>

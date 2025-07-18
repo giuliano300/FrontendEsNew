@@ -46,6 +46,7 @@ export class Recipients {
   valoreNotificante?: string | null = null;
   telegramText?: string | null = null;
   pec?: string | null = null;
+  cron?: string | null = null;
   notified?: boolean | null = false;
   fromApi: boolean = false;
   tempGuid: string = FncUtils.generateGuid();

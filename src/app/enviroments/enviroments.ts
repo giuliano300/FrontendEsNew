@@ -9,6 +9,7 @@ export const alertBollNominativo = "Nominativo";
 export const alertBollIndirizzo = "Indirizzo";
 export const alertBollCap = "Cap";
 export const alertBollLocalita = "Località";
+export const alertCron = "Inserisci il numero cronologico";
 export const infoDettaglioInvii = "Vai al dettaglio";
 export const infoBtnEdit = "Modifica";
 export const infoBtnDelete = "Elimina";

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserRecipientsService } from '../../../services/user-recipients.service';
 import { GlobalServicesService } from '../../../services/global-services.service';
 import { FormStorageService } from '../../../services/form-storage.service';
-import { alertAddress, alertComplAddress, alertComplName, alertMailDest, alertName, alertProvince, alertState } from '../../../enviroments/enviroments';
+import { alertAddress, alertComplAddress, alertComplName, alertMailDest, alertName, alertProvince, alertState, alertCron } from '../../../enviroments/enviroments';
 import { UserRecipients } from '../../../interfaces/UserRecipients';
 import { filter, map, Observable, of, startWith } from 'rxjs';
 import { Comune } from '../../../interfaces/Comune';
@@ -44,7 +44,8 @@ export class SelectRecipientComponent {
   alertComplAddress = alertComplAddress;
   alertProvince = alertProvince;
   alertState = alertState;
-  alertMailDest= alertMailDest;
+  alertMailDest = alertMailDest;
+  alertCron = alertCron;
 
   userRecipients: UserRecipients[] = [];
 
@@ -77,7 +78,8 @@ export class SelectRecipientComponent {
     stato: new FormControl('', [Validators.required]),
     email: new FormControl(''),
     addRecipient: new FormControl(''),
-    pec: new FormControl('')
+    pec: new FormControl(''),
+    cron: new FormControl('')
   });
 
   onStatoChange(event: Event) {
@@ -109,7 +111,8 @@ export class SelectRecipientComponent {
         provincia: u.province,
         stato: u.state,
         email: u.email,
-        pec: u.pec
+        pec: u.pec,
+        cron: u.cron
       });
   }
 
@@ -219,7 +222,7 @@ export class SelectRecipientComponent {
       this.getUserRecipient(parseInt(selectedValue!));
   }
 
-    removeFields(){
+  removeFields(){
     const fieldsToClear = [
         'nominativo',
         'indirizzo',
@@ -295,7 +298,8 @@ export class SelectRecipientComponent {
       tempGuid: FncUtils.generateGuid(),
       userId: this.user!.id!,
       userParentId: this.user!.parentId!,
-      pec: this.form.value.pec!
+      pec: this.form.value.pec!,
+      cron: this.form.value.pec!
     };
 
     const destinatari = [];
