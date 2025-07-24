@@ -1,3 +1,10 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -7,7 +14,7 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div class="row step-1">
         <div class="col-md-6">
             <div class="dettaglio-lotto">
                 <ul>
@@ -58,7 +65,7 @@
 
 <div class="filter">
     <form [formGroup]="form">
-        <div class="container">
+        <div class="container step-2">
             <div class="row">
                 <div class="col-md-12">
                     <h4 class="color-blue mt-1 mb-3 flex-start"><i class='bx bx-search'></i>&nbsp;Ricerca spedizione</h4>
@@ -100,7 +107,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 step-3">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="isLoaded">
 
                     <!-- Colonna Nominativo -->
@@ -139,7 +146,7 @@
                     <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Stato </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <a href="https://www.poste.it/cerca/index.html#/risultati-spedizioni/{{element.code}}" target="_blank" class="flex"><i class='bx bx-link-external'></i>&nbsp; Verifica lo stato</a>
+                        <a href="https://www.poste.it/cerca/index.html#/risultati-spedizioni/{{element.code}}" target="_blank" class="flex step-4"><i class='bx bx-link-external'></i>&nbsp; Verifica lo stato</a>
                     </td>
                     </ng-container>
 
@@ -147,7 +154,7 @@
                     <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Download documento</th>
                     <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
-                        <a (click)="downloadFile(element.attachedFile)"><i class='bx bx-envelope' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                        <a (click)="downloadFile(element.attachedFile)" class="step-5"><i class='bx bx-envelope' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
                     </td>
                     </ng-container>
                     
@@ -169,7 +176,7 @@
                         Ricevuta accettazione
                         </th>
                         <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
-                            <a (click)="downloadFile(element.attachedFileRA)"><i class='bx bx-file' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                            <a (click)="downloadFile(element.attachedFileRA)" class="step-end"><i class='bx bx-file' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
                         </td>
                     </ng-container>
                     <!-- Colonna Ricevuta accettazione -->

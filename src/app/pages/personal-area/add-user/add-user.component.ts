@@ -10,6 +10,12 @@ import { FncUtils } from '../../../fncUtils/fncUtils';
 import { UsersService } from '../../../services/users.service';
 import { inserisciText, modificaText } from '../../../enviroments/enviroments';
 import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
 
 @Component({
   selector: 'app-add-user',
@@ -38,7 +44,7 @@ export class AddUserComponent {
 
   constructor(private router: Router, private fb: FormBuilder, 
     private userSenderService: UserSendersService, private userService: UsersService, 
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute, private shepherdService: ShepherdService, private tourService: TourSeenService) {
     this.form = this.fb.group({
       userTypes: ['', [Validators.required]],
       businessName: ['', [Validators.required, Validators.maxLength(44)]],
@@ -53,6 +59,8 @@ export class AddUserComponent {
       id: ['']
     });
   }
+
+  page: number = TourPage.userAdd;
 
   ngOnInit(): void {
     const user = localStorage.getItem('user');
@@ -103,6 +111,8 @@ export class AddUserComponent {
 
 
     this.getUserSenders();
+
+    this.getTourInThisPage();
   }
 
   getUserSenders(){
@@ -187,5 +197,82 @@ export class AddUserComponent {
   onPasswordInput() {
     this.password = this.form.get('pwd')?.value || '';
   }
+
+        startTour() {
+      const steps = [
+        {
+          id: 'archiviovisure1',
+          text: "Compila i dati del nuovo utente e specifica se può solo visualizzare o anche inserire contenuti.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'archiviovisure1',
+          text: "Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni",
+          attachTo: {
+            element: '.step-end',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        }
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
+
 
 }

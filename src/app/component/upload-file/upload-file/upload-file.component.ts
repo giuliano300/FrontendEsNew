@@ -12,6 +12,9 @@ import { PDFDocument } from 'pdf-lib'
 import { ProductTypes } from '../../../interfaces/EnumTypes';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-upload-file',
@@ -37,12 +40,15 @@ export class UploadFileComponent {
     private http: HttpClient,
     private router: Router,
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService
+    private shepherdService: ShepherdService,
+    private tourService: TourSeenService
   ) {
     this.form = this.fb.group({
       // eventuali altri controlli
     });
   }
+
+  page: number = TourPage.uploadFile;
 
   onFileDrop(files: NgxFileDropEntry[]) {
     this.errorMessage = '';
@@ -161,10 +167,8 @@ export class UploadFileComponent {
       
     });
 
-      //if(!localStorage.getItem("tour")){
-        this.startTour();
-        //localStorage.setItem("tour", "true");
-      //}
+    this.getTourInThisPage();
+
   }
 
   onSubmit() {
@@ -176,7 +180,7 @@ export class UploadFileComponent {
     }
   }
 
-      startTour() {
+  startTour() {
     const steps = [
       {
         id: 'singleraccomandata',
@@ -189,6 +193,7 @@ export class UploadFileComponent {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -224,8 +229,30 @@ export class UploadFileComponent {
     // Ritarda il primo step
     setTimeout(() => {
       this.shepherdService.start();
+      this.completeTour();
     }, 300);
 
   }
+
+    //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+
+    ///////////////////////////
+
 
 }

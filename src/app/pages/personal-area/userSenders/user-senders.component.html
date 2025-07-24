@@ -1,3 +1,9 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -10,14 +16,14 @@
     <div class="row">
       <div class="col-md-4"></div>
       <div class="col-md-4 flex">
-        <a routerLink="/addSender" class="button mt-4 bg-color-green color-white">Aggiungi nuovo mittente</a>
+        <a routerLink="/addSender" class="button mt-4 bg-color-green color-white step-1">Aggiungi nuovo mittente</a>
       </div>
       <div class="col-md-4"></div>
     </div>
 </div>
 <div class="container-fluid mt-3">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12 step-end">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
 

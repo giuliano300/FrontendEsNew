@@ -189,6 +189,7 @@ onSubmit(): void {
     // Ritarda il primo step
     setTimeout(() => {
       this.shepherdService.start();
+      this.completeTour();
     }, 300);
 
   }

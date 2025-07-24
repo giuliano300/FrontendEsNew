@@ -30,6 +30,7 @@ export class InvioSingoloRaccomandata5Component {
         this.bulletin = "senza bolletino";
 
     });
+    
   }
 
 }

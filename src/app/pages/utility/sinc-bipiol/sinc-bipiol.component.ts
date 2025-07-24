@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityService } from '../../../services/utility.service';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 @Component({
@@ -19,7 +24,15 @@ export class SincBipiolComponent {
     validMessage: string | null = null;
     preload: boolean = false;
 
-   constructor(private http: HttpClient, private utilityService: UtilityService){}
+   constructor(private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService, private tourService: TourSeenService){}
+
+   page: number = TourPage.sincBipiol;
+
+    ngOnInit() {
+
+      this.getTourInThisPage();
+
+    }
 
    onFileDrop(files: NgxFileDropEntry[]) {
       for (const droppedFile of files) {
@@ -87,5 +100,66 @@ export class SincBipiolComponent {
         }
       }
    }
+
+       startTour() {
+      const steps = [
+        {
+          id: 'archiviovisure1',
+          text: "Carica il file e segui le istruzioni.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        }
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
 
 }

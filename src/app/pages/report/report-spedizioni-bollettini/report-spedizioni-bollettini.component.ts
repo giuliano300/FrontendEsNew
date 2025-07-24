@@ -14,6 +14,14 @@ import { Users } from '../../../interfaces/Users';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
 import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
+
+
 @Component({
   selector: 'app-report-spedizioni-bollettini',
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
@@ -25,8 +33,13 @@ export class ReportSpedizioniBollettiniComponent {
   constructor(
     private router: Router,
     private modalService: NgbModal,
-    private recipientService: RecipientService
+    private recipientService: RecipientService,
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService
+
   ) {}
+
+  page: number = TourPage.reportSpedizioniBollettini;
 
   infoBtnDownload = infoBtnDownload;
   user: Users | null  = null;  
@@ -68,6 +81,9 @@ export class ReportSpedizioniBollettiniComponent {
     }
 
     this.user! = JSON.parse(user!);
+
+    this.getTourInThisPage();
+
 
   }
   
@@ -186,5 +202,83 @@ export class ReportSpedizioniBollettiniComponent {
         this.currentModalRef.componentInstance.modalData = response;
      })
   }
+
+
+      startTour() {
+      const steps = [
+        {
+          id: 'reportspedizioni1',
+          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto, l'esito e lo stato dei pagamenti.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'reportspedizioniend',
+          text: "La tabella riporta i risultati del filtro e consente di visualizzare: l'ID lotto,  il tipo di prodotto, il mittente, il destinatario, l'accettazione, il costo, il codice e lo stato.",
+          attachTo: {
+            element: '.step-end',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        }
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
 }
 

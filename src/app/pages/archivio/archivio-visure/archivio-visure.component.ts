@@ -13,6 +13,12 @@ import { constPageIndex, constPageSize } from '../../../../main';
 import { OperationService } from '../../../services/operation.service';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
 
 @Component({
   selector: 'app-archivio-visure',
@@ -22,7 +28,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ArchivioVisureComponent {
 
-  constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService) {}
+  constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+
+  page: number = TourPage.archivioVisure;
 
   infoBtnDownload = infoBtnDownload;
   user: Users | null  = null;  
@@ -51,6 +59,8 @@ export class ArchivioVisureComponent {
     }
 
     this.user! = JSON.parse(user!);
+
+    this.getTourInThisPage();
 
   }
 
@@ -135,4 +145,95 @@ export class ArchivioVisureComponent {
       window.URL.revokeObjectURL(link.href);
 
   }
+
+    startTour() {
+      const steps = [
+        {
+          id: 'archiviovisure1',
+          text: "Filtra le tue spedizioni effettuate inserendo un intervallo di date, il codice fiscale o la Partita IVA, oppure il nome dell’intestatario.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'archiviovisure2',
+          text: "La tabella riporta i risultati del filtro e consente di visualizzare: il tipo di prodotto, l'intestatario, il richiedente, il codice fiscale o la P. IVA, l'esito della spedizione, la data di accettazione, il prezzo, il codice e lo stato.",
+          attachTo: {
+            element: '.step-2',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'archiviovisure1end',
+          text: "Clicca sul pulsante per scaricare il documento richiesto.",
+          attachTo: {
+            element: '.step-end',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        }
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
 }

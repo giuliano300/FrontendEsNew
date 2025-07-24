@@ -1,3 +1,9 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -13,7 +19,7 @@
     <div class="generic-form mt-5">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8 step-1">
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label>TIPOLOGIA</label>
@@ -70,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 step-end">
                     <h4 class="color-blue">SCEGLI I MITTENTI</h4>
                     <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni.</p>
                     <mat-selection-list class="sender-selection" (selectionChange)="onCheckboxChange($event)">

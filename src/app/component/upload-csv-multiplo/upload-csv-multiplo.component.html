@@ -1,6 +1,15 @@
-    <div class="generic-form">
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
+
+
+
+<div class="generic-form">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-5 step-1">
                 <h4>Carica una nuova lista <em>(in formato .csv come da esempio)</em></h4>
                 <div class="file-upload">
                     <!-- AREA DRAG & DROP -->
@@ -31,7 +40,7 @@
                 </div>                    
                 
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 step-2">
                 <h4>Risultato caricamento <em> (lista destinatari presenti nel file .csv)</em></h4>
 
                 <div class="result-upload">
@@ -79,7 +88,7 @@
     </div>
 
     <form [formGroup]="formFinale" (ngSubmit)="onSubmit()">
-        <div class="group-button">
+        <div class="group-button step-end">
             <a [routerLink]="backLink">INDIETRO</a>
             <input type="submit" value="AVANTI" [disabled]="!hasValidRecipients" />
         </div>

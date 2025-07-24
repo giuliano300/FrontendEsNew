@@ -8,6 +8,12 @@ import { CapitalizePipe } from '../../../fncUtils/CapitalizePipe';
 import { UserRecipientsService } from '../../../services/user-recipients.service';
 import { Users } from '../../../interfaces/Users';
 import { UserRecipients } from '../../../interfaces/UserRecipients';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
 
 @Component({
   selector: 'app-add-recipient',
@@ -34,7 +40,7 @@ export class AddRecipientComponent {
     alertName2 = alertName2;
     inserisciModificaText = inserisciText
 
-    constructor(private router: Router, private fb: FormBuilder, private userRecipientService: UserRecipientsService, private route: ActivatedRoute) {
+    constructor(private router: Router, private fb: FormBuilder, private userRecipientService: UserRecipientsService, private route: ActivatedRoute, private shepherdService: ShepherdService, private tourService: TourSeenService) {
       this.form = this.fb.group({
         businessName: ['', [Validators.required, Validators.maxLength(44)]],
         address: ['', [Validators.required]],
@@ -50,6 +56,8 @@ export class AddRecipientComponent {
         id: [''] 
       });
    }
+
+   page: number = TourPage.addRecipient;
 
      ngOnInit(): void {
        const user = localStorage.getItem('user');
@@ -97,6 +105,8 @@ export class AddRecipientComponent {
              });
          });
        });
+
+       this.getTourInThisPage();
    
      }
    
@@ -137,5 +147,67 @@ export class AddRecipientComponent {
         this.alertText = 'Compila tutti i campi obbligatori correttamente.';
       }
   }
+
+      startTour() {
+      const steps = [
+        {
+          id: 'archiviovisure1',
+          text: "Compila i campi del form per aggiungere un nuovo desitnatario alla rubrica.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        }
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
+
   
 }

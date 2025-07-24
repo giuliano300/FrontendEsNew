@@ -27,6 +27,12 @@ import { UserOptions } from '../../../interfaces/UserOptions';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
 
 
 @Component({
@@ -42,8 +48,12 @@ export class DettaglioSpedizioneComponent {
     private modalService: NgbModal,
     private operationservice: OperationService,
     private recipientService: RecipientService, 
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService
   ) {}
+
+  page: number = TourPage.dettaglioSpedizione;
 
   displayedColumns: string[] = ['businessName', 'address', 'valid', 'insertDate', 'code', 'status', 'actions'];
 
@@ -103,6 +113,8 @@ export class DettaglioSpedizioneComponent {
         this.isLoaded = true;
       })
     });
+
+    this.getTourInThisPage();
   }
     
   filterData(){
@@ -256,5 +268,144 @@ export class DettaglioSpedizioneComponent {
       saveAs(content, 'documenti.zip');
     });
   }
+
+      startTour() {
+      const steps = [
+        {
+          id: 'dettagliosped1',
+          text: "Questa sezione mostra i dettagli del lotto, come il codice di spedizione, il tipo di prodotto, il numero totale di destinatari, la data di creazione e il prezzo.",
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'dettagliosped2',
+          text: "Questa sezione consente di effettuare una ricerca per singolo destinatario utilizzando il nome, il codice o l'esito della spedizione.",
+          attachTo: {
+            element: '.step-2',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'dettagliosped3',
+          text: "In questa tabella sono elencati i destinatari di ciascun lotto di spedizione, con i relativi dati:<br> nominativo, indirizzo, esito della spedizione, codice identificativo e data di accettazione.",
+          attachTo: {
+            element: '.step-3',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+                {
+          id: 'dettagliosped4',
+          text: "Clicca sul link per accedere alla pagina 'Dove e Quando' di Poste Italiane e consultare lo stato aggiornato della spedizione.",
+          attachTo: {
+            element: '.step-4',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'dettagliosped5',
+          text: "Cliccando sul pulsante puoi scaricare il documento inviato a ciascun destinatario della spedizione.",
+          attachTo: {
+            element: '.step-5',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'dettagliospedend',
+          text: "Clicca sul pulsante per scaricare la ricevuta di accettazione.",
+          attachTo: {
+            element: '.step-end',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        },
+        
+
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+  
+  //COPIARE SENZA TOCCARE
+  restartTour(){
+    this.startTour();
+  }
+  
+  completeTour()
+  {
+    this.shepherdService.tourObject?.on('complete', () => {
+      this.tourService.setTourSeen(this.page).subscribe();
+    });
+  }
+
+  getTourInThisPage(){
+    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    if(!userTourPage.some(tour => tour.page === this.page))
+      this.startTour();
+  }
+
+  ///////////////////////////
+
+
 
 }

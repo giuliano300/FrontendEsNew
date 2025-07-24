@@ -14,6 +14,11 @@ import { UserRecipientsService } from '../../../services/user-recipients.service
 import { DeleteDialogComponent } from '../../../component/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-rubrica-destinatari',
@@ -23,7 +28,9 @@ import { CommonModule } from '@angular/common';
 })
 export class RubricaDestinatariComponent {
 
-  constructor(private router: Router, private userRecipientService: UserRecipientsService, private dialog: MatDialog) {}
+  constructor(private router: Router, private userRecipientService: UserRecipientsService, private dialog: MatDialog, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+
+  page: number = TourPage.rubricaDestinatari;
 
   infoBtnEdit = infoBtnEdit;
   infoBtnDelete = infoBtnDelete;
@@ -49,6 +56,7 @@ export class RubricaDestinatariComponent {
     this.user! = JSON.parse(user!);
 
     this.getUserRecipients();
+    this.getTourInThisPage();
   }
 
   getUserRecipients(){
@@ -92,5 +100,81 @@ export class RubricaDestinatariComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+      startTour() {
+        const steps = [
+          {
+            id: 'archiviovisure1',
+            text: "Clicca sul pulsante per aggiungere un nuovo destinatario alla rubrica",
+            attachTo: {
+              element: '.step-1',
+              on: 'bottom' as PopperPlacement
+            },
+            modalOverlayOpeningPadding: 14,
+            modalOverlayOpeningRadius: 5,
+            classes: 'margin-step-y', 
+            buttons: [
+              { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+              { text: 'Avanti', action: () => this.shepherdService.next() }
+            ]
+          },
+          {
+            id: 'archiviovisure1',
+            text: "In questa tabella è riportata la lista dei destinatari.",
+            attachTo: {
+              element: '.step-end',
+              on: 'bottom' as PopperPlacement
+            },
+            modalOverlayOpeningPadding: 14,
+            modalOverlayOpeningRadius: 5,
+            classes: 'margin-step-y', 
+            buttons: [
+              { text: 'Fine', action: () => this.shepherdService.complete() }
+            ]
+          }
+        ];
+  
+      // Abilita il dark overlay
+      this.shepherdService.modal = true;
+  
+      // Opzioni di default per tutti gli step
+      this.shepherdService.defaultStepOptions = {
+        scrollTo: true,
+        cancelIcon: { enabled: true },
+        classes: 'shepherd-theme-arrows'
+      };
+  
+      // Carica e avvia il tour
+      this.shepherdService.addSteps(steps);
+  
+      // Ritarda il primo step
+      setTimeout(() => {
+        this.shepherdService.start();
+        this.completeTour();
+      }, 300);
+  
+    }
+  
+    
+    //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+  
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+  
+    ///////////////////////////
+  
 
 }

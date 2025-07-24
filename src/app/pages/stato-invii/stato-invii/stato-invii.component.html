@@ -1,3 +1,10 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -13,7 +20,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 step-1">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
 

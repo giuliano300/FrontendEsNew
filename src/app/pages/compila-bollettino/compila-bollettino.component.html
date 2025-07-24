@@ -1,3 +1,8 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
 
 <div class="container">
     <div class="row">
@@ -25,7 +30,7 @@
         </div>
     </div>
 
-    <div class="generic-form">
+    <div class="generic-form step-1">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-md-4">
@@ -109,7 +114,7 @@
             </div>
 
 
-            <div class="group-button">
+            <div class="group-button step-end">
                 <a [routerLink]="backLink">INDIETRO</a>
                 <input type="submit" value="AVANTI" />
             </div>

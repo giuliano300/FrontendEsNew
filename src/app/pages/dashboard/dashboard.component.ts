@@ -89,7 +89,7 @@ export class DashboardComponent {
         },
         {
           id: 'dashboard5',
-          text: 'Accedi alla sezione <strong>Utility di Easysender</strong> per sincronizzare Bipiol, unire o comprimere PDF, stampare e scaricare file di esempio. ',
+          text: 'Compila i campi del form per inserire il bollettino di pagamento.',
           attachTo: {
             element: '.step-5',
             on: 'bottom' as PopperPlacement

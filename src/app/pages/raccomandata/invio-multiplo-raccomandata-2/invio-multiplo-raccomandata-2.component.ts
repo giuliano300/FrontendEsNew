@@ -17,6 +17,12 @@ import { filter, map, Observable, of, startWith } from 'rxjs';
 import { Comune } from '../../../interfaces/Comune';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { GlobalServicesService } from '../../../services/global-services.service';
+import { ShepherdService } from 'angular-shepherd';
+import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
+
 
 
 @Component({
@@ -26,11 +32,18 @@ import { GlobalServicesService } from '../../../services/global-services.service
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
 export class InvioMultiploRaccomandata2Component {
-  constructor(private router: Router, 
+  constructor(
+    private router: Router, 
     private userSendersService: UserSendersService, 
     private userLogosService: UserLogosService, 
     private globalServices: GlobalServicesService,     
-    private formStorage: FormStorageService) {}
+    private formStorage: FormStorageService,
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService
+    ) {}
+
+  page: number = TourPage.raccomandataMultipla2;
+
   alertMessage = false;
   alertText = '';
   
@@ -208,6 +221,7 @@ export class InvioMultiploRaccomandata2Component {
       } else {
         this.disableARValidators();
       }
+      
     });
     const bul = localStorage.getItem('bulletin')!;
       if(parseInt(bul) == bulletin.si)
@@ -216,6 +230,8 @@ export class InvioMultiploRaccomandata2Component {
     this.getUserLogos();
     this.getUserSenders();
     this.getComuni();
+
+    this.getTourInThisPage();
   }
 
   getUserLogos(){
@@ -353,5 +369,125 @@ onSubmit(): void {
       this.alertMessage = false;
       this.alertText = '';
     }
+
+  startTour() {
+    const steps = [
+      {
+        id: 'multipleraccomandata',
+        text: "Seleziona un mittente dal menu a tendina.",
+        attachTo: {
+          element: '.step-1',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'multipleraccomandata2',
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirà nel frontespizio della tua comunicazione.",
+        attachTo: {
+          element: '.step-2',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'multipleraccomandata3',
+        text: "Imposta la raccomandata selezionando il formato, la stampa (fronte o fronte/retro) e la ricevuta di ritorno, se desiderata.",
+        attachTo: {
+          element: '.step-3',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'multipleraccomandata4',
+        text: "Se hai scelto la ricevuta di ritorno compila i campi del destinatario AR.",
+        attachTo: {
+          element: '.step-4',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+          { text: 'Avanti', action: () => this.shepherdService.next() }
+        ]
+      },
+      {
+        id: 'multipleraccomandataend',
+        text: "Clicca su <strong>'AVANTI'</strong> per continuare, oppure su <strong>'INDIETRO'</strong> per tornare allo step precedente.",
+        attachTo: {
+          element: '.step-end',
+          on: 'bottom' as PopperPlacement,
+        },
+        modalOverlayOpeningPadding: 15, // evidenzia con margine
+        modalOverlayOpeningRadius: 5,   // bordo arrotondato
+        classes: 'margin-step-y', 
+        buttons: [
+          { text: 'Fine', action: () => this.shepherdService.complete() }
+        ]
+      }
+    ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+    //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+  
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+  
+    ///////////////////////////
+
 
 }

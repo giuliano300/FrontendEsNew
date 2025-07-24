@@ -20,6 +20,9 @@ import * as CryptoJS from 'crypto-js';
 import { ProductTypes } from '../../../interfaces/EnumTypes';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
+import { TourPage } from '../../../interfaces/EnumTypes';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-select-recipient',
@@ -32,8 +35,11 @@ export class SelectRecipientComponent {
     private userRecipientService: UserRecipientsService,
     private globalServices: GlobalServicesService, 
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService
+    private shepherdService: ShepherdService,
+    private tourService: TourSeenService
   ) {}
+
+  page: number = TourPage.selectRecipent;
 
   alertMessage = false;
   alertText = '';
@@ -272,11 +278,7 @@ export class SelectRecipientComponent {
 
     this.getComuni();
 
-      //if(!localStorage.getItem("tour")){
-        this.startTour();
-        //localStorage.setItem("tour", "true");
-      //}
-
+    this.getTourInThisPage();
   }
 
   onSubmit(): void {
@@ -333,6 +335,7 @@ export class SelectRecipientComponent {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -347,6 +350,7 @@ export class SelectRecipientComponent {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -361,6 +365,7 @@ export class SelectRecipientComponent {
         modalOverlayOpeningRadius: 5,   // bordo arrotondato
         classes: 'margin-step-y', 
         buttons: [
+          { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
           { text: 'Avanti', action: () => this.shepherdService.next() }
         ]
       },
@@ -397,10 +402,30 @@ export class SelectRecipientComponent {
     // Ritarda il primo step
     setTimeout(() => {
       this.shepherdService.start();
+      this.completeTour();
     }, 300);
 
   }
 
+  //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+
+    ///////////////////////////
 
 
 }

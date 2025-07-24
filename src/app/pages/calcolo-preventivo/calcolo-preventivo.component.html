@@ -1,3 +1,10 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-5">
@@ -57,7 +64,7 @@
         </div>
     </div>
 
-    <div class="preventivo">
+    <div class="preventivo step-1">
         <div class="row">
             <div class="col-md-12 text-center">
                 <h3>Riepilogo dell'ordine</h3>
@@ -106,7 +113,7 @@
         </div>
    </div>
 
-    <div class="group-button">
+    <div class="group-button step-end">
         <a [routerLink]="routerLink">INDIETRO</a>
         <a (click)="sendShipping()" [hidden]="send" class="bg-color-green color-white">SPEDISCI</a>
         <a [hidden]="!send" class="bg-color-green color-white"><i class="fas fa-spinner fa-spin"></i></a>

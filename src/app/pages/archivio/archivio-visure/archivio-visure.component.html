@@ -1,3 +1,10 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -10,7 +17,7 @@
 </div>
 
 
-<div class="filter">
+<div class="filter step-1">
     <form [formGroup]="form" (ngSubmit)="filterResults()">
         <div class="container">
             <div class="row mb-3">
@@ -44,7 +51,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 step-2">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
 
@@ -107,7 +114,7 @@
                     <ng-container matColumnDef="doc">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center;"> documento </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <button mat-button class="mat-button-download" (click)="downloadFile(element.doc)"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
+                        <button mat-button class="mat-button-download step-end" (click)="downloadFile(element.doc)"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
                     </td>
                     </ng-container>
 
