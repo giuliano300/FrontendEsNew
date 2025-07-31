@@ -72,7 +72,7 @@ export class SelectRecipientComponent {
   ffwLink: string | null = null;
 
   form = new FormGroup({
-    sel_destinatario: new FormControl('', [Validators.required]),
+    sel_destinatario: new FormControl(''),
     sel_spedizione: new FormControl('Italia'),
     nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
     indirizzo: new FormControl('', [Validators.required]),
@@ -326,7 +326,7 @@ export class SelectRecipientComponent {
     }
   }
 
-      startTour() {
+  startTour() {
     const steps = [
       {
         id: 'singleraccomandata',

@@ -7,7 +7,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { importProvidersFrom } from '@angular/core';
 
 
-export const API_URL = "http://localhost:5105/Api/";
+export const API_URL = "https://backendnew.easysender.it/Api/";
 export const secretKey = 'easysender2025!EWT';
 export const maxUploadLimit = 1200;
 
