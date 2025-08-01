@@ -72,6 +72,8 @@ export class DettaglioSpedizioneComponent {
   getRR: boolean = false;
   isLoaded: boolean = false;
 
+  firstLoading: boolean = false;
+
   ngOnInit() {
 
     const user = localStorage.getItem('user');
@@ -79,6 +81,8 @@ export class DettaglioSpedizioneComponent {
       this.router.navigate(['/']);
       return;
     }
+
+    this.firstLoading = true;
 
     this.user! = JSON.parse(user!);
     
@@ -95,6 +99,7 @@ export class DettaglioSpedizioneComponent {
       .subscribe(response => {
         this.getDettaglioSpedizioniResponse = response;
 
+        this.firstLoading = false;
 
         if(response.data.operation.operationType == ProductTypes.ROL && this.userOptions.some(a => a.enabled && a.optionId == Options.rr)){
           this.getRR = true;
@@ -204,21 +209,26 @@ export class DettaglioSpedizioneComponent {
     this.router.navigate(['/archivioSpedizioni']);
   }
 
-  downloadFile(doc:string){
+  downloadFile(doc: string, id:number){
+    this.recipientService.getFile(doc, id)
+    .subscribe(response => {
+      if(!response)
+      {
+        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        return;
+      }
 
-    if(doc == ""){
-      this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
-      return;
-    }
+      const blob = FncUtils.getFileFromBase64(response);
 
-    const blob = FncUtils.getFileFromBase64(doc);
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'documento.pdf';
+      link.click();
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'documento.pdf';
-    link.click();
+      window.URL.revokeObjectURL(link.href);
+      
+    });
 
-    window.URL.revokeObjectURL(link.href);
 
   }
 
@@ -235,38 +245,37 @@ export class DettaglioSpedizioneComponent {
 
   downloadAllFilesAsZip(rr: boolean = true) {
     const zip = new JSZip();
-    const recipients = this.getDettaglioSpedizioniResponse?.data.recipients;
+    let count = 1;
 
-    if (!recipients || recipients.length === 0) {
-        this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
-      return;
-    }
+    let doc = "attachedFile";
+    if(rr)
+      doc = "rr";
 
-    let count = 0;
-    const total = recipients.length;
+    this.recipientService.getAllFiles(doc, this.id!)
+      .subscribe(response => {
 
-    recipients.forEach((recipient) => {
-      let base64 = recipient.attachedFileRR; 
-      if(!rr)
-        base64 = recipient.attachedFile;
+        console.log(response);
 
-      if (base64 && base64.trim() !== '') {
-        const fileData = FncUtils.getFileFromBase64(base64);
-        const filename = recipient.fileName!;
+        response.forEach((recipient) => 
+        {
+            const fileData = FncUtils.getFileFromBase64(recipient);
+            const filename = count + ".pdf";
 
-        zip.file(filename, fileData);
-        count++;
-      }
-    });
+            zip.file(filename, fileData);
+            count ++;        
+        });
 
-    if (count === 0) {
-      this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
-      return;
-    }
+        if (count === 0) {
+          this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
+          return;
+        }
 
-    zip.generateAsync({ type: 'blob' }).then(content => {
-      saveAs(content, 'documenti.zip');
-    });
+        zip.generateAsync({ type: 'blob' }).then(content => {
+          saveAs(content, 'documenti.zip');
+        });
+
+
+      });
   }
 
       startTour() {

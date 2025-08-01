@@ -126,10 +126,11 @@ export class InvioMultiploRaccomandata4Component {
                 } 
                 else
                 {
-                  let file:PdfBase64List = {
+                  let file: PdfBase64List = {
                     name: fileTrovato.name,
                     base64: fileTrovato.base64,
-                    pages: fileTrovato.pages
+                    pages: fileTrovato.pages,
+                    id: fileTrovato.id
                   };
                   numeroPagineTotali.push(fileTrovato.pages);
                   filesUpload.push(file);

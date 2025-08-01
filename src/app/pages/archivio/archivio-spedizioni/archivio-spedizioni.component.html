@@ -44,7 +44,7 @@
 
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row relative">
         <div class="col-md-12 step-2">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
@@ -97,8 +97,12 @@
                 showFirstLastButtons>
             </mat-paginator>
 
-            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
+            <div *ngIf="(!dataSource.data || dataSource.data.length === 0) && !firstLoading" class="text-center">
                 Nessun dato disponibile.
+            </div>
+
+            <div *ngIf="firstLoading" class="text-center loading">
+                 <i class="fas fa-spinner fa-spin"></i>
             </div>
 
         </div>

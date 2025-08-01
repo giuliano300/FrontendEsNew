@@ -47,6 +47,8 @@ export class StatoInviiComponent {
 
   user: Users | null  = null;  
 
+  firstLoading: boolean = false;
+
   displayedColumns: string[] = ['date', 'numberOfRecipient', 'transferPercentage'];
   dataSource = new MatTableDataSource<any>([]);
   
@@ -93,6 +95,7 @@ export class StatoInviiComponent {
   }
 
   getStatoInvii(){
+    this.firstLoading = true;
     this.operationService.getStatoInvii(this.user!.id!, this.id!)
     .subscribe((data: GetStatoInvii[]) => {
       if (!data || data.length === 0) {
@@ -102,6 +105,7 @@ export class StatoInviiComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       }
+      this.firstLoading = false;
     });
   }
   

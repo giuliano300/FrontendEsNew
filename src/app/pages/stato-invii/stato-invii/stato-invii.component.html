@@ -20,7 +20,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12 step-1">
+        <div class="col-md-12 step-1 relative">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
 
@@ -65,6 +65,10 @@
 
             <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
                 Nessun dato disponibile.
+            </div>
+
+            <div *ngIf="firstLoading" class="text-center loading">
+                 <i class="fas fa-spinner fa-spin"></i>
             </div>
         </div>
     </div>

@@ -38,7 +38,7 @@ export class InvioSingoloRaccomandata2Component {
 
 form = new FormGroup({
   sel_logo: new FormControl(''),
-  tipoFormato: new FormControl('', [Validators.required]),
+  tipoFormato: new FormControl('A4', [Validators.required]),
   tipoColore: new FormControl('', [Validators.required]),
   tipoStampa: new FormControl('', [Validators.required]),
   tipoRicevuta: new FormControl('', [Validators.required])

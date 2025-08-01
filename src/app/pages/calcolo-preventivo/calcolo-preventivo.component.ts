@@ -264,6 +264,8 @@ export class CalcoloPreventivoComponent {
 
       for(let i = 0; i < destinatariDec.length; i++){
 
+          let fileId: string = "";
+
           let Recipient: Recipients = Object.assign(new Recipients(), destinatariDec[i]);
           if(this.productType != ProductTypes.TOL && this.productType != ProductTypes.VOL){
             const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
@@ -276,6 +278,7 @@ export class CalcoloPreventivoComponent {
             Recipient.posteType = this.tipoLettera;
             Recipient.tipologiaNotificante = this.tipoNotificante;
             Recipient.valoreNotificante = this.nomeNotificante;
+            fileId = fileTrovato?.id!;
           }
           
           if(this.productType == ProductTypes.TOL)
@@ -296,7 +299,8 @@ export class CalcoloPreventivoComponent {
 
           const completeRecipient: CompleteRecipient = {
             Recipient: Recipient,
-            bulletin: b
+            bulletin: b,
+            fileId: fileId
           };
 
           completeRecipients.push(completeRecipient);

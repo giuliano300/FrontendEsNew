@@ -70,7 +70,7 @@ export class InvioMultiploLettera2Component {
   form = new FormGroup({
     sel_logo: new FormControl(''),
     sel_mittente: new FormControl('', [Validators.required]),
-    tipoFormato: new FormControl('', [Validators.required]),
+    tipoFormato: new FormControl('A4', [Validators.required]),
     tipoColore: new FormControl('', [Validators.required]),
     tipoStampa: new FormControl('', [Validators.required]),
     tipoLettera: new FormControl('', [Validators.required]),
@@ -196,7 +196,7 @@ export class InvioMultiploLettera2Component {
       this.alertText = '';
     }
 
-      startTour() {
+  startTour() {
     const steps = [
       {
         id: 'multiplelettera',

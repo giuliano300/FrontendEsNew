@@ -25,6 +25,30 @@ export class RecipientService {
         return this.http.get<GetDettaglioDestinatario>(`${this.apiUrl}/GetDettaglioDestinatario?${params.toString()}`);
       }
 
+    getFile(
+       type:string,
+        id:number
+      ): Observable<string>
+      {
+        const params = new URLSearchParams({
+          id: id.toString(),
+          type: type
+        })
+        return this.http.get<string>(`${this.apiUrl}/getFile?${params.toString()}`);
+      }
+
+    getAllFiles(
+       type:string,
+        id:number
+      ): Observable<string[]>
+      {
+        const params = new URLSearchParams({
+          id: id.toString(),
+          type: type
+        })
+        return this.http.get<string[]>(`${this.apiUrl}/GetAllFiles?${params.toString()}`);
+      }
+
 
     getErroriNotificati(
         userId: number,

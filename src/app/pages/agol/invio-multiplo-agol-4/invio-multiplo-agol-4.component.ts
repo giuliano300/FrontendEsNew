@@ -117,7 +117,8 @@ export class InvioMultiploAgol4Component {
                   let file:PdfBase64List = {
                     name: fileTrovato.name,
                     base64: fileTrovato.base64,
-                    pages: fileTrovato.pages
+                    pages: fileTrovato.pages,
+                    id: fileTrovato.id
                   };
                   numeroPagineTotali.push(fileTrovato.pages);
                   filesUpload.push(file);

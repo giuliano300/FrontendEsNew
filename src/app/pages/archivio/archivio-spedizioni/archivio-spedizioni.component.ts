@@ -40,6 +40,8 @@ export class ArchivioSpedizioniComponent {
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
 
+  firstLoading: boolean = false;
+
   ngOnInit() {
     const user = localStorage.getItem('user');
     if (!user) {
@@ -62,6 +64,8 @@ export class ArchivioSpedizioniComponent {
   getArchivioSpedizioni(){
     const pageIndex = this.paginator?.pageIndex || constPageIndex;
     const pageSize = this.paginator?.pageSize || constPageSize;
+    
+    this.firstLoading = true;
 
     this.operationService.getArchivioSpedizioni(
       this.user!.id!,
@@ -73,6 +77,7 @@ export class ArchivioSpedizioniComponent {
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
       this.dataSource.data = response.data;
+      this.firstLoading = false;
     });
   }
    

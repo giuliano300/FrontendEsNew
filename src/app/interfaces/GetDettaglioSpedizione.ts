@@ -1,7 +1,7 @@
 import { Operations } from "../classes/Operations";
-import { Recipients } from "../classes/Recipients";
+import { RecipientsExcludeFields } from "../classes/RecipientsExcludeFields";
 
 export interface GetDettaglioSpedizione {
   operation: Operations,
-  recipients: Recipients[]
+  recipients: RecipientsExcludeFields[]
 }

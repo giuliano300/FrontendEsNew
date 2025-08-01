@@ -5,4 +5,5 @@ import { Senders } from "../classes/Senders";
 export class CompleteRecipient {
   Recipient?: Recipients | null;
   bulletin?: Bulletins | null | undefined;
+  fileId?: string | null | undefined;
 }
