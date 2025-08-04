@@ -74,6 +74,9 @@ export class DettaglioSpedizioneComponent {
 
   firstLoading: boolean = false;
 
+  isDowloadingFiles: boolean = false;
+  isDowloadingFilesRR: boolean = false;
+
   ngOnInit() {
 
     const user = localStorage.getItem('user');
@@ -248,37 +251,38 @@ export class DettaglioSpedizioneComponent {
     let count = 1;
 
     let doc = "attachedFile";
-    if(rr)
+    if(rr){
+      this.isDowloadingFilesRR = true;
       doc = "rr";
+    }
+    else
+      this.isDowloadingFiles = true;
 
     this.recipientService.getAllFiles(doc, this.id!)
-      .subscribe(response => {
-
-        console.log(response);
-
-        response.forEach((recipient) => 
-        {
-            const fileData = FncUtils.getFileFromBase64(recipient);
-            const filename = count + ".pdf";
-
-            zip.file(filename, fileData);
-            count ++;        
-        });
-
-        if (count === 0) {
+    .subscribe({
+      next: (blob) => {
+        const a = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'files.zip';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.isDowloadingFiles = false;
+        this.isDowloadingFilesRR = false;
+      },
+      error: (err) => {
+        if (err.status === 404) {
           this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
-          return;
+        } else {
+          this.openDialog("Errore","Si è verificato un errore durante il download.");
         }
-
-        zip.generateAsync({ type: 'blob' }).then(content => {
-          saveAs(content, 'documenti.zip');
-        });
-
-
-      });
+        this.isDowloadingFiles = false;
+        this.isDowloadingFilesRR = false;
+      }
+    });  
   }
 
-      startTour() {
+  startTour() {
       const steps = [
         {
           id: 'dettagliosped1',

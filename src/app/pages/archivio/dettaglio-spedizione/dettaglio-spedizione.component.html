@@ -98,14 +98,25 @@
 
 
 <div class="container-fluid mt-4">
-    <!--<div class="row">
+    <div class="row">
         <div class="col-md-12">
             <div class="flex-end link-table">
-                <a (click)="downloadAllFilesAsZip(false)" class="flex-start"><i class='bx bxs-file-archive'></i>&nbsp;Scarica tutti i documenti</a>&nbsp;&nbsp;
-                <a (click)="downloadAllFilesAsZip(true)" class="flex-start" *ngIf="getRR"><i class='bx bx-file'></i>&nbsp;Scarica tutte le R. R.</a>
+                <span [hidden]="isDowloadingFiles">
+                    <a (click)="downloadAllFilesAsZip(false)" class="flex-start">
+                        <i class='bx bxs-file-archive'></i>&nbsp;Scarica tutti i documenti&nbsp;&nbsp;&nbsp;</a>
+                </span>
+                <span [hidden]="!isDowloadingFiles" class="wait">
+                    <i class="fas fa-spinner fa-spin"></i>&nbsp;Creazione file in corso&nbsp;&nbsp;&nbsp;
+                </span>
+                <span [hidden]="isDowloadingFilesRR">
+                    <a (click)="downloadAllFilesAsZip(true)" class="flex-start" *ngIf="getRR"><i class='bx bx-file'></i>&nbsp;Scarica tutte le R. R.</a>
+                </span>
+                <span [hidden]="!isDowloadingFilesRR" class="wait">
+                    <i class="fas fa-spinner fa-spin"></i>&nbsp;Creazione file in corso&nbsp;&nbsp;&nbsp;
+                </span>
             </div>
         </div>
-    </div>-->
+    </div>
     <div class="row">
         <div class="col-md-12 step-3 relative">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
