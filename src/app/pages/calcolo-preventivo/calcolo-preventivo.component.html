@@ -110,6 +110,9 @@
             <div *ngIf="errorMessage" class="error text-center col-md-12 mt-3">
                 {{errorMessage}}
             </div>
+            <div [hidden]="!send" class="alert text-center col-md-12">
+                Invio in corso...<br>il processo potrebbe richiedere fino a 5 minuti.
+            </div>
         </div>
    </div>
 

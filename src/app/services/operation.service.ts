@@ -27,20 +27,27 @@ export class OperationService {
     }
 
     getDettaglioSpedizione(
-        id:number,
-        businessName?: string | null,
-        code?: string | null, 
-        valid?: string | null
-      ): Observable<GetDettaglioSpedizioneResponse>
-      {
-        const params = new URLSearchParams({
-          id: id.toString(),
-          businessName: businessName ?? '',
-          code: code ?? '',
-          valid: valid ?? ''
-        })
-        return this.http.get<GetDettaglioSpedizioneResponse>(`${this.apiUrl}/GetDettaglioSpedizione?${params.toString()}`);
-      }
+      id: number,
+      businessName: string | null = '',
+      code: string | null = '',
+      valid: string | null = '',
+      page: number = 1,
+      pageSize: number = 50
+    ): Observable<GetDettaglioSpedizioneResponse> {
+      const params = new URLSearchParams({
+        id: id.toString(),
+        businessName: businessName ?? '',
+        code: code ?? '',
+        valid: valid ?? '',
+        page: page.toString(),
+        pageSize: pageSize.toString()
+      });
+
+      return this.http.get<GetDettaglioSpedizioneResponse>(
+        `${this.apiUrl}/GetDettaglioSpedizione?${params.toString()}`
+      );
+    }
+
 
     getArchivioSpedizioni(
         userId: number,

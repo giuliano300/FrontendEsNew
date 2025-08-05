@@ -270,7 +270,6 @@ export class CalcoloPreventivoComponent {
           if(this.productType != ProductTypes.TOL && this.productType != ProductTypes.VOL){
             const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
             Recipient.fileName = fileTrovato!.name;
-            Recipient.attachedFile = fileTrovato!.base64;
             Recipient.numberOfPages = fileTrovato!.pages;
             Recipient.productType = this.productType!;
             Recipient.logoId = this.logoId;

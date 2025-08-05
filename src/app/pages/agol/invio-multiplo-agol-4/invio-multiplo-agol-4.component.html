@@ -76,7 +76,9 @@
                                 nessun file .zip ancora caricato
                             </div>
                             <div *ngIf="checking" class="preloader">
-                                <i class="fas fa-spinner fa-spin"></i>
+                                <i class="fas fa-spinner fa-spin"></i><br><br>
+                                <span class="mt-3" [hidden]="sincro">Attendere caricamento file in corso...</span>
+                                <span class="mt-3" [hidden]="!sincro">Sincronizzazione dei file...<br>Il processo può richiedere alcuni minuti</span>
                             </div>
     
                         </ul>

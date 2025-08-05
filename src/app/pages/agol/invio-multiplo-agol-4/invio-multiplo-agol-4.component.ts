@@ -11,6 +11,7 @@ import { PdfBase64List } from '../../../classes/PdfBase64List';
 import { Recipients } from '../../../classes/Recipients';
 import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 import * as CryptoJS from 'crypto-js';
+import { Users } from '../../../interfaces/Users';
 
 @Component({
   selector: 'app-invio-multiplo-agol-4',
@@ -27,7 +28,8 @@ export class InvioMultiploAgol4Component {
   pdfBase64List: PdfBase64List[] = [];
   recipients: Recipients[] = [];
   checkRecipient: checkRecipient[] = [];
-  checking:boolean = false;
+  checking: boolean = false;
+  sincro: boolean = false;
   
   nominativiCaricati: number = 0;
   nominativiValidi: number = 0;
@@ -65,6 +67,14 @@ export class InvioMultiploAgol4Component {
   
 
   onFileDrop(files: NgxFileDropEntry[]) {
+    const u = localStorage.getItem('user');
+    let user: Users | null = null;
+      if (!u) {
+        this.router.navigate(['/']);
+        return;
+    }
+    user = JSON.parse(u) as Users;
+  
     this.errorMessage = '';
     this.uploadProgress = 0;
     this.uploadCompleted = false;
@@ -84,13 +94,15 @@ export class InvioMultiploAgol4Component {
         const formData = new FormData();
         formData.append('file', file, file.name);
 
-        this.http.post(API_URL + 'Uploads/upload-zip', formData, {
+        this.http.post(API_URL + 'Uploads/upload-zip?userId=' + user.id, formData, {
           reportProgress: true,
           observe: 'events'
         }).subscribe({
           next: event => {
             if (event.type === HttpEventType.UploadProgress && event.total) {
               this.uploadProgress = Math.round(100 * event.loaded / event.total);
+              if(this.uploadProgress == 100)
+                this.sincro = true;
             } 
             else if (event.type === HttpEventType.Response) 
             {
@@ -116,7 +128,6 @@ export class InvioMultiploAgol4Component {
                 {
                   let file:PdfBase64List = {
                     name: fileTrovato.name,
-                    base64: fileTrovato.base64,
                     pages: fileTrovato.pages,
                     id: fileTrovato.id
                   };
@@ -141,6 +152,7 @@ export class InvioMultiploAgol4Component {
               const encryptedInvii = CryptoJS.AES.encrypt(JSON.stringify(Inviitotali), secretKey).toString();
               this.formStorage.saveForm("invii-totali", encryptedInvii);
               this.checking = false;
+              this.sincro = false;
 
             }
           },
@@ -148,10 +160,12 @@ export class InvioMultiploAgol4Component {
             this.errorMessage = 'Errore durante l\'upload. Controllare che il file .zip contenga file .pdf';
             console.error(error);
             this.checking = false;
+            this.sincro = false;
 
           },
           complete: () => {
             this.checking = false;
+            this.sincro = false;
           }
         });
       });

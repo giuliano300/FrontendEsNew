@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -77,6 +77,9 @@ export class DettaglioSpedizioneComponent {
   isDowloadingFiles: boolean = false;
   isDowloadingFilesRR: boolean = false;
 
+  pageIndex = 0;
+  pageSize = 20;
+
   ngOnInit() {
 
     const user = localStorage.getItem('user');
@@ -98,7 +101,7 @@ export class DettaglioSpedizioneComponent {
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id')!);
       //console.log('ID ricevuto:', this.id);
-      this.operationservice.getDettaglioSpedizione(this.id)
+      this.operationservice.getDettaglioSpedizione(this.id, '', '', '', this.pageIndex + 1, this.pageSize)
       .subscribe(response => {
         this.getDettaglioSpedizioniResponse = response;
 
@@ -111,35 +114,48 @@ export class DettaglioSpedizioneComponent {
 
         this.displayedColumns.push('action3');
 
-
         this.totalRecords = response.totalCount;
+        
         this.dataSource.data = response.data.recipients;    
         
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-
         this.isLoaded = true;
       })
     });
 
     this.getTourInThisPage();
   }
-    
-  filterData(){
+
+  onPaginateChange(event: PageEvent) {
+
+    this.pageIndex = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     const businessName = this.form.value.destinatario;
     const code = this.form.value.codice;
     const valid  = this.form.value.sel_esito;
 
-    this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString())
+    this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
       .subscribe(response => {
         this.getDettaglioSpedizioniResponse = response;
         
-        this.totalRecords = response.totalCount;
-        this.dataSource.data = response.data.recipients;    
-        
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
+        this.totalRecords = response.totalCount;      
+        this.isLoaded = true;
+      })
+  }
+    
+  filterData(){
+   this.pageIndex = 1;
+   this.pageSize = 20;
+   const businessName = this.form.value.destinatario;
+   const code = this.form.value.codice;
+   const valid  = this.form.value.sel_esito;
 
+    this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
+      .subscribe(response => {
+        this.getDettaglioSpedizioniResponse = response;
+        
+        this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
+        this.totalRecords = response.totalCount;      
         this.isLoaded = true;
       })
   }
