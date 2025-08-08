@@ -240,8 +240,8 @@ export class DettaglioSpedizioneComponent {
     this.router.navigate(['/archivioSpedizioni']);
   }
 
-  downloadFile(doc: string, id:number){
-    this.recipientService.getFile(doc, id)
+  downloadFile(doc: string, element: any){
+    this.recipientService.getFile(doc, element.id)
     .subscribe(response => {
       if(!response)
       {
