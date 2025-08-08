@@ -22,6 +22,7 @@ import { TourSeenService } from '../../../services/tourSeen.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
+import { GetReportSpedizioni } from '../../../interfaces/GetReportSpedizioni';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class ReportSpedizioniComponent {
 
   infoBtnDownload = infoBtnDownload;
   user: Users | null  = null;  
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<GetReportSpedizioni>([]);
 
   startDate: string | null = null;
   endDate: string | null = null;
@@ -94,7 +95,7 @@ export class ReportSpedizioniComponent {
 
 
 
-  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'insertDate', 'price', 'doc', 'code', 'state'];
+  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

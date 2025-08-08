@@ -103,6 +103,15 @@
                         <td mat-cell *matCellDef="let element"> {{element.businessName}} </td>
                     </ng-container>
 
+                    <!-- Colonna ESITO -->
+                    <ng-container matColumnDef="esito">
+                        <th mat-header-cell *matHeaderCellDef > Esito </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="valid" *ngIf="element.valid">OK</span>
+                            <span class="error" *ngIf="!element.valid">KO</span>
+                        </td>
+                    </ng-container>
+
                     <!-- Colonna ACCETTAZIONE -->
                     <ng-container matColumnDef="insertDate">
                         <th mat-header-cell *matHeaderCellDef > ACCETTAZIONE </th>
@@ -138,7 +147,8 @@
                     <ng-container matColumnDef="state">
                         <th mat-header-cell *matHeaderCellDef > STATO </th>
                         <td mat-cell *matCellDef="let element"> 
-                            <a (click)="openModal(element.recipientId)">{{element.state}}</a>
+                            <a (click)="openModal(element.recipientId)" *ngIf="element.valid">{{element.state}}</a>
+                            <span *ngIf="!element.valid" class="error">{{element.state}}</span>
                         </td>
                     </ng-container>
 

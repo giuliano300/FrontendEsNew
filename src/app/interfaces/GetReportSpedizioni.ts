@@ -11,5 +11,7 @@ export interface GetReportSpedizioni {
   doc?: Uint8Array | null;
   code: string;
   state: string;
+  valid: boolean;
+  currentState: number;
   historicRecipientStatuses?: HistoricRecipientStatus[] | null;
 }
