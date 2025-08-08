@@ -1,7 +1,7 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,11 +19,17 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
+import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 
 
 @Component({
   selector: 'app-report-spedizioni',
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
+  ],
   templateUrl: './report-spedizioni.component.html',
   styleUrl: './report-spedizioni.component.scss'
 })
@@ -31,10 +37,12 @@ export class ReportSpedizioniComponent {
 
   constructor(
     private router: Router,
+    private dialog: MatDialog,
     private modalService: NgbModal,
     private recipientService: RecipientService,
     private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private tourService: TourSeenService,
+    private renderer: Renderer2
   ) {}
 
   page: number = TourPage.reportSpedizioni;
@@ -53,6 +61,14 @@ export class ReportSpedizioniComponent {
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
   currentModalRef!: NgbModalRef;
+
+  search: boolean = false;
+  remove: boolean = false;
+
+  firstLoading: boolean = false;
+
+  pageIndex = 0;
+  pageSize = 20;
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -78,20 +94,11 @@ export class ReportSpedizioniComponent {
 
 
 
-  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'insertDate', 'price', 'doc', 'code', 'state'];
+  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'insertDate', 'price', 'doc', 'code', 'state'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    // Gestione cambio pagina
-    this.paginator.page.subscribe(() => {
-      this.getReportSpedizioni();
-    });
-
-    this.getReportSpedizioni();
-  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -102,6 +109,7 @@ export class ReportSpedizioniComponent {
   }
 
   getReportSpedizioni(){
+    this.firstLoading = true;
     const pageIndex = this.paginator?.pageIndex || constPageIndex;
     const pageSize = this.paginator?.pageSize || constPageSize;
 
@@ -120,10 +128,21 @@ export class ReportSpedizioniComponent {
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
       this.dataSource.data = response.data;
+      this.search = false;
+      this.remove = false;
+      this.firstLoading = false;
     });
+  }
+
+  onPaginateChange(event: PageEvent) {
+
+    this.pageIndex = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.getReportSpedizioni();
   }
    
   filterResults(){
+    this.search = true;
     this.startDate = this.form.value.start_date || null;
     this.endDate = this.form.value.end_date || null;
     this.code = this.form.value.codice || null;
@@ -136,9 +155,16 @@ export class ReportSpedizioniComponent {
     this.getReportSpedizioni();  
   }
 
-  downloadFile(doc:string){
+  downloadFile(doc: string, element: any){
+    this.recipientService.getFile(doc, element.recipientId)
+    .subscribe(response => {
+      if(!response)
+      {
+        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        return;
+      }
 
-     const blob = FncUtils.getFileFromBase64(doc);
+      const blob = FncUtils.getFileFromBase64(response);
 
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
@@ -146,8 +172,22 @@ export class ReportSpedizioniComponent {
       link.click();
 
       window.URL.revokeObjectURL(link.href);
+      
+    });
+
 
   }
+
+  openDialog(title: string, message: string){
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      width: '400px',
+      data: { 
+        title: title,
+        message: message
+        }  
+    });
+  }
+
 
   openModal(id: number) {
 
@@ -170,6 +210,7 @@ export class ReportSpedizioniComponent {
       esito: '',
     });
     
+    this.remove = true;
     this.startDate = null;
     this.endDate = null;
     this.code = null;
@@ -182,7 +223,7 @@ export class ReportSpedizioniComponent {
     this.getReportSpedizioni();  
   }
 
-    startTour() {
+  startTour() {
       const steps = [
         {
           id: 'reportspedizioni1',

@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -32,12 +32,16 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 
 
 
 @Component({
   selector: 'app-dettaglio-spedizione',
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
+  ],
   templateUrl: './dettaglio-spedizione.component.html',
   styleUrl: './dettaglio-spedizione.component.scss'
 })
@@ -76,6 +80,8 @@ export class DettaglioSpedizioneComponent {
 
   isDowloadingFiles: boolean = false;
   isDowloadingFilesRR: boolean = false;
+
+  search: boolean = false;
 
   pageIndex = 0;
   pageSize = 20;
@@ -127,6 +133,7 @@ export class DettaglioSpedizioneComponent {
 
   onPaginateChange(event: PageEvent) {
 
+    this.firstLoading = true;
     this.pageIndex = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     const businessName = this.form.value.destinatario;
@@ -140,24 +147,29 @@ export class DettaglioSpedizioneComponent {
         this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
         this.totalRecords = response.totalCount;      
         this.isLoaded = true;
-      })
+        this.firstLoading = false;
+    })
   }
     
   filterData(){
-   this.pageIndex = 1;
-   this.pageSize = 20;
-   const businessName = this.form.value.destinatario;
-   const code = this.form.value.codice;
-   const valid  = this.form.value.sel_esito;
+    this.search = true;
+    this.firstLoading = true;
+    this.pageIndex = 1;
+    this.pageSize = 20;
+    const businessName = this.form.value.destinatario;
+    const code = this.form.value.codice;
+    const valid  = this.form.value.sel_esito;
 
-    this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
-      .subscribe(response => {
-        this.getDettaglioSpedizioniResponse = response;
-        
-        this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
-        this.totalRecords = response.totalCount;      
-        this.isLoaded = true;
-      })
+      this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
+        .subscribe(response => {
+          this.getDettaglioSpedizioniResponse = response;
+          
+          this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
+          this.totalRecords = response.totalCount;      
+          this.isLoaded = true;
+          this.search = false;
+          this.firstLoading = false;
+        })
   }
 
 

@@ -462,6 +462,15 @@ small{
     border: solid 1px $error-color!important;
 }
 
+.overflow-y-hidden{
+    overflow-y: hidden;
+}
+
+.progress{
+    margin: -18px 0 10px;
+    background: none;
+}
+
     /* Personalizza l'aspetto della tabella */
     .mat-table {
       width: 100%;

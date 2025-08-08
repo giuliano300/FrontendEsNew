@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,12 +19,18 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
+import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 
 @Component({
   selector: 'app-report-spedizioni-bollettini',
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
+  ],
   templateUrl: './report-spedizioni-bollettini.component.html',
   styleUrl: './report-spedizioni-bollettini.component.scss'
 })
@@ -35,6 +41,7 @@ export class ReportSpedizioniBollettiniComponent {
     private modalService: NgbModal,
     private recipientService: RecipientService,
     private shepherdService: ShepherdService, 
+    private dialog: MatDialog,
     private tourService: TourSeenService
 
   ) {}
@@ -59,6 +66,12 @@ export class ReportSpedizioniBollettiniComponent {
   constPageSize: number = constPageSize;
   currentModalRef!: NgbModalRef;
   
+  search: boolean = false;
+  remove: boolean = false;
+  firstLoading: boolean = false;
+
+  pageIndex = 0;
+  pageSize = 20;
 
   form = new FormGroup({
     start_date: new FormControl(''),
@@ -111,8 +124,9 @@ export class ReportSpedizioniBollettiniComponent {
   }
 
   getReportSpedizioni(){
-    const pageIndex = this.paginator?.pageIndex || constPageIndex;
-    const pageSize = this.paginator?.pageSize || constPageSize;
+    this.firstLoading = true;
+    const pageIndex = this.pageIndex;
+    const pageSize = this.pageSize;
 
     this.recipientService.getReportSpedizioni(
       this.user!.id!,
@@ -132,10 +146,22 @@ export class ReportSpedizioniBollettiniComponent {
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
       this.dataSource.data = response.data;
+      this.firstLoading = false;
+      this.search = false;
+      this.remove = false;
     });
+  }
+
+  onPaginateChange(event: PageEvent) {
+
+    this.pageIndex = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.getReportSpedizioni();
   }
    
   filterResults(){
+    this.search = true;
+
     this.startDate = this.form.value.start_date || null;
     this.endDate = this.form.value.end_date || null;
     this.code = this.form.value.codice || null;
@@ -163,7 +189,7 @@ export class ReportSpedizioniBollettiniComponent {
       end_date_pay: '',
       sel_pagamento: ''
     });
-    
+    this.remove = true;
     this.startDate = null;
     this.endDate = null;
     this.code = null;
@@ -179,9 +205,16 @@ export class ReportSpedizioniBollettiniComponent {
     this.getReportSpedizioni();  
   }
 
-  downloadFile(doc:string){
+  downloadFile(doc: string, element: any){
+    this.recipientService.getFile(doc, element.recipientId)
+    .subscribe(response => {
+      if(!response)
+      {
+        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        return;
+      }
 
-     const blob = FncUtils.getFileFromBase64(doc);
+      const blob = FncUtils.getFileFromBase64(response);
 
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
@@ -189,7 +222,19 @@ export class ReportSpedizioniBollettiniComponent {
       link.click();
 
       window.URL.revokeObjectURL(link.href);
+      
+    });
 
+  }
+
+  openDialog(title: string, message: string){
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      width: '400px',
+      data: { 
+        title: title,
+        message: message
+        }  
+    });
   }
 
   openModal(id: number) {

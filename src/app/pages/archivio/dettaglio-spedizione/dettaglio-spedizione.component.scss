@@ -1,5 +1,23 @@
+@use '../../../../variables' as *;
+
 .wait{
     color: #567FC5;
     opacity: 0.8;
     
+}
+
+.search{
+    background-color: $primary-color;
+    width: 100%;
+    height: 38px;
+    float: left;
+    color: $white-color;
+    border: 0;
+    padding: 5px 0;
+    margin-top: 25px;
+    font-size: 14px;
+
+    .fa-spinner{
+        font-size: 16px;
+    }
 }

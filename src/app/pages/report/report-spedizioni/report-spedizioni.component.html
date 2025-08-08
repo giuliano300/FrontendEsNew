@@ -4,7 +4,6 @@
   </a>
 </div>
 
-
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-4">
@@ -16,7 +15,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="filter pb-5">
     <form [formGroup]="form">
@@ -59,10 +57,16 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" name="search" value="CERCA" (click)="filterResults()">
+                    <button type="submit" name="search" (click)="filterResults()">
+                        <span [hidden]="search">CERCA</span>
+                        <span [hidden]="!search"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" name="remove" (click)="removeFilter()" class="button-red" value="RIMUOVI FILTRI">
+                    <button type="submit" name="remove" (click)="removeFilter()" class="button-red">
+                        <span [hidden]="remove">RIMUOVI FILTRI</span>
+                        <span [hidden]="!remove"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -70,13 +74,13 @@
 </div>
 
 
-<div class="container-fluid">
+<div class="container-fluid" id="tbl">
     <div class="row">
-        <div class="col-md-12 mt-4 step-end">
+        <div class="col-md-12 mt-4 step-end relative">
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
                     <!-- Colonna Id Lotto -->
-                    <ng-container matColumnDef="operationId">
+                    <ng-container matColumnDef="id">
                         <th mat-header-cell *matHeaderCellDef > id lotto </th>
                         <td mat-cell *matCellDef="let element"> {{element.operationId}} </td>
                     </ng-container>
@@ -113,16 +117,21 @@
 
                     <!-- Colonna File -->
                     <ng-container matColumnDef="doc">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File </th>
-                    <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <button  mat-button class="mat-button-download" (click)="downloadFile(element.doc)"><i class='bx bxs-file-pdf' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></button>
-                    </td>
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
+                            <a class="step-5"
+                            (click)="downloadFile('attachedFile', element)"><i class='bx bx-envelope' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                        </td>
                     </ng-container>
 
                     <!-- Colonna CODICE -->
                     <ng-container matColumnDef="code">
                         <th mat-header-cell *matHeaderCellDef > CODICE </th>
-                        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+                        <td mat-cell *matCellDef="let element"> 
+                            <a href="https://www.poste.it/cerca/index.html#/risultati-spedizioni/{{element.code}}" target="_blank" class="step-4">
+                                {{element.code}} 
+                            </a>
+                        </td>
                     </ng-container>
 
                     <!-- Colonna STATO -->
@@ -141,16 +150,21 @@
               
             </table>
               
-              <!-- Paginazione -->
-            <mat-paginator [hidden]="!dataSource.data || dataSource.data.length === 0"
-                [length]="totalRecords"
-                [pageSize]="constPageSize"
-                [pageSizeOptions]="[5, 10, 25, 50]"
-                showFirstLastButtons>
+            <div class="progress">
+                <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
+            </div>
+            <!-- Paginazione -->
+            <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
+               [pageSize]="20"
+               (page)="onPaginateChange($event)">
             </mat-paginator>
 
             <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
                 Nessun dato disponibile.
+            </div>
+
+            <div *ngIf="firstLoading" #fullHeightDiv class="text-center loading">
+                <i class="fas fa-spinner fa-spin"></i>
             </div>
 
         </div>

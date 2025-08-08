@@ -1,0 +1,64 @@
+        <div class="generic-form">
+            <div class="row">
+                <div class="col-md-5 step-1">
+                    <h4>Carica file <em>(in formato .zip)</em></h4>
+                    <div class="file-upload">
+                        <!-- AREA DRAG & DROP -->
+                        <ngx-file-drop (onFileDrop)="onFileDrop($event)">
+                            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="drop-zone" (click)="openFileSelector()">
+                                Trascina qui il file o clicca per selezionarlo
+                            </div>
+                            </ng-template>
+                        </ngx-file-drop>
+        
+                        <!-- BARRA DI CARICAMENTO -->
+                        <div class="progress-container" *ngIf="uploadProgress !== null">
+                            <div
+                            class="progress-bar"
+                            [style.width.%]="uploadProgress"
+                            [ngClass]="{ 'completed': uploadProgress === 100 }"
+                            >
+                            {{ uploadProgress }}%
+                            </div>
+                        </div>
+                        
+                        <div *ngIf="errorMessage" class="error mt-3">
+                            {{ errorMessage }}
+                        </div>                    
+
+                    </div>
+                    
+                </div>
+                <div class="col-md-7 step-2">
+                    <h4>Risultato caricamento</h4>
+    
+                    <div class="result-upload">
+                        <div class="result-upload__top">
+                            <section><img src="/assets/img/icn-nominativi.png" alt="Nominativi caricati"> Nominativi caricati:&nbsp;&nbsp;<strong>{{nominativiCaricati}}</strong></section>
+                            <section><img src="/assets/img/icn-validi.png" alt="Validi"> Validi:&nbsp;&nbsp;<strong>{{nominativiValidi}}</strong></section>
+                            <section><img src="/assets/img/icn-errori.png" alt="Errori"> Errori:&nbsp;&nbsp;<strong>{{nominativiInErrore}}</strong></section>
+                        </div>
+                        <ul>
+                            <li>
+                                <span>NOMINATIVO</span><span>VALIDO</span><span>TIPO DI ERRORE</span>
+                            </li>
+                            <li *ngFor="let r of checkRecipients" [ngClass]="r.valido ? '' : 'liError'">
+                                <span>{{r.recipient?.businessName}}</span><span>{{r.valido ? "SI" : "NO"}}</span><span>{{r.errore}}</span>
+                            </li>
+                            <div *ngIf="checkRecipient.length == 0 && !checking" class="no-upload">
+                                nessun file .zip ancora caricato
+                            </div>
+    
+                            <div *ngIf="checking" class="preloader">
+                                <i class="fas fa-spinner fa-spin"></i><br><br>
+                                <span class="mt-3" [hidden]="sincro">Attendere caricamento file in corso...</span>
+                                <span class="mt-3" [hidden]="!sincro">Sincronizzazione dei file...<br>Il processo può richiedere alcuni minuti</span>
+                            </div>
+    
+                        </ul>
+                    </div>
+    
+                </div>
+            </div>
+        </div>

@@ -17,6 +17,7 @@ export class LoginComponent {
 
   errorMessage: string | null = null;
   user: Users  | null = null;
+  sendLogin: boolean = false;
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -31,6 +32,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
+      this.sendLogin = true;
       this.errorMessage = null; 
 
       const login: Login = {
@@ -42,6 +44,7 @@ export class LoginComponent {
         .subscribe((data: any) => {
           if(data == null){
             this.errorMessage = 'Email o password non corretti.';
+             this.sendLogin = false;
           }
           else {
             this.user! = data.user;

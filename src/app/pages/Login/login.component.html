@@ -26,7 +26,10 @@
                             Password obbligatoria
                         </div>
                         <label>
-                           <button type="submit" [disabled]="form.invalid">Accedi</button>
+                           <button type="submit" [disabled]="form.invalid || sendLogin">
+                                <span [hidden]="sendLogin">Accedi</span>
+                                <span [hidden]="!sendLogin" class="spin"><i class="fas fa-spinner fa-spin"></i></span>
+                            </button>
                         </label>
                         <div *ngIf="errorMessage" class="error">
                             {{ errorMessage }}

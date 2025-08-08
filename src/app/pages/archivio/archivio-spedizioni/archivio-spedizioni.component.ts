@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,18 +12,22 @@ import { OperationService } from '../../../services/operation.service';
 import { Users } from '../../../interfaces/Users';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
-import { constPageIndex, constPageSize } from '../../../../main';
+import { constPageSize } from '../../../../main';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 
 
 @Component({
   selector: 'app-archivio-spedizioni',
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
+  ],
   templateUrl: './archivio-spedizioni.component.html',
   styleUrl: './archivio-spedizioni.component.scss'
 })
@@ -35,12 +39,15 @@ export class ArchivioSpedizioniComponent {
   infoDettaglioInvii = infoDettaglioInvii;
   user: Users | null  = null;  
   dataSource = new MatTableDataSource<any>([]);
-  startDate: string | null = null;
-  endDate: string | null = null;
+  startDate: string = "";
+  endDate: string = "";
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
 
   firstLoading: boolean = false;
+
+  pageIndex = 0;
+  pageSize = 50;
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -53,6 +60,7 @@ export class ArchivioSpedizioniComponent {
 
     this.getTourInThisPage();
 
+    this.getArchivioSpedizioni();
   }
 
   form = new FormGroup({
@@ -62,8 +70,8 @@ export class ArchivioSpedizioniComponent {
 
 
   getArchivioSpedizioni(){
-    const pageIndex = this.paginator?.pageIndex || constPageIndex;
-    const pageSize = this.paginator?.pageSize || constPageSize;
+    const pageIndex = this.pageIndex;
+    const pageSize = this.pageSize;
     
     this.firstLoading = true;
 
@@ -80,22 +88,20 @@ export class ArchivioSpedizioniComponent {
       this.firstLoading = false;
     });
   }
+
+  onPaginateChange(event: PageEvent) {
+
+    this.firstLoading = true;
+    this.pageIndex = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.getArchivioSpedizioni();
+  }
+
    
   displayedColumns: string[] = ['date', 'productName', 'numberOfRecipient', 'totalPrice', 'actions'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    // Gestione cambio pagina
-    this.paginator.page.subscribe(() => {
-      this.getArchivioSpedizioni();
-    });
-
-    this.getArchivioSpedizioni();
-  }
 
   goToDetail(row: any) {
     // Per esempio: vai a /dettaglio/[nome]
@@ -107,8 +113,8 @@ export class ArchivioSpedizioniComponent {
   }
 
   filterResults(){
-    this.startDate = this.form.value.start_date || null;
-    this.endDate = this.form.value.end_date || null;
+    this.startDate = this.form.value.start_date || "";
+    this.endDate = this.form.value.end_date || "";
     if (this.paginator) 
         this.paginator.firstPage();
 
@@ -116,9 +122,13 @@ export class ArchivioSpedizioniComponent {
   }
 
   filterRemove() {
-    this.startDate = null;
-    this.endDate = null;
+    this.form.reset({
+      start_date: '',
+      end_date: ''
+    });
 
+    this.startDate = this.form.value.start_date || "";
+    this.endDate = this.form.value.end_date || "";
     if (this.paginator)
       this.paginator.firstPage();
 

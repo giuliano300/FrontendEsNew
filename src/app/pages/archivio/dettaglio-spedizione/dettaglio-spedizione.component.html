@@ -89,7 +89,10 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" name="filter" value="CERCA" (click)="filterData()">
+                    <button type="submit" name="search" (click)="filterData()" class="search">
+                        <span [hidden]="search">CERCA</span>
+                        <span [hidden]="!search"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -198,9 +201,12 @@
                                 
               
             </table>
-              
+            <div class="progress">
+                <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
+            </div>
+
             <!-- Paginazione -->
-            <mat-paginator [length]="totalRecords"
+            <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
                [pageSize]="20"
                (page)="onPaginateChange($event)">
             </mat-paginator>

@@ -35,7 +35,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <input type="button" value="X Rimuovi filtri" name="reset" (click)="filterRemove()">
+                    <a (click)="filterRemove()" class="filterRemove">X Rimuovi filtri</a>
                 </div>
             </div>
         </div>
@@ -90,11 +90,13 @@
                     
             </table>
               
-            <mat-paginator [hidden]="!dataSource.data || dataSource.data.length === 0"
-                [length]="totalRecords"
-                [pageSize]="constPageSize"
-                [pageSizeOptions]="[5, 10, 25, 50]"
-                showFirstLastButtons>
+            <div class="progress">
+                <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
+            </div>
+
+             <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
+               [pageSize]="50"
+               (page)="onPaginateChange($event)">
             </mat-paginator>
 
             <div *ngIf="(!dataSource.data || dataSource.data.length === 0) && !firstLoading" class="text-center">
