@@ -164,7 +164,7 @@ export class DettaglioSpedizioneComponent {
         .subscribe(response => {
           this.getDettaglioSpedizioniResponse = response;
           
-          this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
+          this.dataSource = new MatTableDataSource(response.data.recipients);
           this.totalRecords = response.totalCount;      
           this.isLoaded = true;
           this.search = false;
@@ -261,6 +261,13 @@ export class DettaglioSpedizioneComponent {
     });
 
 
+  }
+
+  filterRemove(){
+    this.form.reset({
+      sel_esito: ''
+    });
+    this.filterData();
   }
 
   openDialog(title: string, message: string){

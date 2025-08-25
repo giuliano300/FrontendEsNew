@@ -80,7 +80,7 @@
                     <label>CODICE</label>
                     <input type="text" formControlName="codice" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>ESITO</label>
                     <select formControlName="sel_esito">
                         <option value="">-- Esito --</option>
@@ -88,11 +88,14 @@
                         <option value="false">ERRORE</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <button type="submit" name="search" (click)="filterData()" class="search">
                         <span [hidden]="search">CERCA</span>
                         <span [hidden]="!search"><i class="fas fa-spinner fa-spin"></i></span>
                     </button>
+                </div>
+                <div class="col-md-2">
+                    <a (click)="filterRemove()" class="filterRemove">RIMUOVI FILTRI</a>
                 </div>
             </div>
         </div>
@@ -209,6 +212,10 @@
             </table>
             <div class="progress">
                 <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
+            </div>
+
+            <div *ngIf="(!dataSource.data || dataSource.data.length === 0) && !firstLoading" class="text-center">
+                Nessun destinatario trovato.
             </div>
 
             <!-- Paginazione -->

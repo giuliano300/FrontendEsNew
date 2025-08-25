@@ -52,6 +52,7 @@ export class ReportSpedizioniComponent {
   user: Users | null  = null;  
   dataSource = new MatTableDataSource<GetReportSpedizioni>([]);
 
+  startDateInit: string | null = new Date().toISOString().split('T')[0];
   startDate: string | null = null;
   endDate: string | null = null;
   code: string | null = null;
@@ -79,13 +80,16 @@ export class ReportSpedizioniComponent {
     }
 
     this.user! = JSON.parse(user!);
+    this.startDate = this.startDateInit;
+
+    this.getReportSpedizioni();
 
     this.getTourInThisPage();
 
   }
 
   form = new FormGroup({
-    start_date: new FormControl(''),
+    start_date: new FormControl(this.startDateInit),
     end_date: new FormControl(''),
     nominativo: new FormControl(''),
     codice: new FormControl(''),
@@ -129,6 +133,7 @@ export class ReportSpedizioniComponent {
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
       this.dataSource.data = response.data;
+      
       this.search = false;
       this.remove = false;
       this.firstLoading = false;
@@ -203,7 +208,7 @@ export class ReportSpedizioniComponent {
   
   removeFilter(){
     this.form.reset({
-      start_date: '',
+      start_date: this.startDateInit,
       end_date: '',
       nominativo: '',
       codice: '',
@@ -212,7 +217,7 @@ export class ReportSpedizioniComponent {
     });
     
     this.remove = true;
-    this.startDate = null;
+    this.startDate = this.startDateInit;
     this.endDate = null;
     this.code = null;
     this.businessName = null;
