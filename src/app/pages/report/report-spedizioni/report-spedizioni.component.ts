@@ -23,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 import { GetReportSpedizioni } from '../../../interfaces/GetReportSpedizioni';
+import { parse } from 'path';
 
 
 @Component({
@@ -58,7 +59,7 @@ export class ReportSpedizioniComponent {
   code: string | null = null;
   businessName: string | null = null;
   productType: number | null = 0;
-  valid: string | null = null;
+  valid: boolean | null = null;
   
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
@@ -71,6 +72,7 @@ export class ReportSpedizioniComponent {
 
   pageIndex = 0;
   pageSize = 20;
+  totalCounts = 0;
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -81,6 +83,7 @@ export class ReportSpedizioniComponent {
 
     this.user! = JSON.parse(user!);
     this.startDate = this.startDateInit;
+    this.valid = true;
 
     this.getReportSpedizioni();
 
@@ -94,7 +97,7 @@ export class ReportSpedizioniComponent {
     nominativo: new FormControl(''),
     codice: new FormControl(''),
     product: new FormControl<number | null>(null),    
-    esito: new FormControl(''),
+    esito: new FormControl<boolean | null>(true)
   });
 
 
@@ -128,11 +131,14 @@ export class ReportSpedizioniComponent {
       this.productType!,
       this.businessName,
       this.code,
-      this.valid
+      this.valid?.toString(),
+      this.totalCounts
     )
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
       this.dataSource.data = response.data;
+      
+      this.totalCounts = response.totalCount;
       
       this.search = false;
       this.remove = false;
@@ -154,7 +160,8 @@ export class ReportSpedizioniComponent {
     this.code = this.form.value.codice || null;
     this.businessName = this.form.value.nominativo || null;
     this.productType = this.form.value.product! || null;
-    this.valid = this.form.value.esito || null;
+    this.valid = this.form.value.esito || true;
+    this.totalCounts = 0;
     if (this.paginator) 
         this.paginator.firstPage();
 
@@ -213,7 +220,7 @@ export class ReportSpedizioniComponent {
       nominativo: '',
       codice: '',
       product: null,
-      esito: '',
+      esito: true,
     });
     
     this.remove = true;
@@ -223,6 +230,8 @@ export class ReportSpedizioniComponent {
     this.businessName = null;
     this.productType = null;
     this.valid = null;
+    this.totalCounts = 0;
+    
     if (this.paginator) 
         this.paginator.firstPage();
 

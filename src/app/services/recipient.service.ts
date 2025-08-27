@@ -73,6 +73,7 @@ export class RecipientService {
         businessName?: string | null,
         code?: string | null, 
         valid?: string | null,
+        totalCounts: number = 0,
         paymentDateS?: string | null,
         paymentDateE?: string | null,
         paid?: string | null
@@ -91,7 +92,8 @@ export class RecipientService {
           pageSize: pageSize.toString(),
           paymentDateS: paymentDateS ?? '',
           paymentDateE: paymentDateE ?? '',
-          paid: paid ?? ''
+          paid: paid ?? '',
+          totalCounts: totalCounts.toString() ?? '0'
         })
         return this.http.get<GetReportSpedizioniResponse>(`${this.apiUrl}/GetReportSpedizioni?${params.toString()}`);
       }

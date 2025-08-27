@@ -57,7 +57,7 @@ export class ReportSpedizioniBollettiniComponent {
   code: string | null = null;
   businessName: string | null = null;
   productType: number | null = 0;
-  valid: string | null = null;
+  valid: boolean | null = null;
   paymentDataS: string | null = null;
   paymentDataE: string | null = null;
   paid: string | null = null;
@@ -70,16 +70,19 @@ export class ReportSpedizioniBollettiniComponent {
   remove: boolean = false;
   firstLoading: boolean = false;
 
+  startDateInit: string | null = new Date().toISOString().split('T')[0];
+
   pageIndex = 0;
   pageSize = 20;
+  totalCounts = 0;
 
   form = new FormGroup({
-    start_date: new FormControl(''),
+    start_date: new FormControl(this.startDateInit),
     end_date: new FormControl(''),
     nominativo: new FormControl(''),
     codice: new FormControl(''),
     product: new FormControl<number | null>(null),    
-    esito: new FormControl(''),
+    esito: new FormControl<boolean | null>(true),
     sel_utente: new FormControl(''),
     start_date_pay: new FormControl(''),
     end_date_pay: new FormControl(''),
@@ -93,7 +96,12 @@ export class ReportSpedizioniBollettiniComponent {
       return;
     }
 
+    this.startDate = this.startDateInit;
+    this.valid = true;
+
     this.user! = JSON.parse(user!);
+
+    this.getReportSpedizioni();
 
     this.getTourInThisPage();
 
@@ -105,15 +113,7 @@ export class ReportSpedizioniBollettiniComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    // Gestione cambio pagina
-    this.paginator.page.subscribe(() => {
-      this.getReportSpedizioni();
-    });
-
-    this.getReportSpedizioni();
-  }
+  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -138,13 +138,15 @@ export class ReportSpedizioniBollettiniComponent {
       this.productType!,
       this.businessName,
       this.code,
-      this.valid,
+      this.valid?.toString(),
+      this.totalCounts,
       this.paymentDataS,
       this.paymentDataE,
       this.paid
     )
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
+      this.totalCounts = response.totalCount;
       this.dataSource.data = response.data;
       this.firstLoading = false;
       this.search = false;
@@ -171,6 +173,8 @@ export class ReportSpedizioniBollettiniComponent {
     this.paymentDataS = this.form.value.start_date_pay || null;
     this.paymentDataE = this.form.value.end_date_pay || null;
     this.paid = this.form.value.sel_pagamento || null;
+    this.totalCounts = 0;
+    
     if (this.paginator) 
         this.paginator.firstPage();
 
@@ -179,12 +183,12 @@ export class ReportSpedizioniBollettiniComponent {
 
   removeFilter(){
     this.form.reset({
-      start_date: '',
+      start_date: this.startDateInit,
       end_date: '',
       nominativo: '',
       codice: '',
       product: null,
-      esito: '',
+      esito: true,
       start_date_pay: '',
       end_date_pay: '',
       sel_pagamento: ''
@@ -199,6 +203,7 @@ export class ReportSpedizioniBollettiniComponent {
     this.paymentDataS = null;
     this.paymentDataE = null;
     this.paid = null;
+    this.totalCounts = 0;
     if (this.paginator) 
         this.paginator.firstPage();
 
