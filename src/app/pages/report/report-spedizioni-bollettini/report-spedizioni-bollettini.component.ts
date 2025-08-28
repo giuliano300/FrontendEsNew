@@ -57,7 +57,7 @@ export class ReportSpedizioniBollettiniComponent {
   code: string | null = null;
   businessName: string | null = null;
   productType: number | null = 0;
-  valid: boolean | null = null;
+  valid: string | null = null;
   paymentDataS: string | null = null;
   paymentDataE: string | null = null;
   paid: string | null = null;
@@ -82,7 +82,7 @@ export class ReportSpedizioniBollettiniComponent {
     nominativo: new FormControl(''),
     codice: new FormControl(''),
     product: new FormControl<number | null>(null),    
-    esito: new FormControl<boolean | null>(true),
+    esito: new FormControl(''),
     sel_utente: new FormControl(''),
     start_date_pay: new FormControl(''),
     end_date_pay: new FormControl(''),
@@ -97,7 +97,6 @@ export class ReportSpedizioniBollettiniComponent {
     }
 
     this.startDate = this.startDateInit;
-    this.valid = true;
 
     this.user! = JSON.parse(user!);
 
@@ -108,7 +107,7 @@ export class ReportSpedizioniBollettiniComponent {
 
   }
   
-  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'insertDate', 'price', 'doc', 'code', 'state'];
+  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -138,7 +137,7 @@ export class ReportSpedizioniBollettiniComponent {
       this.productType!,
       this.businessName,
       this.code,
-      this.valid?.toString(),
+      this.valid,
       this.totalCounts,
       this.paymentDataS,
       this.paymentDataE,
@@ -156,7 +155,7 @@ export class ReportSpedizioniBollettiniComponent {
 
   onPaginateChange(event: PageEvent) {
 
-    this.pageIndex = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getReportSpedizioni();
   }
@@ -174,7 +173,8 @@ export class ReportSpedizioniBollettiniComponent {
     this.paymentDataE = this.form.value.end_date_pay || null;
     this.paid = this.form.value.sel_pagamento || null;
     this.totalCounts = 0;
-    
+    this.pageIndex = 0;
+  
     if (this.paginator) 
         this.paginator.firstPage();
 
@@ -188,7 +188,7 @@ export class ReportSpedizioniBollettiniComponent {
       nominativo: '',
       codice: '',
       product: null,
-      esito: true,
+      esito: '',
       start_date_pay: '',
       end_date_pay: '',
       sel_pagamento: ''
@@ -204,6 +204,7 @@ export class ReportSpedizioniBollettiniComponent {
     this.paymentDataE = null;
     this.paid = null;
     this.totalCounts = 0;
+    this.pageIndex = 0;
     if (this.paginator) 
         this.paginator.firstPage();
 

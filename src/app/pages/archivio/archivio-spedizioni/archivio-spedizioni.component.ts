@@ -98,7 +98,7 @@ export class ArchivioSpedizioniComponent {
   }
 
    
-  displayedColumns: string[] = ['date', 'productName', 'numberOfRecipient', 'totalPrice', 'actions'];
+  displayedColumns: string[] = ['insertDate', 'operationType', 'numberOfRecipient', 'totalPriceSum', 'actions'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -110,6 +110,10 @@ export class ArchivioSpedizioniComponent {
   
   getDate(date:string): string{
     return FncUtils.GetFormattedData(date);
+  }
+
+  getProductName(operationType: number): string{
+    return FncUtils.GetProductName(operationType);
   }
 
   filterResults(){

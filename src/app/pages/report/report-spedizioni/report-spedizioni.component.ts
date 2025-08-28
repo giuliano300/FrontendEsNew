@@ -59,7 +59,7 @@ export class ReportSpedizioniComponent {
   code: string | null = null;
   businessName: string | null = null;
   productType: number | null = 0;
-  valid: boolean | null = null;
+  valid: string | null = null;
   
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
@@ -83,7 +83,6 @@ export class ReportSpedizioniComponent {
 
     this.user! = JSON.parse(user!);
     this.startDate = this.startDateInit;
-    this.valid = true;
 
     this.getReportSpedizioni();
 
@@ -97,7 +96,7 @@ export class ReportSpedizioniComponent {
     nominativo: new FormControl(''),
     codice: new FormControl(''),
     product: new FormControl<number | null>(null),    
-    esito: new FormControl<boolean | null>(true)
+    esito: new FormControl('')
   });
 
 
@@ -148,7 +147,7 @@ export class ReportSpedizioniComponent {
 
   onPaginateChange(event: PageEvent) {
 
-    this.pageIndex = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getReportSpedizioni();
   }
@@ -160,8 +159,9 @@ export class ReportSpedizioniComponent {
     this.code = this.form.value.codice || null;
     this.businessName = this.form.value.nominativo || null;
     this.productType = this.form.value.product! || null;
-    this.valid = this.form.value.esito || true;
+    this.valid = this.form.value.esito || null;
     this.totalCounts = 0;
+    this.pageIndex = 0;
     if (this.paginator) 
         this.paginator.firstPage();
 
@@ -220,7 +220,7 @@ export class ReportSpedizioniComponent {
       nominativo: '',
       codice: '',
       product: null,
-      esito: true,
+      esito: '',
     });
     
     this.remove = true;
@@ -231,6 +231,7 @@ export class ReportSpedizioniComponent {
     this.productType = null;
     this.valid = null;
     this.totalCounts = 0;
+    this.pageIndex = 0;
     
     if (this.paginator) 
         this.paginator.firstPage();

@@ -51,6 +51,21 @@ export class FncUtils {
         return dataFormattata;
       }
 
+    static GetProductName(d: number): string{
+      switch(d){
+          case 1:
+          case 4:
+            return "Raccomandata";
+          case 2:
+          case 5:
+            return "Lettera";
+          case 3:
+            return "Telegramma";
+          default:
+            return "Tipo sconosciuto";
+      }
+    }
+
 
       static getNazioniList(http: HttpClient): Observable<string[]> {
         return http.get<string[]>('/assets/json/upu.json').pipe(
