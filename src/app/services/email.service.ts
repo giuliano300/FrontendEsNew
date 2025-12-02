@@ -1,15 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../main';
 import { Observable } from 'rxjs';
 import { AssistenceRequest } from '../interfaces/AssistenceRequest';
+import { HttpLoggingService } from '../wrapper/http-logging.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmailService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpLoggingService) { }
 
    private apiUrl = API_URL + "Email";
  

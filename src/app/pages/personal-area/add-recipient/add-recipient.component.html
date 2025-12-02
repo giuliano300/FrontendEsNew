@@ -18,7 +18,7 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="flex-start">
-                        RAGIONE SOCIALE / NOME E COGNOME
+                        RAGIONE SOCIALE / NOME E COGNOME <span class="required">*</span>
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                     </label>
                     <input type="text" formControlName="businessName" />
@@ -34,7 +34,7 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label class="flex-start">
-                        INDIRIZZO
+                        INDIRIZZO <span class="required">*</span>
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                     </label>
                     <input type="text" formControlName="address" />
@@ -47,31 +47,31 @@
                     <input type="text" formControlName="complementAddress" />
                 </div>
                 <div class="col-md-4">
-                    <label>CAP</label>
+                    <label>CAP <span class="required">*</span></label>
                     <input type="text" formControlName="zipCode" maxlength="5" />
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label>CITTÀ</label>
+                    <label>CITTÀ <span class="required">*</span></label>
                     <input type="text" formControlName="city" />
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
-                        PROVINCIA
+                        PROVINCIA <span class="required">*</span>
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                     </label>
                     <input type="text" formControlName="province" maxlength="2" />
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
-                        STATO
+                        STATO <span class="required">*</span>
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                     </label>
                     <input type="text" formControlName="state" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-md-4">
                     <label class="flex-start">
                         CODICE FISCALE
@@ -88,10 +88,15 @@
                 </div>
                 <div class="col-md-4">
                     <label class="flex-start">
-                        Telefono
+                        TELEFONO
                         <i class='bx bxs-info-square color-blue' ngbTooltip="{{infoCodiceFiscale}}" placement="right"></i>
                     </label>
                     <input type="text" formControlName="mobile" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="required">* Campi obbligatori</span>
                 </div>
             </div>
 

@@ -48,8 +48,8 @@ export class AddSenderComponent {
         complementAddress: [''],
         city: ['', [Validators.required]],
         state: ['', [Validators.required]],
-        mobile: ['', [Validators.required]],
-        email: ['', [Validators.required]],
+        mobile: [''],
+        email: [''],
         id: [''] 
       });
    }

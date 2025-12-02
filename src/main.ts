@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { importProvidersFrom } from '@angular/core';
+import {importProvidersFrom } from '@angular/core';
 
 
 export const API_URL = "https://backendnew.easysender.it/Api/";
@@ -45,6 +45,7 @@ export enum returnReceipt{
   si = 0,
   no = 1
 }
+
 
 bootstrapApplication(AppComponent, {
   providers: [

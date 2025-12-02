@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../main';
-import { HttpClient } from '@angular/common/http';
 import { Notifications } from '../interfaces/Notifications';
+import { HttpLoggingService } from '../wrapper/http-logging.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpLoggingService) { }
 
    private apiUrl = API_URL + "Notifications";
  

@@ -58,7 +58,11 @@ img{height: auto;}
 
 a{text-decoration:none; cursor: pointer;}
 
-
+.required{
+    color: $error-color;
+    margin-left: 2px;
+    font-size: 12px;
+}
 
 a[routerLink] {
     cursor: pointer;

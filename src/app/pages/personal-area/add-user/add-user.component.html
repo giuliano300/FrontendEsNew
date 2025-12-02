@@ -22,7 +22,7 @@
                 <div class="col-md-8 step-1">
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label>TIPOLOGIA</label>
+                            <label>TIPOLOGIA <span class="required">*</span></label>
                             <select formControlName="userTypes" >
                                 <option value="">-- Seleziona tipologia --</option>
                                 <option value="2">Solo visualizzazione</option>
@@ -32,25 +32,25 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label>RAGIONE SOCIALE / NOME E COGNOME</label>
+                            <label>RAGIONE SOCIALE / NOME E COGNOME <span class="required">*</span></label>
                             <input type="text" formControlName="businessName" />
                         </div>
                         <div class="col-md-4">
-                            <label>INDIRIZZO</label>
+                            <label>INDIRIZZO <span class="required">*</span></label>
                             <input type="text" formControlName="address" />
                         </div>
                         <div class="col-md-4">
-                            <label>CITTÀ</label>
+                            <label>CITTÀ <span class="required">*</span></label>
                             <input type="text" formControlName="city" />
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label>CAP</label>
+                            <label>CAP <span class="required">*</span></label>
                             <input type="text" formControlName="zipCode" />
                         </div>
                         <div class="col-md-4">
-                            <label>PROVINCIA</label>
+                            <label>PROVINCIA <span class="required">*</span></label>
                             <input type="text" formControlName="province" />
                         </div>
                         <div class="col-md-4">
@@ -60,19 +60,27 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label>TELEFONO</label>
+                            <label>TELEFONO <span class="required">*</span></label>
                             <input type="phone" formControlName="mobile" />
                         </div>
                         <div class="col-md-4">
-                            <label>EMAIL</label>
+                            <label>EMAIL <span class="required">*</span></label>
                             <input type="email" formControlName="email" />
                         </div>
                         <div class="col-md-4">
-                            <label>PASSWORD <span *ngIf="!inserimento">(inserisci la password se vuoi cambiarla)</span></label>
+                            <label>PASSWORD 
+                                <span class="required">*</span>
+                                <span *ngIf="!inserimento">(inserisci la password se vuoi cambiarla)</span>
+                            </label>
                             <input type="password" formControlName="pwd" (input)="onPasswordInput()" />
                             <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
                                 Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span class="required">* Campi obbligatori</span>
                         </div>
                     </div>
                 </div>

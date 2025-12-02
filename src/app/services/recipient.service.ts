@@ -2,40 +2,40 @@ import { Injectable } from '@angular/core';
 import { API_URL } from '../../main';
 import { Observable } from 'rxjs';
 import { GetDettaglioDestinatario } from '../interfaces/GetDettaglioDestinatario';
-import { HttpClient } from '@angular/common/http';
 import { GetReportSpedizioniResponse } from '../interfaces/GetReportSpedizioniResponse';
 import { Recipients } from '../classes/Recipients';
+import { HttpLoggingService } from '../wrapper/http-logging.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipientService {
 
- constructor(private http: HttpClient) {}
+ constructor(private http: HttpLoggingService) {}
   
   private apiUrl = API_URL + "Recipients";
 
     getDettaglioDestinatario(
-        id:number
-      ): Observable<GetDettaglioDestinatario>
-      {
-        const params = new URLSearchParams({
-          id: id.toString()
-        })
-        return this.http.get<GetDettaglioDestinatario>(`${this.apiUrl}/GetDettaglioDestinatario?${params.toString()}`);
-      }
+      id:number
+    ): Observable<GetDettaglioDestinatario>
+    {
+      const params = new URLSearchParams({
+        id: id.toString()
+      })
+      return this.http.get<GetDettaglioDestinatario>(`${this.apiUrl}/GetDettaglioDestinatario?${params.toString()}`);
+    }
 
     getFile(
-       type:string,
-        id:number
-      ): Observable<string>
-      {
-        const params = new URLSearchParams({
-          id: id.toString(),
-          type: type
-        })
-        return this.http.get<string>(`${this.apiUrl}/getFile?${params.toString()}`);
-      }
+      type:string,
+      id:number
+    ): Observable<string>
+    {
+      const params = new URLSearchParams({
+        id: id.toString(),
+        type: type
+      })
+      return this.http.get<string>(`${this.apiUrl}/getFile?${params.toString()}`);
+    }
 
     getAllFiles(type: string, id: number): Observable<Blob> {
       const params = new URLSearchParams({
@@ -43,9 +43,7 @@ export class RecipientService {
         type: type
       });
 
-      return this.http.get(`${this.apiUrl}/GetAllFiles?${params.toString()}`, {
-        responseType: 'blob'
-      });
+      return this.http.getBlob(`${this.apiUrl}/GetAllFiles?${params.toString()}`);
     }
 
 

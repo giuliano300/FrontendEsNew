@@ -20,7 +20,7 @@
                     <ul>
                         <li>
                             <label class="flex-start">
-                                NOMINATIVO
+                                NOMINATIVO <span class="required">*</span>
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertName}}" placement="right"></i>
                             </label>
                             <input type="text" formControlName="businessName" />
@@ -34,7 +34,7 @@
                         </li>
                         <li>
                             <label class="flex-start">
-                                PROVINCIA
+                                PROVINCIA <span class="required">*</span>
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                             </label>
                             <input type="text" formControlName="province" maxlength="2" />
@@ -51,12 +51,12 @@
                             <input type="text" formControlName="complementNames" />
                         </li>
                         <li>
-                            <label>CAP</label>
+                            <label>CAP <span class="required">*</span></label>
                             <input type="text" formControlName="zipCode" maxlength="5" />
                         </li>
                         <li>
                             <label class="flex-start">
-                                STATO
+                                STATO <span class="required">*</span>
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                             </label>
                             <input type="text" formControlName="state" />
@@ -67,18 +67,18 @@
                     <ul>
                         <li>
                             <label class="flex-start">
-                                INDIRIZZO
+                                INDIRIZZO <span class="required">*</span>
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertAddress}}" placement="right"></i>
                             </label>
                             <input type="text" formControlName="address" />
                         </li>
                         <li>
-                            <label>CITTÀ</label>
+                            <label>CITTÀ <span class="required">*</span></label>
                             <input type="text" formControlName="city" />
                         </li>
                         <li>
                             <label>TELEFONO</label>
-                            <input type="phone" formControlName="mobile" />
+                            <input type="phone" formControlName="mobile" maxlength="15" />
                         </li>
                     </ul>
                 </div>
@@ -87,6 +87,9 @@
                         <li>
                             <label>EMAIL</label>
                             <input type="email" formControlName="email" />
+                        </li>
+                        <li>
+                            <span class="required">* Campi obbligatori</span>
                         </li>
                     </ul>
                 </div>
