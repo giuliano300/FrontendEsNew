@@ -11,4 +11,5 @@ export class Operations {
   error: boolean = false;
   errorMessage?: string | null;
   csvFileName?: string | null;
+  haveBulletins?: boolean = false;
 }

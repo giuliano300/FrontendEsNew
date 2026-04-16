@@ -277,6 +277,10 @@ export class CalcoloPreventivoComponent {
             Recipient.posteType = this.tipoLettera;
             Recipient.tipologiaNotificante = this.tipoNotificante;
             Recipient.valoreNotificante = this.nomeNotificante;
+            
+            if(this.shippingTypes == ShippingTypes.singola)
+              Recipient.attachedFile = fileTrovato?.base64!;
+
             fileId = fileTrovato?.id!;
           }
           
@@ -307,7 +311,7 @@ export class CalcoloPreventivoComponent {
       }
 
 
-      operationName = 'Spedizione' +  this.productName + (this.shippingTypes == ShippingTypes.singola ? ' singola' : ' multipla ') + (this.bulletin  ? ' con bollettino' : '');
+      operationName = 'Spedizione ' +  this.productName + (this.shippingTypes == ShippingTypes.singola ? ' singola' : ' multipla ') + (this.bulletin  ? ' con bollettino' : '');
 
       o = {
         operation: {
@@ -322,7 +326,8 @@ export class CalcoloPreventivoComponent {
           areaTestOperation: false,
           error: false,
           errorMessage: null,
-          csvFileName: null
+          csvFileName: null,
+          haveBulletins: this.bulletin
         },
         completeRecipient: completeRecipients,
         sender: sender,
@@ -338,7 +343,7 @@ export class CalcoloPreventivoComponent {
         } 
         else 
         {
-          let res = {
+        let res = {
             operationId: data.id,
             destinatari: this.Inviitotali,
             data: data.insertDate
@@ -350,7 +355,6 @@ export class CalcoloPreventivoComponent {
           else
           {
             this.formStorage.saveForm("riepilogo", res);
-
             this.router.navigate(['/riepilogoSpedizione']);
           }
         }
@@ -359,7 +363,7 @@ export class CalcoloPreventivoComponent {
     })
   }
 
-      startTour() {
+  startTour() {
       const steps = [
         {
           id: 'calcolopreventivo',

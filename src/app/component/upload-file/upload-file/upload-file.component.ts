@@ -117,7 +117,7 @@ export class UploadFileComponent {
 
           this.destinatariDec[0].fileName = this.fileName;
 
-           const encryptedDestinatari = CryptoJS.AES.encrypt(JSON.stringify(this.destinatariDec), secretKey).toString();
+          const encryptedDestinatari = CryptoJS.AES.encrypt(JSON.stringify(this.destinatariDec), secretKey).toString();
           this.formStorage.saveForm("destinatari", encryptedDestinatari);
       };
 
