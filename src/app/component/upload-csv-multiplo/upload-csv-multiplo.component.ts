@@ -27,6 +27,8 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
 import { TourSeenService } from '../../services/tourSeen.service';
+import { ComuniItaliani } from '../../interfaces/ComuniItaliani';
+import { UtilityService } from '../../services/utility.service';
 
 
 @Component({
@@ -72,6 +74,8 @@ export class UploadCsvMultiploComponent {
   backLink: string = "";
   ffwLink: string = "";
 
+  comuniItaliani: ComuniItaliani[] = [];
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -79,7 +83,8 @@ export class UploadCsvMultiploComponent {
     private formStorage: FormStorageService,
     private modalService: NgbModal,
     private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private tourService: TourSeenService,
+    private utilityService: UtilityService
   ) {
     this.form = this.fb.group({
       // eventuali altri controlli
@@ -126,6 +131,12 @@ export class UploadCsvMultiploComponent {
 
       });
 
+      this.http
+      .get<ComuniItaliani[]>('assets/json/comuniItaliani.json')
+      .subscribe(data => {
+        this.comuniItaliani = data;
+      });
+
       this.getTourInThisPage();
 
   }
@@ -146,7 +157,7 @@ export class UploadCsvMultiploComponent {
       }
 
       const recipient = FncUtils.mapCsvToRecipient(row);
-      const bulletin = hasBulletin ? FncUtils.mapCsvToBulletin(row, recipient.tempGuid) : undefined;
+      const bulletin = hasBulletin ? FncUtils.mapCsvToBulletin(row, recipient.tempGuid, this.comuniItaliani, this.utilityService) : undefined;
 
       this.result.push({ recipient, bulletin });
     }

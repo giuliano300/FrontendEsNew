@@ -2,6 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { Recipients } from "../classes/Recipients";
 import { Bulletins } from "../classes/Bulletins";
+import { UtilityService } from "../services/utility.service";
+import { ComuniItaliani } from "../interfaces/ComuniItaliani";
 
 export interface ComuniCap {
   cap: string;
@@ -166,8 +168,7 @@ export class FncUtils {
       
     }
 
-    static mapCsvToBulletin(row: any, tempGuid: string): Bulletins {
-
+    static mapCsvToBulletin(row: any, tempGuid: string, comuni: ComuniItaliani[], utilService: UtilityService): Bulletins {
       const lowerCaseRow: any = {};
       for (const key in row) {
           if (row.hasOwnProperty(key)) {
@@ -175,13 +176,15 @@ export class FncUtils {
           }
       }
 
+      const code = utilService.getCodiceClienteBollettino(lowerCaseRow['eseguitodacap'], lowerCaseRow['anno'], comuni);
+      console.log(code);
       return {
         id: 0,
         productType: 0,
         recipientId: 0,
         numeroContoCorrente: lowerCaseRow['numerocontocorrente'],
         intestatoA: lowerCaseRow['intestatoa'],
-        codiceCliente: lowerCaseRow['codicecliente'],
+        codiceCliente: lowerCaseRow['codicecliente'] == "" || lowerCaseRow['codicecliente'] == null ? code : lowerCaseRow['codicecliente'],
         importoEuro: lowerCaseRow['importoeuro'],
         eseguitoDaNominativo: lowerCaseRow['eseguitodanominativo'],
         eseguitoDaIndirizzo: lowerCaseRow['eseguitodaindirizzo'],

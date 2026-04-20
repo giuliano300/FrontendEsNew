@@ -48,7 +48,7 @@
                         </li>
                         <li>
                             <label>ANNO DI RIFERIMENTO</label>
-                            <input type="text" formControlName="anno_riferimento" />
+                            <input type="text" formControlName="anno_riferimento" (change)="GetclientCode()" />
                         </li>
                     </ul>
                 </div>
@@ -70,7 +70,7 @@
                                 ESEGUITO DA CAP
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertBollCap}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="eseguito_cap" maxlength="5" />
+                            <input type="text" formControlName="eseguito_cap" maxlength="5" (change)="GetclientCode()" />
                         </li>
                     </ul>
                 </div>
@@ -89,7 +89,7 @@
                         </li>
                         <li>
                             <label>CODICE CLIENTE</label>
-                            <input type="text" formControlName="codice_cliente" />
+                            <input type="text" formControlName="codice_cliente" readonly />
                         </li>
                     </ul>
                 </div>

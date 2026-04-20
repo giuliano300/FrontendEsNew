@@ -46,7 +46,6 @@ export enum returnReceipt{
   no = 1
 }
 
-
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),

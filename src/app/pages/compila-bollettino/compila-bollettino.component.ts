@@ -17,6 +17,9 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
 import { TourSeenService } from '../../services/tourSeen.service';
+import { ComuniItaliani } from '../../interfaces/ComuniItaliani';
+import { HttpClient } from '@angular/common/http';
+import { UtilityService } from '../../services/utility.service';
 
 
 
@@ -27,7 +30,13 @@ import { TourSeenService } from '../../services/tourSeen.service';
   styleUrl: './compila-bollettino.component.scss'
 })
 export class CompilaBollettinoComponent {
-  constructor(private router: Router, private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private utilService: UtilityService, 
+    private formStorage: FormStorageService, 
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService) {}
 
   page: number = TourPage.compilaBollettino;
 
@@ -43,6 +52,8 @@ export class CompilaBollettinoComponent {
   recipients: Recipients[] | null = null;
 
   backLink: string | null = null;
+
+  comuniItaliani: ComuniItaliani[] = [];
   
   form = new FormGroup({
     conto_corrente: new FormControl('', [Validators.required]),
@@ -84,10 +95,31 @@ export class CompilaBollettinoComponent {
            break;
       }
 
+      this.http
+        .get<ComuniItaliani[]>('assets/json/comuniItaliani.json')
+        .subscribe(data => {
+          this.comuniItaliani = data;
+        });
+
+
       this.getTourInThisPage();
 
     })
 
+  }
+
+  GetclientCode(){
+    const cap = this.form.value.eseguito_cap;
+    const annoDiRiferimento = this.form.value.anno_riferimento;
+    if(cap && annoDiRiferimento)
+    {
+      const code = this.utilService.getCodiceClienteBollettino(annoDiRiferimento, cap, this.comuniItaliani);
+      const control = this.form.get('codice_cliente') as FormControl;
+    
+      if (control) {
+        control.setValue(code);
+      }    
+    }
   }
 
 
