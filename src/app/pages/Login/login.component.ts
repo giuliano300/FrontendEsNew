@@ -47,6 +47,7 @@ export class LoginComponent {
              this.sendLogin = false;
           }
           else {
+            //console.log(data);
             this.user! = data.user;
             localStorage.setItem('authToken', data.token);
             localStorage.setItem('user', JSON.stringify(this.user!));

@@ -24,9 +24,9 @@ export function GetFilePrice(productType:number, numberOfPages: number, colori: 
 
   if(type == 'TOL'){
     return {
-      vatPrice: 5.01,
-      totalPrice: 27.80,
-      price: 22.79
+      vatPrice: 0.90,
+      totalPrice: 4.97,
+      price: 4.07
     } as Prices;
   }
 

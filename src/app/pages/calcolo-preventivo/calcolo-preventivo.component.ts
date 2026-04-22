@@ -21,6 +21,7 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
 import { TourSeenService } from '../../services/tourSeen.service';
+import { UserProducts } from '../../interfaces/UserProducts';
 
 @Component({
   selector: 'app-calcolo-preventivo',
@@ -115,6 +116,8 @@ export class CalcoloPreventivoComponent {
 
     this.user! = JSON.parse(user!);
 
+    const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
+    
     Promise.all([
       this.formStorage.getForm('step2'),
       this.formStorage.getForm('invii-totali')
@@ -133,6 +136,23 @@ export class CalcoloPreventivoComponent {
         this.bulletinw = "senza bollettino";
 
       this.productType = datiDecriptati.prodotto;
+      
+      //NEL CASO MOL E COL
+      if (userProducts) {
+        const upgradeMap: Partial<Record<ProductTypes, ProductTypes>> = {
+          [ProductTypes.ROL]: ProductTypes.MOL,
+          [ProductTypes.LOL]: ProductTypes.COL
+        };
+
+        const targetType = upgradeMap[this.productType! as ProductTypes];
+
+        if (targetType && userProducts.some(p => p.type === targetType)) {
+          this.productType = targetType;
+        }
+      }      
+
+      //console.log("Product type after upgrade check:", this.productType);
+
       this.shippingTypes = datiDecriptati.tipoinvio;
       this.fronteRetro = datiDecriptati.tipoStampa;
       this.tipoColore = datiDecriptati.tipoColore;
@@ -150,8 +170,10 @@ export class CalcoloPreventivoComponent {
 
       if(have)
         this.calcolaPreventivo();
+
+      const currentType = this.productType as ProductTypes;
      
-      switch(parseInt(datiDecriptati.prodotto)){
+      switch(currentType){
           case ProductTypes.ROL: 
           case ProductTypes.MOL: 
             this.productName = "raccomandata";
@@ -267,6 +289,8 @@ export class CalcoloPreventivoComponent {
           let fileId: string = "";
 
           let Recipient: Recipients = Object.assign(new Recipients(), destinatariDec[i]);
+          Recipient.productType = this.productType!;
+
           if(this.productType != ProductTypes.TOL && this.productType != ProductTypes.VOL){
             const fileTrovato = filesuploadDec.find(a => a.name === destinatariDec[i].fileName);
             Recipient.fileName = fileTrovato!.name;
