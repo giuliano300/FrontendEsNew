@@ -47,7 +47,7 @@ form = new FormGroup({
   tipoFormato: new FormControl('A4', [Validators.required]),
   tipoColore: new FormControl('', [Validators.required]),
   tipoStampa: new FormControl('', [Validators.required]),
-  tipoLettera: new FormControl('', [Validators.required])
+  tipoLettera: new FormControl('Posta4', [Validators.required])
 });
 
 ngOnInit() {

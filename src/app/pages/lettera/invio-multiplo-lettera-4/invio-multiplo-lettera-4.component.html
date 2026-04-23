@@ -1,3 +1,9 @@
+<div class="restart-tour">
+  <a (click)="restartTour()">
+    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
+  </a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col md-12 text-center mt-5">
@@ -24,7 +30,7 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         
-        <app-upload-zip [recipients] = "recipients"  (checkRecipient)="onCheckRecipientChanged($event)"></app-upload-zip>
+        <app-upload-zip [recipients] = "recipients"  (checkRecipient)="onCheckRecipientChanged($event)" *ngIf="loaded"></app-upload-zip>
   
         <div class="group-button">
             <a routerLink="/invioMultiploLettera3">INDIETRO</a>

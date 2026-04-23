@@ -34,7 +34,7 @@ export class InvioMultiploRaccomandata3Component {
           const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
           if(datiDecriptati.bollettino == 1){
             this.bulletin = true;
-            this.bulletinText = "con bollettimo";
+            this.bulletinText = "con bollettino";
           }
       });
 

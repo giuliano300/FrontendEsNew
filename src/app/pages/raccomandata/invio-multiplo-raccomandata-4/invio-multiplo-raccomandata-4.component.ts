@@ -42,10 +42,10 @@ export class InvioMultiploRaccomandata4Component {
   nominativiValidi: number = 0;
   nominativiInErrore: number = 0;
   bulletin: string = "senza bollettino";
-
+  loaded = false;
+  
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private router: Router,
     private formStorage: FormStorageService,
     private shepherdService: ShepherdService, 
@@ -71,8 +71,10 @@ export class InvioMultiploRaccomandata4Component {
           if(datiDecriptati.bollettino == 1)
             this.bulletin = "con bollettino";
   
-          const recipients = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
-          this.recipients = recipients;
+          const r = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
+          this.recipients = r;
+          if(this.recipients.length > 0)
+            this.loaded = true;
       })
 
       this.getTourInThisPage();
@@ -80,9 +82,6 @@ export class InvioMultiploRaccomandata4Component {
 
   onCheckRecipientChanged(results: checkRecipient[]) {
     this.checkRecipient = results;
-
-    // qui puoi usarli come vuoi
-    console.log('Ricevuti risultati:', this.checkRecipient);
   }
 
   onSubmit() {
@@ -103,7 +102,7 @@ export class InvioMultiploRaccomandata4Component {
   }
 
 
-      startTour() {
+  startTour() {
       const steps = [
         {
           id: 'uploadmulti',

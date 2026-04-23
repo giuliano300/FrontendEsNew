@@ -119,5 +119,6 @@ export enum TourPage
   addRecipient= 39,
   personalizzazioneCover= 40,
   addLogo= 41,
-  erroriNotificati= 42
+  erroriNotificati= 42,
+  letteraMultipla4 = 43,
 }

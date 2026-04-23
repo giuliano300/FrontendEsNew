@@ -50,7 +50,6 @@ export class UploadZipComponent {
 
     @Output() checkRecipient = new EventEmitter<checkRecipient[]>();
 
-  
   onFileDrop(files: NgxFileDropEntry[]) {
     const u = localStorage.getItem('user');
     let user: Users | null = null;

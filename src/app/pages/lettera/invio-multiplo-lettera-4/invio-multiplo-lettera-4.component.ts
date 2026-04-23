@@ -13,6 +13,11 @@ import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 
 import { PdfBase64List } from '../../../classes/PdfBase64List';
 import { UploadZipComponent } from "../../../component/upload-zip/upload-zip.component";
+import { PopperPlacement } from 'shepherd.js';
+import { ShepherdService } from 'angular-shepherd';
+import { TourSeenService } from '../../../services/tourSeen.service';
+import { TourSeen } from '../../../interfaces/TourSeen';
+import { TourPage } from '../../../interfaces/EnumTypes';
 
 
 @Component({
@@ -37,11 +42,12 @@ export class InvioMultiploLettera4Component  {
   nominativiValidi: number = 0;
   nominativiInErrore: number = 0;
   bulletin: string = "senza bollettino";
-
+  loaded = false;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService,   
     private router: Router,
     private formStorage: FormStorageService
   ) {
@@ -50,6 +56,8 @@ export class InvioMultiploLettera4Component  {
     });
   }
 
+  page: number = TourPage.letteraMultipla4;
+  
   ngOnInit(): void {
 
       Promise.all([
@@ -63,9 +71,10 @@ export class InvioMultiploLettera4Component  {
           if(datiDecriptati.bollettino === 1)
             this.bulletin = "con bollettino";
   
-          const recipients = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
-          this.recipients = recipients;
-
+          const r = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
+          this.recipients = r;
+          if(this.recipients.length > 0)
+            this.loaded = true;
       })
   }
 
@@ -89,5 +98,95 @@ export class InvioMultiploLettera4Component  {
   get hasValidRecipients(): boolean {
     return this.checkRecipient.some(r => r.valido) ?? false;
   }
+  startTour() {
+      const steps = [
+        {
+          id: 'uploadmulti',
+          text: 'Carcia i file pdf in un archivio .ZIP',
+          attachTo: {
+            element: '.step-1',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'uploadmulti2',
+          text: 'In questa sezione verrà visualizzato il risultato del caricamento con eventuali errori.',
+          attachTo: {
+            element: '.step-2',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'X Chiudi tour', action: () => this.shepherdService.complete(), classes:"close" },
+            { text: 'Avanti', action: () => this.shepherdService.next() }
+          ]
+        },
+        {
+          id: 'uploadmultiend',
+          text: "Clicca su <strong>'AVANTI'</strong> per continuare, oppure su <strong>'INDIETRO'</strong> per tornare allo step precedente.",
+          attachTo: {
+            element: '.step-end',
+            on: 'bottom' as PopperPlacement
+          },
+          modalOverlayOpeningPadding: 14,
+          modalOverlayOpeningRadius: 5,
+          classes: 'margin-step-y', 
+          buttons: [
+            { text: 'Fine', action: () => this.shepherdService.complete() }
+          ]
+        }
 
+      ];
+
+    // Abilita il dark overlay
+    this.shepherdService.modal = true;
+
+    // Opzioni di default per tutti gli step
+    this.shepherdService.defaultStepOptions = {
+      scrollTo: true,
+      cancelIcon: { enabled: true },
+      classes: 'shepherd-theme-arrows'
+    };
+
+    // Carica e avvia il tour
+    this.shepherdService.addSteps(steps);
+
+    // Ritarda il primo step
+    setTimeout(() => {
+      this.shepherdService.start();
+      this.completeTour();
+    }, 300);
+
+  }
+
+
+    //COPIARE SENZA TOCCARE
+    restartTour(){
+      this.startTour();
+    }
+    
+    completeTour()
+    {
+      this.shepherdService.tourObject?.on('complete', () => {
+        this.tourService.setTourSeen(this.page).subscribe();
+      });
+    }
+  
+    getTourInThisPage(){
+      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      if(!userTourPage.some(tour => tour.page === this.page))
+        this.startTour();
+    }
+  
+    ///////////////////////////
+  
 }
