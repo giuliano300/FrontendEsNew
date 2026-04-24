@@ -47,13 +47,22 @@ export class LoginComponent {
              this.sendLogin = false;
           }
           else {
-            //console.log(data);
+            // Se è attivo il doppio fattore
+            if (data.user.doubleFactor === true) {
+
+              // Salvo temporaneamente i dati necessari
+              localStorage.setItem('pending2faData', JSON.stringify(data));
+
+              // Vai pagina verifica codice OTP
+              this.router.navigate(['/two-factor']);
+
+              return;
+            }            
+            
             this.user! = data.user;
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('user', JSON.stringify(this.user!));
-            localStorage.setItem('userOptions', JSON.stringify(data.options));
-            localStorage.setItem('userProducts', JSON.stringify(data.products));
-            localStorage.setItem('userTourPage', JSON.stringify(data.tour));
+
+            this.authService.saveLocalStorage(data);
+            
             this.router.navigate(['/dashboard']);
           }
         });

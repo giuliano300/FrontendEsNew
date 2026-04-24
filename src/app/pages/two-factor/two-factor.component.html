@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center mt-5 mb-5">
+            <img src="/assets/img/logo-login.svg" class="logo mt-5 mb-2">
+        </div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12 text-center mt-4">
+                    <h1>Verifica accesso</h1>
+                    <p>Inserisci il codice di verifica inviato alla tua email</p>
+                </div>
+                <div class="col-lg-12">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="forms">
+                        <label>
+                            <input type="text" formControlName="code" placeholder="Codice di verifica">
+                        </label>
+                        <div *ngIf="form.controls.code.invalid && form.controls.code.touched" class="error">
+                            Codice di verifica obbligatorio
+                        </div>
+                    
+                        <label>
+                           <button type="submit" [disabled]="form.invalid || sendLogin">
+                                <span [hidden]="sendLogin">Accedi</span>
+                                <span [hidden]="!sendLogin" class="spin"><i class="fas fa-spinner fa-spin"></i></span>
+                            </button>
+                        </label>
+                        <div *ngIf="errorMessage" class="error">
+                            {{ errorMessage }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

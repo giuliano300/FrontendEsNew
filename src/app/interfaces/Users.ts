@@ -18,4 +18,5 @@ export interface Users {
   arraySenderId?: string;
   enabled: boolean;
   deleted: boolean;
+  doubleFactor?: boolean;
 }

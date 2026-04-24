@@ -286,43 +286,71 @@ export class SelectRecipientComponent {
 
   onSubmit(): void {
 
-    const destinatario = {
-      businessName: this.form.value.nominativo!,
-      complementName: this.form.value.comp_nominativo!,
-      address: this.form.value.indirizzo!,
-      complementAddress: this.form.value.comp_indirizzo!,
-      zipCode: this.form.value.cap!,
-      city: this.form.value.citta!,
-      province: this.form.value.provincia!,
-      state: this.form.value.stato!,
-      email: this.form.value.email!,
-      fileName: null,
-      tempGuid: FncUtils.generateGuid(),
-      userId: this.user!.id!,
-      userParentId: this.user!.parentId!,
-      pec: this.form.value.pec!,
-      cron: this.form.value.pec!
-    };
-
-    const destinatari = [];
-    destinatari.push(destinatario);
-  
-    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(destinatari), secretKey).toString();
-    this.formStorage.saveForm('destinatari', encrypted);
-  
     if (this.form.valid) {
 
-      if(this.form.value.addRecipient)
-        this.userRecipientService.setUserRecipient(destinatario!).subscribe(data => {
-          this.router.navigate([this.ffwLink]);
-        });
-      else
-        this.router.navigate([this.ffwLink]);
+      const destinatario = {
+        businessName: this.form.value.nominativo!,
+        complementName: this.form.value.comp_nominativo!,
+        address: this.form.value.indirizzo!,
+        complementAddress: this.form.value.comp_indirizzo!,
+        zipCode: this.form.value.cap!,
+        city: this.form.value.citta!,
+        province: this.form.value.provincia!,
+        state: this.form.value.stato!,
+        email: this.form.value.email!,
+        fileName: null,
+        tempGuid: FncUtils.generateGuid(),
+        userId: this.user!.id!,
+        userParentId: this.user!.parentId!,
+        pec: this.form.value.pec!,
+        cron: this.form.value.cron!
+      };
 
+      const destinatari = [];
+      destinatari.push(destinatario);
+
+      const encrypted = CryptoJS.AES.encrypt(
+        JSON.stringify(destinatari),
+        secretKey
+      ).toString();
+
+      this.formStorage.saveForm('destinatari', encrypted);
+
+      if (this.form.value.addRecipient) {
+        this.userRecipientService
+          .setUserRecipient(destinatario)
+          .subscribe(() => {
+            this.router.navigate([this.ffwLink]);
+          });
+      } else {
+        this.router.navigate([this.ffwLink]);
+      }
 
     } else {
+
+      this.form.markAllAsTouched();
+
+      const labels: any = {
+        nominativo: 'Nominativo',
+        indirizzo: 'Indirizzo',
+        cap: 'CAP',
+        provincia: 'Provincia',
+        citta: 'Città',
+        stato: 'Stato',
+        email: 'Email',
+        pec: 'PEC',
+        cron: 'Cron'
+      };
+
+      const campiMancanti = Object.keys(this.form.controls)
+        .filter(key => this.form.get(key)?.invalid)
+        .map(key => labels[key])
+        .filter(label => label);
+
       this.alertMessage = true;
-      this.alertText = 'Compila tutti i campi obbligatori correttamente.';
+      this.alertText =
+        'Compila i seguenti campi obbligatori: ' +
+        campiMancanti.join(', ');
     }
   }
 

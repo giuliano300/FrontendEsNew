@@ -30,7 +30,8 @@ export class InvioMultiploAgol4Component {
   checkRecipient: checkRecipient[] = [];
   checking: boolean = false;
   sincro: boolean = false;
-  
+  loaded: boolean = false;
+
   nominativiCaricati: number = 0;
   nominativiValidi: number = 0;
   nominativiInErrore: number = 0;
@@ -61,7 +62,8 @@ export class InvioMultiploAgol4Component {
   
           const recipients = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
           this.recipients = recipients;
-          //console.log(this.recipients);
+          if(this.recipients.length > 0)
+            this.loaded = true;      
       })
   }
   

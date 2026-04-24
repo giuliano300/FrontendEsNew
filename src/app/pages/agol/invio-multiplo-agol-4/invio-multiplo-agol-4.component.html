@@ -24,7 +24,7 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <app-upload-zip [recipients] = "recipients"  (checkRecipient)="onCheckRecipientChanged($event)"></app-upload-zip>
+        <app-upload-zip [recipients] = "recipients"  (checkRecipient)="onCheckRecipientChanged($event)" *ngIf="loaded"></app-upload-zip>
     
     
         <div class="group-button">

@@ -78,11 +78,16 @@ import { StampaUnioneComponent } from './pages/utility/stampa-unione/stampa-unio
 import { UnionePdfComponent } from './pages/utility/unione-pdf/unione-pdf.component';
 import { VideoTutorialComponent } from './pages/utility/video-tutorial/video-tutorial.component';
 import { ComunicazioniComponent } from './pages/comunicazioni/comunicazioni.component';
+import { TwoFactorComponent } from './pages/two-factor/two-factor.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LoginComponent
+  },
+  {
+    path: 'two-factor',
+    component: TwoFactorComponent
   },
   {
     path: 'passwordRecovery',

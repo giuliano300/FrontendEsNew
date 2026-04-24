@@ -336,58 +336,89 @@ export class SelectSenderComponent {
   }
 
   onSubmit(): void {
-   
+
     if (this.form.valid) {
 
-        const mittente = {
-          businessName: this.form.value.nominativo,
-          complementNames: this.form.value.comp_nominativo,
-          address: this.form.value.indirizzo,
-          complementAddress: this.form.value.comp_indirizzo,
-          zipCode: this.form.value.cap,
-          city: this.form.value.citta,
-          province: this.form.value.provincia,
-          state: this.form.value.stato
-        };
+      const mittente = {
+        businessName: this.form.value.nominativo,
+        complementNames: this.form.value.comp_nominativo,
+        address: this.form.value.indirizzo,
+        complementAddress: this.form.value.comp_indirizzo,
+        zipCode: this.form.value.cap,
+        city: this.form.value.citta,
+        province: this.form.value.provincia,
+        state: this.form.value.stato
+      };
 
-        let destinatarioAR = {};
-        if(this.ricevutaDiRitorno)
-        {
-          if(!this.form.value.destinatario){
-              destinatarioAR = {
-                businessName: this.form.value.nominativo_ar,
-                completamentoNominativo: this.form.value.comp_nominativo_ar,
-                address: this.form.value.indirizzo_ar,
-                complementAddress: this.form.value.comp_indirizzo_ar,
-                zipCode: this.form.value.cap_ar,
-                city: this.form.value.citta_ar,
-                province: this.form.value.provincia_ar,
-                state: this.form.value.stato_ar
-              };
-          }
-          else
-            destinatarioAR = mittente;
+      let destinatarioAR = {};
+
+      if (this.ricevutaDiRitorno) {
+        if (!this.form.value.destinatario) {
+          destinatarioAR = {
+            businessName: this.form.value.nominativo_ar,
+            completamentoNominativo: this.form.value.comp_nominativo_ar,
+            address: this.form.value.indirizzo_ar,
+            complementAddress: this.form.value.comp_indirizzo_ar,
+            zipCode: this.form.value.cap_ar,
+            city: this.form.value.citta_ar,
+            province: this.form.value.provincia_ar,
+            state: this.form.value.stato_ar
+          };
+        } else {
+          destinatarioAR = mittente;
         }
+      }
 
-      const encrypted = CryptoJS.AES.encrypt(JSON.stringify(mittente), secretKey).toString();
+      const encrypted = CryptoJS.AES.encrypt(
+        JSON.stringify(mittente),
+        secretKey
+      ).toString();
 
       this.formStorage.saveForm('mittente', encrypted);
 
-      
-      if (Object.keys(destinatarioAR).length > 0){
-        const encryptedAR = CryptoJS.AES.encrypt(JSON.stringify(destinatarioAR), secretKey).toString();
+      if (Object.keys(destinatarioAR).length > 0) {
+        const encryptedAR = CryptoJS.AES.encrypt(
+          JSON.stringify(destinatarioAR),
+          secretKey
+        ).toString();
+
         this.formStorage.saveForm('destinararioAR', encryptedAR);
       }
 
       this.router.navigate([this.ffwLink]);
+
     } else {
+
+      this.form.markAllAsTouched();
+
+      const labels: any = {
+        nominativo: 'Nominativo',
+        indirizzo: 'Indirizzo',
+        cap: 'CAP',
+        provincia: 'Provincia',
+        citta: 'Città',
+        stato: 'Stato',
+
+        nominativo_ar: 'Nominativo AR',
+        indirizzo_ar: 'Indirizzo AR',
+        cap_ar: 'CAP AR',
+        provincia_ar: 'Provincia AR',
+        citta_ar: 'Città AR',
+        stato_ar: 'Stato AR'
+      };
+
+      const campiMancanti = Object.keys(this.form.controls)
+        .filter(key => this.form.get(key)?.invalid)
+        .map(key => labels[key]);
+
       this.alertMessage = true;
-      this.alertText = 'Compila tutti i campi obbligatori correttamente.';
+      this.alertText =
+        'Compila i seguenti campi obbligatori: ' +
+        campiMancanti.join(', ');
     }
   }
-
-
-    startTour() {
+  
+  startTour() {
     const steps = [
       {
         id: 'singleraccomandata',
