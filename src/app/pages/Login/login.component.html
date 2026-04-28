@@ -19,8 +19,19 @@
                             Email non valida
                         </div>
                     
-                        <label>
-                            <input type="password" formControlName="password" placeholder="Password">
+                        <label class="password-field">
+                            <input 
+                                [type]="showPassword ? 'text' : 'password'" 
+                                formControlName="password" 
+                                placeholder="Password"
+                            >
+                            <div class="password-toggle">
+                                <i 
+                                    class="fas" 
+                                    [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                                    (click)="togglePassword()"
+                                ></i>
+                            </div>
                         </label>
                         <div *ngIf="form.controls.password.invalid && form.controls.password.touched" class="error">
                             Password obbligatoria

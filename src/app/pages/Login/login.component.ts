@@ -18,6 +18,7 @@ export class LoginComponent {
   errorMessage: string | null = null;
   user: Users  | null = null;
   sendLogin: boolean = false;
+  showPassword = false;
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -28,6 +29,10 @@ export class LoginComponent {
     const token = localStorage.getItem('authToken');
     if (token) 
       this.router.navigate(['/dashboard']);
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit() {

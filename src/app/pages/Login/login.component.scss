@@ -25,3 +25,33 @@ p{
         font-size: 20px;
     }
 }
+
+.password-field {
+  position: relative;
+  display: block;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-field i {
+  position: relative;
+  left: 18px;
+  top: 43%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  cursor: pointer;
+  background: #f5f5f5;
+  width: 55px;
+  height:calc(100% - 2px);
+  border-left: 1px solid #BFBFBF;
+}
