@@ -243,6 +243,7 @@ export class DettaglioSpedizioneComponent {
   downloadFile(doc: string, element: any){
     this.recipientService.getFile(doc, element.id)
     .subscribe(response => {
+      console.log(response);
       if(!response)
       {
         this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");

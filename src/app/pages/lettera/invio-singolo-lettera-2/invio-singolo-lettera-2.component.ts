@@ -11,9 +11,10 @@ import { FormStorageService } from '../../../services/form-storage.service';
 import * as CryptoJS from 'crypto-js';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
-import { TourPage } from '../../../interfaces/EnumTypes';
+import { ProductTypes, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { UserProducts } from '../../../interfaces/UserProducts';
 
 
 @Component({
@@ -41,6 +42,7 @@ export class InvioSingoloLettera2Component {
 
   user: Users | null  = null;
 
+  isHidden: boolean = true;
 
 form = new FormGroup({
   sel_logo: new FormControl(''),
@@ -66,6 +68,10 @@ ngOnInit() {
   this.getUserLogos();
 
   this.getTourInThisPage();
+
+  const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
+    if(userProducts.some(product => product.type == ProductTypes.COL))
+      this.isHidden = false;
 }
 
 getUserLogos(){
