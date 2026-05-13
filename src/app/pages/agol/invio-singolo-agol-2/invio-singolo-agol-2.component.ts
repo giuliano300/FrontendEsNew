@@ -118,6 +118,7 @@ onSubmit(): void {
     tipoinvio: localStorage.getItem('sendType'),
     prodotto: localStorage.getItem('productType'),
     bollettino:  localStorage.getItem('bulletin'),
+    tipoRicevuta: "SI"
   };
 
   const encrypted = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();
