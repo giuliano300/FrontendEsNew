@@ -46,7 +46,9 @@ export class UtilityService {
       if (userProducts) {
         const upgradeMap: Partial<Record<ProductTypes, ProductTypes>> = {
           [ProductTypes.ROL]: ProductTypes.MOL,
-          [ProductTypes.LOL]: ProductTypes.COL
+          [ProductTypes.LOL]: ProductTypes.COL,
+          [ProductTypes.AGOL]: ProductTypes.AGOL,
+          [ProductTypes.VOL]: ProductTypes.VOL,
         };
         console.log("userProducts", upgradeMap);
 

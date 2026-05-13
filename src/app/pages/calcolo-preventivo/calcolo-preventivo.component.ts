@@ -287,6 +287,8 @@ export class CalcoloPreventivoComponent {
             Recipient.posteType = this.tipoLettera;
             Recipient.tipologiaNotificante = this.tipoNotificante;
             Recipient.valoreNotificante = this.nomeNotificante;
+            if(senderAR?.AR)
+              Recipient.returnReceipt = true;
             
             if(this.shippingTypes == ShippingTypes.singola)
               Recipient.attachedFile = fileTrovato?.base64!;
@@ -299,6 +301,9 @@ export class CalcoloPreventivoComponent {
           
           if(this.productType == ProductTypes.VOL)
             Recipient.typeVisura = this.selDocumento!;
+
+          if(this.productType == ProductTypes.AGOL)
+            Recipient.tipologiaNotificante = Recipient.tipologiaNotificante || null;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
           Recipient.frontBack = (this.fronteRetro == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);

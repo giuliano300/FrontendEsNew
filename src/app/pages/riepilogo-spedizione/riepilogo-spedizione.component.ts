@@ -6,6 +6,7 @@ import { ProductTypes } from '../../interfaces/EnumTypes';
 import { CommonModule } from '@angular/common';
 import * as CryptoJS from 'crypto-js';
 import { FncUtils } from '../../fncUtils/fncUtils';
+import { UtilityService } from '../../services/utility.service';
 
 @Component({
   selector: 'app-riepilogo-spedizione',
@@ -17,7 +18,8 @@ export class RiepilogoSpedizioneComponent {
 
   constructor(
     private formStorage: FormStorageService,
-    private router: Router
+    private router: Router,
+    private utl: UtilityService
   ) 
   {
   } 
@@ -47,7 +49,9 @@ export class RiepilogoSpedizioneComponent {
        if(datiDecriptati.bollettino == 1)
         this.bulletin = true;
 
-       switch(parseInt(datiDecriptati.prodotto)){
+       const prodtctType = this.utl.getRealProduct(parseInt(datiDecriptati.prodotto));
+
+       switch(prodtctType){
           case ProductTypes.ROL: 
           case ProductTypes.MOL: 
             this.productName = "raccomandata";
