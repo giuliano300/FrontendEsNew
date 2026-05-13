@@ -1,6 +1,6 @@
   <div class="modal-header">
     <h4 class="modal-title flex-start">
-      Informativa spedizione
+      Storico spedizione
     </h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
   </div>
@@ -41,6 +41,14 @@
                 STATO LAVORAZIONE
             </li>
         </ul>
+        <ul *ngFor="let item of modalData?.historicRecipientStatuses">
+            <li>
+                <strong>{{getDate(item.outcomeDate)}}</strong>
+            </li>
+            <li>
+                <span>{{item.message?.toUpperCase()}}</span>
+            </li>
+        </ul>
         <ul>
             <li>
                 <strong>{{getDate(modalData.recipient.insertDate!)}}</strong>
@@ -55,14 +63,6 @@
             </li>
             <li>
                 <span>PRESA IN CARICO</span>
-            </li>
-        </ul>
-        <ul *ngFor="let item of modalData?.historicRecipientStatuses">
-            <li>
-                <strong>{{getDate(item.insertDate)}}</strong>
-            </li>
-            <li>
-                <span>{{item.message?.toUpperCase()}}</span>
             </li>
         </ul>
     </div>

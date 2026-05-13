@@ -18,6 +18,8 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourSeenService } from '../../../services/tourSeen.service';
+import { UserProducts } from '../../../interfaces/UserProducts';
+import { UtilityService } from '../../../services/utility.service';
 
 
 
@@ -34,7 +36,12 @@ export class StatoInviiComponent {
   id!: number;
   productName: string | null = null;
   
-  constructor(private router: Router, private operationService: OperationService, private route: ActivatedRoute, private shepherdService: ShepherdService, private tourService: TourSeenService) 
+  constructor(private router: Router, 
+    private operationService: OperationService, 
+    private route: ActivatedRoute, 
+    private shepherdService: ShepherdService, 
+    private tourService: TourSeenService,
+    private ut: UtilityService) 
   {
   }
 
@@ -65,7 +72,10 @@ export class StatoInviiComponent {
     this.user! = JSON.parse(user!);
 
     this.route.paramMap.subscribe(params => {
-      this.id = parseInt(params.get('id')!);
+      this.id = this.ut.getRealProduct(parseInt(params.get('id')!));
+
+      //console.log("id", this.id); 
+
       switch(this.id){
         case ProductTypes.ROL:
         case ProductTypes.MOL:

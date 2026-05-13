@@ -7,6 +7,8 @@ import { ZipResponse } from '../interfaces/ZipResponse';
 import { PdfUnioneRequest } from '../interfaces/PdfUnioneRequest';
 import { PdfUnioneResponse } from '../interfaces/PdfUnioneResponse';
 import { ComuniItaliani } from '../interfaces/ComuniItaliani';
+import { UserProducts } from '../interfaces/UserProducts';
+import { ProductTypes } from '../interfaces/EnumTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,22 @@ export class UtilityService {
     return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/ComprimiPdf", zipStampaUnioneRequest);
   }
 
+  getRealProduct(id: number): number{
+      const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
+      if (userProducts) {
+        const upgradeMap: Partial<Record<ProductTypes, ProductTypes>> = {
+          [ProductTypes.ROL]: ProductTypes.MOL,
+          [ProductTypes.LOL]: ProductTypes.COL
+        };
+        console.log("userProducts", upgradeMap);
+
+        const targetType = upgradeMap[id as ProductTypes];
+
+        if (targetType && userProducts.some(p => p.type === targetType)) 
+          return targetType;
+      }
+      return id;
+  }
 
   getCodiceClienteBollettino(
     anno: string,

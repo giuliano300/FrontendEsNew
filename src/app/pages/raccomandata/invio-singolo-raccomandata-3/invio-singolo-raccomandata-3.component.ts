@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
 import { SelectSenderComponent } from '../../../component/select-sender/select-sender/select-sender.component';
-import { bulletin } from '../../../../main';
+import { bulletin, secretKey } from '../../../../main';
+import { FormStorageService } from '../../../services/form-storage.service';
+import * as CryptoJS from 'crypto-js';
 
 
 @Component({
@@ -13,7 +15,8 @@ import { bulletin } from '../../../../main';
 })
 export class InvioSingoloRaccomandata3Component {
 
-  constructor(private router: Router) {}  
+  constructor(private router: Router,     private formStorage: FormStorageService,
+  ) {}  
   user: Users | null  = null;
   
   bulletin: string | null = "senza bollettino";

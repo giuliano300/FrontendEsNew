@@ -14,8 +14,15 @@ export class ModalSpedizioneComponent  {
   currentModalRef: any;
   @Input() modalData!: GetDettaglioDestinatario;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) {
+  }
   
+  ngOnInit(): void {
+    this.modalData.historicRecipientStatuses.sort((a, b) => {
+      return new Date(b.outcomeDate).getTime() - new Date(a.outcomeDate).getTime();
+    });
+  }
+
    getDate(date:string): string{
      return FncUtils.GetFormattedData(date);
    }

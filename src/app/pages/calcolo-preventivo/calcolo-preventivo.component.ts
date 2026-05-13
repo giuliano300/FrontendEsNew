@@ -22,6 +22,7 @@ import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
 import { TourSeenService } from '../../services/tourSeen.service';
 import { UserProducts } from '../../interfaces/UserProducts';
+import { UtilityService } from '../../services/utility.service';
 
 @Component({
   selector: 'app-calcolo-preventivo',
@@ -37,7 +38,8 @@ export class CalcoloPreventivoComponent {
     private formStorage: FormStorageService,
     private operationService: OperationService,
     private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private tourService: TourSeenService,
+    private ut: UtilityService
   ) 
   {
   }
@@ -115,8 +117,6 @@ export class CalcoloPreventivoComponent {
     }
 
     this.user! = JSON.parse(user!);
-
-    const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
     
     Promise.all([
       this.formStorage.getForm('step2'),
@@ -135,24 +135,10 @@ export class CalcoloPreventivoComponent {
       else
         this.bulletinw = "senza bollettino";
 
-      this.productType = datiDecriptati.prodotto;
+      this.productType = this.ut.getRealProduct(datiDecriptati.prodotto);
+
+      //console.log("product type: " + this.productType);
       
-      //NEL CASO MOL E COL
-      if (userProducts) {
-        const upgradeMap: Partial<Record<ProductTypes, ProductTypes>> = {
-          [ProductTypes.ROL]: ProductTypes.MOL,
-          [ProductTypes.LOL]: ProductTypes.COL
-        };
-
-        const targetType = upgradeMap[this.productType! as ProductTypes];
-
-        if (targetType && userProducts.some(p => p.type === targetType)) {
-          this.productType = targetType;
-        }
-      }      
-
-      //console.log("Product type after upgrade check:", this.productType);
-
       this.shippingTypes = datiDecriptati.tipoinvio;
       this.fronteRetro = datiDecriptati.tipoStampa;
       this.tipoColore = datiDecriptati.tipoColore;
@@ -315,7 +301,7 @@ export class CalcoloPreventivoComponent {
             Recipient.typeVisura = this.selDocumento!;
 
           //FRONTE RETRO, BIANCO NERO, FORMAQTO, RR
-          Recipient.frontBack = (this.tipoStampa == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);
+          Recipient.frontBack = (this.fronteRetro == "SI" ? FrontBack.FronteRetro : FrontBack.SoloFronte);
           Recipient.printType = (this.tipoColore == "BiancoNero" ? PrintType.BiancoNero : PrintType.Colori);
 
           let b: Bulletins | null = new Bulletins();
