@@ -46,6 +46,9 @@
                         <option [ngValue]="1">RACCOMANDATA</option>
                         <option [ngValue]="2">LETTERA</option>
                         <option [ngValue]="3">TELEGRAMMA</option>
+                        <option [ngValue]="4">RACCOMANDATA MARKET</option>
+                        <option [ngValue]="5">POSTA CONTEST</option>
+                        <option [ngValue]="6">ATTO GIUDIZIARIO</option>
                         <option [ngValue]="7">VISURA/CERTIFICATO</option>
                     </select>
                 </div>
@@ -185,6 +188,7 @@
             <!-- Paginazione -->
             <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
                [pageSize]="20"
+               [showFirstLastButtons]="true"
                (page)="onPaginateChange($event)">
             </mat-paginator>
 

@@ -56,13 +56,17 @@ export class FncUtils {
     static GetProductName(d: number): string{
       switch(d){
           case 1:
-          case 4:
-            return "Raccomandata";
-          case 2:
-          case 5:
+             return "Raccomandata";
+         case 4:
+             return "Raccomandata Market";
+         case 2:
             return "Lettera";
+          case 5:
+            return "Posta Contest";
           case 3:
             return "Telegramma";
+          case 6:
+            return "Atto Giudiziario";
           default:
             return "Tipo sconosciuto";
       }
