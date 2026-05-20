@@ -51,6 +51,7 @@ export class SelectSenderComponent {
   userSenders: UserSenders[] = [];
 
   filteredCAPs: Observable<string[]> = of([]);
+  filteredCAPsAr: Observable<string[]> = of([]);
 
   userSender: UserSenders | null = null;
 
@@ -60,6 +61,7 @@ export class SelectSenderComponent {
   user: Users | null  = null;
 
   isOne:boolean = true;
+  isOneAr:boolean = true;
   backLink: string | null = null;
   ffwLink: string | null = null;
 
@@ -87,10 +89,10 @@ export class SelectSenderComponent {
     comp_nominativo_ar: new FormControl(''),
     indirizzo_ar: new FormControl(''),
     comp_indirizzo_ar: new FormControl(''),
-    cap_ar: new FormControl(''),
-    provincia_ar: new FormControl(''),
-    citta_ar: new FormControl(''),
-    stato_ar: new FormControl(''),
+    cap_ar: new FormControl('', [Validators.required, Validators.maxLength(5)]),
+    provincia_ar: new FormControl('', [Validators.required, Validators.maxLength(2)]),
+    citta_ar: new FormControl('', [Validators.required]),
+    stato_ar: new FormControl('', [Validators.required]),
   });
   
 
@@ -190,7 +192,21 @@ export class SelectSenderComponent {
     );
 
     this.form.patchValue({
-      provincia: comune[0].sigla_provincia
+      provincia: comune[0].sigla_provincia,
+      stato: "ITALIA"
+    });
+
+  }
+
+  setProvinceAr(event: Event){
+    const v = (event.target as HTMLSelectElement).value;
+    const comune = this.comuni.filter(comune =>
+          comune.denominazione_ita.startsWith(v!)
+    );
+
+    this.form.patchValue({
+      provincia_ar: comune[0].sigla_provincia,
+      stato_ar: "ITALIA"
     });
 
   }
@@ -200,6 +216,13 @@ export class SelectSenderComponent {
     const capsUnici = Array.from(new Set(this.comuni.map(c => c.cap)));
 
     this.filteredCAPs = this.form.get('cap')!.valueChanges.pipe(
+      startWith(''),
+      map(value => value ?? ''), 
+      filter((value: string | null): value is string => !!value && value.length >= 2),
+      map(value => this._filterCAP(value, capsUnici))
+    );
+
+    this.filteredCAPsAr = this.form.get('cap_ar')!.valueChanges.pipe(
       startWith(''),
       map(value => value ?? ''), 
       filter((value: string | null): value is string => !!value && value.length >= 2),
@@ -240,6 +263,38 @@ export class SelectSenderComponent {
         this.isOne = false;
         this.comuniDaCap = comune;
         this.form.get('citta')?.setValue('');
+     }
+     }
+  }
+
+  setInputCityProvinceAr(event: MatAutocompleteSelectedEvent){
+     const v = event.option.value;
+     if(v){
+
+      this.form.patchValue({
+        provincia_ar: ""
+      });
+
+      const comune = this.comuni.filter(comune =>
+          comune.cap.startsWith(v!)
+      );
+      
+      if(comune.length == 1)
+      {
+        this.isOneAr = true;
+
+        this.form.patchValue({
+          citta_ar: comune[0].denominazione_ita,
+          provincia_ar: comune[0].sigla_provincia,
+          stato_ar: "ITALIA"
+        });
+
+      }
+      else
+      {
+        this.isOneAr = false;
+        this.comuniDaCap = comune;
+        this.form.get('citta_ar')?.setValue('');
      }
      }
   }

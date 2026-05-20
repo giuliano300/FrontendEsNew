@@ -98,7 +98,7 @@
                                 STATO
                                 <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                             </label>
-                            <input type="text" formControlName="stato" readonly  class="readonly" />
+                            <input type="text" formControlName="stato" readonly  class="readonly"  />
                         </li>
                     </ul>
                 </div>
@@ -142,14 +142,24 @@
                             </li>
                             <li>
                                 <label>CAP</label>
-                                <input type="text" formControlName="cap_ar" maxlength="5" />
+                                <input type="text"
+                                    formControlName="cap_ar"
+                                    maxlength="5"
+                                    [matAutocomplete]="autoCapAr"
+                                    class="custom-input" />
+
+                                <mat-autocomplete #autoCapAr="matAutocomplete" (optionSelected)="setInputCityProvinceAr($event)">
+                                <mat-option *ngFor="let cap of filteredCAPsAr | async" [value]="cap">
+                                    {{ cap }}
+                                </mat-option>
+                                </mat-autocomplete>                                                   
                             </li>
                             <li>
                                 <label class="flex-start">
                                     PROVINCIA
                                     <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertProvince}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="provincia_ar" maxlength="2" />
+                                <input type="text" formControlName="provincia_ar" maxlength="2" readonly  class="readonly"  />
                             </li>
                         </ul>
                         </div>
@@ -171,14 +181,20 @@
                             </li>
                             <li>
                                 <label>CITTÀ</label>
-                                <input type="text" formControlName="citta_ar" />
+                                <input type="text" formControlName="citta_ar" readonly class="readonly" *ngIf="isOneAr"  />
+                                <select formControlName="citta_ar" *ngIf="!isOneAr" (change)="setProvinceAr($event)" class="city">
+                                    <option value="">-- Seleziona una città --</option>
+                                    <option *ngFor="let option of comuniDaCap" [value]="option.denominazione_ita">
+                                        {{ option.denominazione_ita }}
+                                    </option>   
+                            </select>
                             </li>
                             <li>
                                 <label class="flex-start">
                                     STATO
                                     <i class='bx bxs-info-square color-blue' ngbTooltip="{{alertState}}" placement="right"></i>
                                 </label>
-                                <input type="text" formControlName="stato_ar" />
+                                <input type="text" formControlName="stato_ar"  readonly  class="readonly" />
                             </li>
                         </ul>
                     </div>
