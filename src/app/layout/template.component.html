@@ -71,11 +71,23 @@
 
               </ul>
 
-          </div>
+            </div>
             
           </div>
+          
         </div>
-
+        <div class="row" *ngIf="isOldUser">
+          <div class="col-lg-12">
+             <div class="access-to-platform">
+                <span>
+                  Il tuo account è stato migrato dalla vecchia piattaforma. 
+                  Alcune funzionalità potrebbero essere cambiate. 
+                  Per assistenza, contatta il supporto. 
+                  Puoi ancora accedere alla vecchia piattaforma fino al {{date}} <a (click)="openOldSite()" href="#">cliccando qui</a>.
+                </span>
+              </div>
+          </div>
+        </div>
       </div>
   </header>
 
@@ -107,7 +119,7 @@
 
   <div class="menu-overlay" (click)="CloseMenu()"></div>
   
-  <main>
+  <main  [ngClass]="{ 'main-old-user': isOldUser }">
     <router-outlet></router-outlet>
   </main>
 

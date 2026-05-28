@@ -79,6 +79,7 @@ import { UnionePdfComponent } from './pages/utility/unione-pdf/unione-pdf.compon
 import { VideoTutorialComponent } from './pages/utility/video-tutorial/video-tutorial.component';
 import { ComunicazioniComponent } from './pages/comunicazioni/comunicazioni.component';
 import { TwoFactorComponent } from './pages/two-factor/two-factor.component';
+import { AccessComponent } from './pages/Access/access.component';
 
 export const routes: Routes = [
   {
@@ -476,7 +477,12 @@ export const routes: Routes = [
         path: 'comunicazioni',
         component: ComunicazioniComponent,
         canActivate: [AuthGuard]
-      },      {
+      },
+      {
+        path: 'access',
+        component: AccessComponent
+      },      
+      {
         path: '**',
         component: NotFoundComponent
       }

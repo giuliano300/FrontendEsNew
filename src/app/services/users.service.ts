@@ -50,6 +50,10 @@ export class UsersService {
       return this.http.put<Users>(this.apiUrl + "/" + user.id, user);
     }
 
+    loginOldPlatform(login: any): Observable<Users>{
+      return this.http.post<any>(this.apiUrl + "/LoginOldPlatform", login);
+    }
+
     deleteUser(id: number): Observable<any> {
       return this.http.delete(this.apiUrl + "/" + id)
         .pipe(

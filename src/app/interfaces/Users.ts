@@ -18,5 +18,7 @@ export interface Users {
   arraySenderId?: string;
   enabled: boolean;
   deleted: boolean;
+  pwdOldSite?: string;
+  guidUserOldSite?: string;
   doubleFactor?: boolean;
 }

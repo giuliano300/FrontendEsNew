@@ -258,6 +258,9 @@ main{
     margin-bottom: 70px;
 }
 
+main.main-old-user{
+    padding-top: 95px;
+}
 
 footer{
     width: 100%;
@@ -357,4 +360,21 @@ footer{
   border-bottom: 1px solid $grey-light;
   padding-bottom: 15px;
   color: $primary-color;
+}
+
+.access-to-platform{
+  background-color: $grey-color;
+  min-height: 30px;
+  margin:0 -15px 20px;
+  display: flex;
+  border-bottom: 1px solid $border-color;
+
+  span{
+    color: $secondary-color;
+    font-size: 0.8rem;
+    font-weight: $font-medium;
+    padding: 5px 15px;
+    width: 100%;
+    text-align: center;
+  }
 }

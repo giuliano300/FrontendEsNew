@@ -5,7 +5,8 @@ import { Users } from '../interfaces/Users';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmailService } from '../services/email.service';
-
+import { expiredDate, loginIV, loginSecretKey, loginUrl } from '../../main';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-template',
@@ -38,7 +39,9 @@ export class TemplateComponent {
   userName: string | null = null;
   currentModalRef: any;
 
+  date: string = expiredDate;
 
+  isOldUser: boolean = false;
   
   logout(){
     localStorage.removeItem('authToken');
@@ -63,6 +66,8 @@ export class TemplateComponent {
   
     this.user! = JSON.parse(user!);    
     this.userName = this.user!.businessName;
+    if(this.user!.pwdOldSite && this.user!.guidUserOldSite)
+      this.isOldUser = true;
 
     // Controllo risoluzione iniziale
     this.checkScreenSize();
@@ -71,6 +76,46 @@ export class TemplateComponent {
     window.addEventListener('resize', this.checkScreenSize.bind(this));
   }
 
+  openOldSite(): void {
+
+    const key = CryptoJS.enc.Utf8.parse(
+      loginSecretKey
+    );
+
+    const iv = CryptoJS.enc.Utf8.parse(
+      loginIV
+    );
+
+    const payload = {
+      guid: this.user?.guidUserOldSite,
+      pwd: this.user?.pwdOldSite,
+      ts: new Date().getTime()
+    };
+
+    const encrypted = CryptoJS.AES.encrypt(
+      JSON.stringify(payload),
+      key,
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+      }
+    );
+
+    const token = encrypted.ciphertext.toString(
+      CryptoJS.enc.Base64
+    );
+
+    const url =
+      `${loginUrl}Accesso?t=${encodeURIComponent(token)}`;
+
+    const newWindow = window.open(url, '_blank');
+
+    if (newWindow) {
+      window.open('', '_self');
+      window.close();
+    }
+  }
   onSubmit(){
     if(this.form.valid){
       const dataToSend = this.form.value;
