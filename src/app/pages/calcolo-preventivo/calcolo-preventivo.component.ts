@@ -21,7 +21,6 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
 import { TourSeenService } from '../../services/tourSeen.service';
-import { UserProducts } from '../../interfaces/UserProducts';
 import { UtilityService } from '../../services/utility.service';
 
 @Component({
@@ -127,6 +126,8 @@ export class CalcoloPreventivoComponent {
 
       const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
 
+      //console.log(datiDecriptati);
+
       const invii = JSON.parse(CryptoJS.AES.decrypt(step2, secretKey).toString(CryptoJS.enc.Utf8));
       this.Inviitotali = invii.numeroInvii;
     
@@ -135,9 +136,9 @@ export class CalcoloPreventivoComponent {
       else
         this.bulletinw = "senza bollettino";
 
-      this.productType = this.ut.getRealProduct(datiDecriptati.prodotto);
+      this.productType = this.ut.getRealProduct(datiDecriptati.prodotto, datiDecriptati.tipoLettera);
 
-      //console.log("product type: " + this.productType);
+      console.log("product type: " + this.productType);
       
       this.shippingTypes = datiDecriptati.tipoinvio;
       this.fronteRetro = datiDecriptati.tipoStampa;
@@ -174,7 +175,8 @@ export class CalcoloPreventivoComponent {
             }
             break;
           case ProductTypes.LOL: 
-          case ProductTypes.COL: 
+          case ProductTypes.COL1: 
+          case ProductTypes.COL4: 
             this.productName = "lettera";
             if(datiDecriptati.tipoinvio == ShippingTypes.singola){
               this.routerLink = "/invioSingoloLettera5";
@@ -349,8 +351,8 @@ export class CalcoloPreventivoComponent {
         senderAR: senderAR,
       };
 
-      //var test = JSON.stringify(o);
-      //console.log(test);
+      var test = JSON.stringify(o);
+      console.log(test);
       this.operationService.setOperation(o)
       .subscribe((data: Operations) => {
         if (!data) {

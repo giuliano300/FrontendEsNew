@@ -41,23 +41,42 @@ export class UtilityService {
     return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/ComprimiPdf", zipStampaUnioneRequest);
   }
 
-  getRealProduct(id: number): number{
-      const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
-      if (userProducts) {
-        const upgradeMap: Partial<Record<ProductTypes, ProductTypes>> = {
-          [ProductTypes.ROL]: ProductTypes.MOL,
-          [ProductTypes.LOL]: ProductTypes.COL,
-          [ProductTypes.AGOL]: ProductTypes.AGOL,
-          [ProductTypes.VOL]: ProductTypes.VOL,
-        };
-        console.log("userProducts", upgradeMap);
+  getRealProduct(id: number, posteType?: string): number {
+    const userProducts: UserProducts[] = JSON.parse(
+      localStorage.getItem('userProducts') || 'null'
+    );
 
-        const targetType = upgradeMap[id as ProductTypes];
-
-        if (targetType && userProducts.some(p => p.type === targetType)) 
-          return targetType;
-      }
+    if (!userProducts) {
       return id;
+    }
+
+    const hasProduct = (type: ProductTypes) =>
+      userProducts.some(p => p.type === type);
+
+    switch (parseInt(id.toString())) {
+      case ProductTypes.ROL:
+        // Se possiede MOL, usa MOL al posto di ROL
+        return hasProduct(ProductTypes.MOL)
+          ? ProductTypes.MOL
+          : ProductTypes.ROL;
+
+      case ProductTypes.LOL:
+        // Caso speciale posta1 -> COL1
+
+        if (posteType?.toLowerCase() === 'posta1' && hasProduct(ProductTypes.COL1)) {
+          return ProductTypes.COL1;
+        }
+
+        // Altrimenti prova COL4
+        if (hasProduct(ProductTypes.COL4)) {
+          return ProductTypes.COL4;
+        }
+
+        return ProductTypes.LOL;
+
+      default:
+        return id;
+    }
   }
 
   getCodiceClienteBollettino(

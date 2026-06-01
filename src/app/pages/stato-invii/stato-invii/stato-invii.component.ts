@@ -82,7 +82,8 @@ export class StatoInviiComponent {
           this.productName = "Raccomandate";
           break;
         case ProductTypes.LOL:
-        case ProductTypes.COL:
+        case ProductTypes.COL1:
+        case ProductTypes.COL4:
           this.productName = "Lettere";
           break;
         case ProductTypes.AGOL:

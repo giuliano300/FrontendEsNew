@@ -58,7 +58,8 @@ export class RiepilogoSpedizioneComponent {
             this.ffwLink = "/statoInvii/1";
             break;
           case ProductTypes.LOL: 
-          case ProductTypes.COL: 
+          case ProductTypes.COL1: 
+          case ProductTypes.COL4: 
             this.productName = "lettera";
             this.ffwLink = "/statoInvii/2";
             break;

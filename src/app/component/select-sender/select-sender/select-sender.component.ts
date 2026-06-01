@@ -315,7 +315,8 @@ export class SelectSenderComponent {
           this.ffwLink = "/invioSingoloRaccomandata4";
           break;
         case ProductTypes.LOL:
-        case ProductTypes.COL:
+        case ProductTypes.COL1:
+        case ProductTypes.COL4:
           this.backLink = "/invioSingoloLettera2";
           this.ffwLink = "/invioSingoloLettera4";
           break;

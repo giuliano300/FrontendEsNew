@@ -89,7 +89,8 @@ export class CompilaBollettinoComponent {
             this.backLink = "/invioSingoloRaccomandata5";
             break;
           case ProductTypes.LOL: 
-          case ProductTypes.COL: 
+          case ProductTypes.COL1: 
+          case ProductTypes.COL4: 
             this.productName = "lettera";
             this.backLink = "/invioSingoloLettera5";
            break;

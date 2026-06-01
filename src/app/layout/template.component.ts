@@ -66,7 +66,7 @@ export class TemplateComponent {
   
     this.user! = JSON.parse(user!);    
     this.userName = this.user!.businessName;
-    if(this.user!.pwdOldSite && this.user!.guidUserOldSite)
+    if(this.user!.passwordOldSite && this.user!.usernameOldSite)
       this.isOldUser = true;
 
     // Controllo risoluzione iniziale
@@ -87,8 +87,8 @@ export class TemplateComponent {
     );
 
     const payload = {
-      guid: this.user?.guidUserOldSite,
-      pwd: this.user?.pwdOldSite,
+      email: this.user?.usernameOldSite,
+      pwd: this.user?.passwordOldSite,
       ts: new Date().getTime()
     };
 

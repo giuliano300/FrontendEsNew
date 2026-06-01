@@ -3,9 +3,10 @@ export enum ProductTypes {
     LOL = 2,
     TOL = 3,
     MOL = 4,
-    COL = 5, 
+    COL4 = 5, 
     AGOL = 6,
-    VOL = 7
+    VOL = 7,
+    COL1 = 8
   }
 
 export class ProductTypesClass {
@@ -14,9 +15,10 @@ export class ProductTypesClass {
     ProductTypes.LOL,
     ProductTypes.TOL,
     ProductTypes.MOL,
-    ProductTypes.COL,
+    ProductTypes.COL4,
     ProductTypes.AGOL,
-    ProductTypes.VOL
+    ProductTypes.VOL,
+    ProductTypes.COL1
   ];
 }
 
@@ -25,9 +27,10 @@ export const ProductTypeDescriptions: { [key in ProductTypes]: string } = {
   [ProductTypes.LOL]: 'LOL',
   [ProductTypes.TOL]: 'TOL',
   [ProductTypes.MOL]: 'MOL',
-  [ProductTypes.COL]: 'COL',
+  [ProductTypes.COL4]: 'COL4',
   [ProductTypes.AGOL]: 'AGOL',
-  [ProductTypes.VOL]: 'VOL'
+  [ProductTypes.VOL]: 'VOL',
+  [ProductTypes.COL1]: 'COL1'
 };
 
 export enum HaveBulletin{

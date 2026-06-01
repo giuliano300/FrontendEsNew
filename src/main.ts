@@ -7,8 +7,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import {importProvidersFrom } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
-// export const API_URL= 'https://backendnew.easysender.it/Api/';
-export const API_URL = 'http://localhost:5105/Api/';
+export const API_URL= 'https://backendnew.easysender.it/Api/';
+// export const API_URL = 'http://localhost:5105/Api/';
 export const secretKey = 'easysender2025!EWT';
 export const maxUploadLimit = 5000;
 
@@ -24,7 +24,7 @@ export const constPageSize = 20;
 export const expiredDate = new Date(2026, 8, 30).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
 export const loginSecretKey = '12345678901234567890123456789012';
 export const loginIV = '1234567890123456';
-export const loginUrl = 'http://localhost/WasySender/';
+export const loginUrl = 'https://app.easysender.it/';
 
 
 export enum sendType{

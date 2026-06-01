@@ -67,6 +67,8 @@ export class LoginComponent {
             this.user! = data.user;
 
             this.authService.saveLocalStorage(data);
+
+            //console.log('Login successful:', data);
             
             this.router.navigate(['/dashboard']);
           }

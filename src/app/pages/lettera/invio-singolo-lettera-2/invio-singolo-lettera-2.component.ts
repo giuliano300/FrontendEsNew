@@ -70,7 +70,7 @@ ngOnInit() {
   this.getTourInThisPage();
 
   const userProducts: UserProducts[] = JSON.parse(localStorage.getItem('userProducts') || 'null');
-    if(userProducts.some(product => product.type == ProductTypes.COL))
+    if(userProducts.some(product => product.type == ProductTypes.COL1))
       this.isHidden = false;
 }
 

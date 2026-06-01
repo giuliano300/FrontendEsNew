@@ -118,7 +118,8 @@ export class UploadCsvMultiploComponent {
               this.ffwLink = "/invioMultiploRaccomandata4";
               break;
             case ProductTypes.LOL:
-            case ProductTypes.COL:
+            case ProductTypes.COL1:
+            case ProductTypes.COL4:
               this.backLink = "/invioMultiploLettera2";
               this.ffwLink = "/invioMultiploLettera4";
               break;
