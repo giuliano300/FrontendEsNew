@@ -1,0 +1,10 @@
+<div *ngIf="visible && (message || strongMessage)" class="alert-message" role="alert">
+  <span>
+    <i [ngClass]="[icon, iconClass]" aria-hidden="true"></i>
+    <ng-container *ngIf="prefix">{{ prefix }}&nbsp;</ng-container>
+    <ng-container *ngIf="message">
+      <span [ngClass]="messageClass">{{ message }}</span>
+    </ng-container>
+    <strong *ngIf="strongMessage" class="color-red">{{ strongMessage }}</strong>
+  </span>
+</div>

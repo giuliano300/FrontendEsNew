@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
@@ -7,24 +10,27 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-sinc-bipiol',
-  imports: [CommonModule, NgxFileDropModule],
+  imports: [UiTourRestartComponent, CommonModule, NgxFileDropModule],
   templateUrl: './sinc-bipiol.component.html',
   styleUrl: './sinc-bipiol.component.scss'
 })
 export class SincBipiolComponent {
 
-    uploadProgress: number | null = null;
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+uploadProgress: number | null = null;
     uploadCompleted: boolean = false;
     erroreMessage: string | null = null;
     validMessage: string | null = null;
     preload: boolean = false;
 
-   constructor(private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService, private tourService: TourSeenService){}
+   constructor(private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService){}
 
    page: number = TourPage.sincBipiol;
 
@@ -43,7 +49,7 @@ export class SincBipiolComponent {
           this.uploadCompleted = false;
 
           fileEntry.file((file: File) => {
-            // Controlla se Ã¨ un file .txt
+            // Controlla se è un file .txt
             if (!file.name.endsWith('.txt')) {
               this.erroreMessage = "Sono ammessi solo file TXT.";
               return;
@@ -55,7 +61,7 @@ export class SincBipiolComponent {
               const textContent = reader.result as string;
 
               if (!textContent.trim()) {
-                this.erroreMessage = "Il file Ã¨ vuoto.";
+                this.erroreMessage = "Il file è vuoto.";
                 return;
               }
 
@@ -118,25 +124,7 @@ export class SincBipiolComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -145,16 +133,9 @@ export class SincBipiolComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

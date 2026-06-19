@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.restart-tour button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: .35rem;
+  padding: 0 0 0 20px;
+
+  i{
+    padding: 0 0 0 10px;
+  }
+}

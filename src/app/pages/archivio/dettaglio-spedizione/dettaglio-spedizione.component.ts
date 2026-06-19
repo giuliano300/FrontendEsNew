@@ -1,4 +1,7 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -12,7 +15,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GetDettaglioSpedizioneResponse } from '../../../interfaces/GetDettaglioSpedizioneResponse';
 import { OperationService } from '../../../services/operation.service';
-import { subscribe } from 'diagnostics_channel';
 import { Options, ProductTypeDescriptions, ProductTypes, RR } from '../../../interfaces/EnumTypes';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { Prices } from '../../../fncUtils/getPrices';
@@ -24,21 +26,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { Users } from '../../../interfaces/Users';
 import { UserProducts } from '../../../interfaces/UserProducts';
 import { UserOptions } from '../../../interfaces/UserOptions';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 
 
 
 @Component({
   selector: 'app-dettaglio-spedizione',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  imports: [UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
   providers: [
     { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
   ],
@@ -46,15 +45,18 @@ import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
   styleUrl: './dettaglio-spedizione.component.scss'
 })
 export class DettaglioSpedizioneComponent {
-  constructor(
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(
     private router: Router, 
     private  route: ActivatedRoute,
     private modalService: NgbModal,
     private operationservice: OperationService,
     private recipientService: RecipientService, 
     private dialog: MatDialog,
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private shepherdService: ShepherdService
   ) {}
 
   page: number = TourPage.dettaglioSpedizione;
@@ -88,7 +90,7 @@ export class DettaglioSpedizioneComponent {
 
   ngOnInit() {
 
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -98,10 +100,10 @@ export class DettaglioSpedizioneComponent {
 
     this.user! = JSON.parse(user!);
     
-    const userOptionsString = localStorage.getItem('userOptions');
+    const userOptionsString = this.appStorage.getItem('userOptions');
     this.userOptions = userOptionsString ? JSON.parse(userOptionsString) as UserOptions[] : [];
 
-    const userProductsString = localStorage.getItem('userProducts');
+    const userProductsString = this.appStorage.getItem('userProducts');
     this.userProducts = userProductsString ? JSON.parse(userProductsString) as UserProducts[] : [];
 
     this.route.paramMap.subscribe(params => {
@@ -243,10 +245,9 @@ export class DettaglioSpedizioneComponent {
   downloadFile(doc: string, element: any){
     this.recipientService.getFile(doc, element.id)
     .subscribe(response => {
-      console.log(response);
       if(!response)
       {
-        this.openDialog("Documento non disponibile","Il documento richiesto non Ã¨ disponibile per il download.");
+        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
         return;
       }
 
@@ -283,8 +284,6 @@ export class DettaglioSpedizioneComponent {
 
 
   downloadAllFilesAsZip(rr: boolean = true) {
-    const zip = new JSZip();
-    let count = 1;
 
     let doc = "attachedFile";
     if(rr){
@@ -310,7 +309,7 @@ export class DettaglioSpedizioneComponent {
         if (err.status === 404) {
           this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
         } else {
-          this.openDialog("Errore","Si Ã¨ verificato un errore durante il download.");
+          this.openDialog("Errore","Si è verificato un errore durante il download.");
         }
         this.isDowloadingFiles = false;
         this.isDowloadingFilesRR = false;
@@ -412,25 +411,7 @@ export class DettaglioSpedizioneComponent {
         
 
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -439,16 +420,9 @@ export class DettaglioSpedizioneComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -12,19 +15,22 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 
 @Component({
   selector: 'app-add-sender',
-  imports: [ReactiveFormsModule, CommonModule, NgbModule, CapitalizePipe],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, NgbModule, CapitalizePipe],
   templateUrl: './add-sender.component.html',
   styleUrl: './add-sender.component.scss'
 })
 export class AddSenderComponent {
 
-    form: FormGroup;
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+form: FormGroup;
     alertMessage = false;
     alertText = '';
     user: Users | null = null;
@@ -38,7 +44,7 @@ export class AddSenderComponent {
     alertState = alertState;
     inserisciModificaText = inserisciText;
 
-    constructor(private router: Router, private fb: FormBuilder, private userSenderService: UserSendersService, private route: ActivatedRoute, private shepherdService: ShepherdService, private tourService: TourSeenService) {
+    constructor(private router: Router, private fb: FormBuilder, private userSenderService: UserSendersService, private route: ActivatedRoute, private shepherdService: ShepherdService) {
       this.form = this.fb.group({
         businessName: ['', [Validators.required, Validators.maxLength(44)]],
         address: ['', [Validators.required]],
@@ -57,7 +63,7 @@ export class AddSenderComponent {
    page: number = TourPage.addSender;
 
     ngOnInit(): void {
-      const user = localStorage.getItem('user');
+      const user = this.appStorage.getItem('user');
       if (!user) {
         this.router.navigate(['/']);
         return;
@@ -83,7 +89,6 @@ export class AddSenderComponent {
           this.userSenderService.getUserSender(id)
           .subscribe((data: UserSenders) => {
           if (!data) {
-            console.log("errore nella risposta");
           } 
           else 
             this.form.patchValue({
@@ -120,7 +125,6 @@ export class AddSenderComponent {
         this.userSenderService.setUserSender(userData)
           .subscribe((data: UserSenders) => {
           if (!data) {
-            console.log('Nessun dato disponibile');
           } 
           this.router.navigate(['/userSenders']);
         });
@@ -130,7 +134,6 @@ export class AddSenderComponent {
         this.userSenderService.updateUserSender(userData)
           .subscribe((data: UserSenders) => {
           if (!data) {
-            console.log('Nessun dato disponibile');
           } 
           this.router.navigate(['/userSenders']);
         });
@@ -159,25 +162,7 @@ export class AddSenderComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -186,16 +171,9 @@ export class AddSenderComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

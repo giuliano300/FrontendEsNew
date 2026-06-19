@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
@@ -10,29 +13,32 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-stampa-unione',
-  imports: [CommonModule, NgxFileDropModule],
+  imports: [UiTourRestartComponent, CommonModule, NgxFileDropModule],
   templateUrl: './stampa-unione.component.html',
   styleUrl: './stampa-unione.component.scss'
 })
 export class StampaUnioneComponent {
-    uploadProgress: number | null = null;
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+uploadProgress: number | null = null;
     uploadCompleted: boolean = false;
     erroreMessage: string | null = null;
     validMessage: string | null = null;
     preload: boolean = false;
     user: Users | null = null;
 
-   constructor(private router: Router, private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService, private tourService: TourSeenService){}
+   constructor(private router: Router, private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService){}
 
     page: number = TourPage.stampaUnione;
 
 
   ngOnInit() {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -53,7 +59,7 @@ export class StampaUnioneComponent {
           this.uploadCompleted = false;
 
           fileEntry.file((file: File) => {
-            // Controlla se Ã¨ un file .zip
+            // Controlla se è un file .zip
             if (!file.name.endsWith('.zip')) {
               this.erroreMessage = "Sono ammessi solo file zip.";
               return;
@@ -62,7 +68,7 @@ export class StampaUnioneComponent {
             const reader = new FileReader();
 
             reader.onload = () => {
-            // reader.result Ã¨ di tipo ArrayBuffer
+            // reader.result è di tipo ArrayBuffer
               const arrayBuffer = reader.result as ArrayBuffer;
               
               // converto ArrayBuffer in Uint8Array
@@ -141,25 +147,7 @@ export class StampaUnioneComponent {
           ]
         },
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -168,16 +156,9 @@ export class StampaUnioneComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

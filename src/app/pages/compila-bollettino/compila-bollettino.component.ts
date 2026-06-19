@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -7,16 +10,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { alertBollCap, alertBollIndirizzo, alertBollLocalita, alertBollNominativo } from '../../enviroments/enviroments';
 import { Users } from '../../interfaces/Users';
 import { FormStorageService } from '../../services/form-storage.service';
-import { bulletin, secretKey } from '../../../main';
+import {  bulletin, secretKey  } from '@app/config/app-constants';
 import { ProductTypes } from '../../interfaces/EnumTypes';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { Bulletins } from '../../classes/Bulletins';
 import { Recipients } from '../../classes/Recipients';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
-import { TourSeenService } from '../../services/tourSeen.service';
 import { ComuniItaliani } from '../../interfaces/ComuniItaliani';
 import { HttpClient } from '@angular/common/http';
 import { UtilityService } from '../../services/utility.service';
@@ -25,18 +27,21 @@ import { UtilityService } from '../../services/utility.service';
 
 @Component({
   selector: 'app-compila-bollettino',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './compila-bollettino.component.html',
   styleUrl: './compila-bollettino.component.scss'
 })
 export class CompilaBollettinoComponent {
-  constructor(
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(
     private http: HttpClient, 
     private router: Router, 
     private utilService: UtilityService, 
     private formStorage: FormStorageService, 
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService) {}
+    private shepherdService: ShepherdService) {}
 
   page: number = TourPage.compilaBollettino;
 
@@ -193,25 +198,7 @@ export class CompilaBollettinoComponent {
         }
 
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -220,16 +207,9 @@ export class CompilaBollettinoComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

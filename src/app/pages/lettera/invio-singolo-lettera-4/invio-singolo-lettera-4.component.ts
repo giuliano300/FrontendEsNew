@@ -1,8 +1,9 @@
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
 
-import { bulletin } from '../../../../main';
-import { Component } from '@angular/core';
+import { bulletin } from '@app/config/app-constants';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { SelectRecipientComponent } from '../../../component/select-recipient/select-recipient/select-recipient.component';
 
 @Component({
@@ -12,6 +13,7 @@ import { SelectRecipientComponent } from '../../../component/select-recipient/se
   styleUrl: './invio-singolo-lettera-4.component.scss'
 })
 export class InvioSingoloLettera4Component {
+  private appStorage = inject(AppStorageService);
   constructor(private router: Router) {}
 
   bulletin: string | null = "senza bollettino";
@@ -19,7 +21,7 @@ export class InvioSingoloLettera4Component {
   user: Users | null  = null;
   
   getThisUser(){
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -31,7 +33,7 @@ export class InvioSingoloLettera4Component {
   ngOnInit(): void {
     this.getThisUser();
 
-      const bul = localStorage.getItem('bulletin')!;
+      const bul = this.appStorage.getItem('bulletin')!;
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
     

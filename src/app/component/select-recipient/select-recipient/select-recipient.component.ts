@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
+import { Component, inject } from '@angular/core';
 import { UserRecipientsService } from '../../../services/user-recipients.service';
 import { GlobalServicesService } from '../../../services/global-services.service';
 import { FormStorageService } from '../../../services/form-storage.service';
@@ -11,32 +14,34 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FncUtils } from '../../../fncUtils/fncUtils';
-import { secretKey } from '../../../../main';
+import {  secretKey  } from '@app/config/app-constants';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { ProductTypes } from '../../../interfaces/EnumTypes';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-select-recipient',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
   templateUrl: './select-recipient.component.html',
   styleUrl: './select-recipient.component.scss'
 })
 export class SelectRecipientComponent {
-  constructor(private router: Router, 
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, 
     private userRecipientService: UserRecipientsService,
     private globalServices: GlobalServicesService, 
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService,
-    private tourService: TourSeenService
+    private shepherdService: ShepherdService
   ) {}
 
   page: number = TourPage.selectRecipent;
@@ -96,7 +101,6 @@ export class SelectRecipientComponent {
     this.userRecipientService.getUserRecipient(id)
       .subscribe((data: UserRecipients) => {
         if (!data) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -123,7 +127,7 @@ export class SelectRecipientComponent {
   }
 
   getThisUser(){
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
       if (!user) {
         this.router.navigate(['/']);
         return;
@@ -136,7 +140,6 @@ export class SelectRecipientComponent {
     this.globalServices.getComuni()
       .subscribe((data: Comune[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -211,7 +214,6 @@ export class SelectRecipientComponent {
     this.userRecipientService.getUserRecipients(this.user!.id!)
       .subscribe((data: UserRecipients[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -335,7 +337,7 @@ export class SelectRecipientComponent {
         indirizzo: 'Indirizzo',
         cap: 'CAP',
         provincia: 'Provincia',
-        citta: 'CittÃ ',
+        citta: 'Città',
         stato: 'Stato',
         email: 'Email',
         pec: 'PEC',
@@ -417,25 +419,7 @@ export class SelectRecipientComponent {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -443,16 +427,9 @@ export class SelectRecipientComponent {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
 
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

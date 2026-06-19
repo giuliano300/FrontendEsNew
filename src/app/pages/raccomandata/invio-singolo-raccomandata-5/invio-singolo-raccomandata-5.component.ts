@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormStorageService } from '../../../services/form-storage.service';
-import { secretKey } from '../../../../main';
-import * as CryptoJS from 'crypto-js';
+import { secretKey } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 import { UploadFileComponent } from '../../../component/upload-file/upload-file/upload-file.component';
 
 

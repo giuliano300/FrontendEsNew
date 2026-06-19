@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { secretKey } from '../../../../main';
+import {  secretKey  } from '@app/config/app-constants';
 import { FormStorageService } from '../../../services/form-storage.service';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { Recipients } from '../../../classes/Recipients';
 import { checkRecipient } from '../../../fncUtils/CheckRecipient';
 
@@ -15,20 +18,23 @@ import { PdfBase64List } from '../../../classes/PdfBase64List';
 import { UploadZipComponent } from "../../../component/upload-zip/upload-zip.component";
 import { PopperPlacement } from 'shepherd.js';
 import { ShepherdService } from 'angular-shepherd';
-import { TourSeenService } from '../../../services/tourSeen.service';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { TourPage } from '../../../interfaces/EnumTypes';
 
 
 @Component({
   selector: 'app-invio-multiplo-lettera-4',
-  imports: [CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink, UploadZipComponent],
+  imports: [UiTourRestartComponent, CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink, UploadZipComponent],
   templateUrl: './invio-multiplo-lettera-4.component.html',
   styleUrl: './invio-multiplo-lettera-4.component.scss'
 })
 export class InvioMultiploLettera4Component  {
 
-  form: FormGroup;
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+form: FormGroup;
   uploadProgress: number | null = null;
   uploadCompleted: boolean = false;
   errorMessage: string | null = null;
@@ -46,8 +52,7 @@ export class InvioMultiploLettera4Component  {
 
   constructor(
     private fb: FormBuilder,
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService,   
+    private shepherdService: ShepherdService,   
     private router: Router,
     private formStorage: FormStorageService
   ) {
@@ -117,7 +122,7 @@ export class InvioMultiploLettera4Component  {
         },
         {
           id: 'uploadmulti2',
-          text: 'In questa sezione verrÃ  visualizzato il risultato del caricamento con eventuali errori.',
+          text: 'In questa sezione verrà visualizzato il risultato del caricamento con eventuali errori.',
           attachTo: {
             element: '.step-2',
             on: 'bottom' as PopperPlacement
@@ -146,25 +151,7 @@ export class InvioMultiploLettera4Component  {
         }
 
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -173,16 +160,9 @@ export class InvioMultiploLettera4Component  {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
   
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

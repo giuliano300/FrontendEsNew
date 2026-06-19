@@ -1,0 +1,7 @@
+<button type="submit" [class]="buttonClass" [disabled]="disabled || loading">
+  <span *ngIf="!loading">{{ label }}</span>
+  <span *ngIf="loading">
+    <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+    <ng-container *ngIf="loadingLabel">&nbsp;{{ loadingLabel }}</ng-container>
+  </span>
+</button>

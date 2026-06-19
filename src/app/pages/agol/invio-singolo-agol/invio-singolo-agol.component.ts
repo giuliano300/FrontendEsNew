@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { sendType } from '../../../../main';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { sendType } from '@app/config/app-constants';
 import { SelectionWithWithoutBulletinComponent } from '../../../component/selection-with-without-bulletin/selection-with-without-bulletin.component';
 
 @Component({
@@ -9,11 +10,12 @@ import { SelectionWithWithoutBulletinComponent } from '../../../component/select
   styleUrl: './invio-singolo-agol.component.scss'
 })
 export class InvioSingoloAgolComponent {
+  private appStorage = inject(AppStorageService);
   tipoInvio = sendType.singolo
 
   constructor() {}
 
   ngOnInit(): void{
-    localStorage.setItem('sendType', this.tipoInvio!.toString());
+    this.appStorage.setItem('sendType', this.tipoInvio!.toString());
   }
 }

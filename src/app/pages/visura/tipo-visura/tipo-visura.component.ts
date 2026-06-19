@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { UiAlertComponent } from '@app/shared/ui';
 
 @Component({
   selector: 'app-tipo-visura',
-  imports: [ReactiveFormsModule, RouterModule, CommonModule],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule, UiAlertComponent],
   templateUrl: './tipo-visura.component.html',
   styleUrl: './tipo-visura.component.scss'
 })

@@ -168,9 +168,7 @@
 
     <div class="row mt-3">
       <div class="col-lg-12 text-center">
-        <div *ngIf="alertMessage" class="alert-message">
-          <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span>
-        </div>
+        <app-ui-alert [visible]="alertMessage" [message]="alertText" />
       </div>
     </div>
 

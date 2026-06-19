@@ -5,12 +5,12 @@ import {  NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { secretKey } from '../../../../main';
+import { secretKey } from '@app/config/app-constants';
 import { FormStorageService } from '../../../services/form-storage.service';
 import { PdfBase64List } from '../../../classes/PdfBase64List';
 import { Recipients } from '../../../classes/Recipients';
 import { checkRecipient } from '../../../fncUtils/CheckRecipient';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { UploadZipComponent } from "../../../component/upload-zip/upload-zip.component";
 
 @Component({
@@ -72,7 +72,6 @@ export class InvioMultiploAgol4Component {
     this.checkRecipient = results;
 
     // qui puoi usarli come vuoi
-    console.log('Ricevuti risultati:', this.checkRecipient);
   }
 
   onSubmit() {

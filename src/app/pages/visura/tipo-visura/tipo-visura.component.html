@@ -38,10 +38,9 @@
                     <input type="submit" value="AVANTI" />
                 </div>
             
-                <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
-                <div *ngIf="alertMessage" class="alert-message">
-                <span><i class='bx bxs-error color-orange'></i> Seleziona un tipo di richiesta per procedere.</span> 
-                </div>
+                <app-ui-alert
+                    [visible]="alertMessage"
+                    message="Seleziona un tipo di richiesta per procedere." />
             </form>
         </div>
     </div>

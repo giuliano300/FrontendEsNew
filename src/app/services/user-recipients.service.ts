@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserRecipients } from '../interfaces/UserRecipients';
 import { catchError, Observable } from 'rxjs';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

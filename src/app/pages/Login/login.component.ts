@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Login } from '../../interfaces/Login';
 import { Router, RouterLink } from '@angular/router';
 import { Users } from '../../interfaces/Users';
+import { AppStorageService } from '../../services/app-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { Users } from '../../interfaces/Users';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private storage: AppStorageService) {}
 
   errorMessage: string | null = null;
   user: Users  | null = null;
@@ -26,7 +27,7 @@ export class LoginComponent {
   });
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
+    const token = this.storage.getAuthToken();
     if (token) 
       this.router.navigate(['/dashboard']);
   }
@@ -56,7 +57,7 @@ export class LoginComponent {
             if (data.user.doubleFactor === true) {
 
               // Salvo temporaneamente i dati necessari
-              localStorage.setItem('pending2faData', JSON.stringify(data));
+              this.storage.setPending2faData(data);
 
               // Vai pagina verifica codice OTP
               this.router.navigate(['/two-factor']);
@@ -68,7 +69,6 @@ export class LoginComponent {
 
             this.authService.saveLocalStorage(data);
 
-            //console.log('Login successful:', data);
             
             this.router.navigate(['/dashboard']);
           }

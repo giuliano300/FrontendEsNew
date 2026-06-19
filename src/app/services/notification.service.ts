@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { Notifications } from '../interfaces/Notifications';
 import { HttpLoggingService } from '../wrapper/http-logging.service';
 

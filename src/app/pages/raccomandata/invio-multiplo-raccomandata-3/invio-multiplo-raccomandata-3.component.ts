@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 // Import Angular Material modules necessari
 import { FormStorageService } from '../../../services/form-storage.service';
 import { Component } from '@angular/core';
-import { secretKey } from '../../../../main';
+import { secretKey } from '@app/config/app-constants';
 import { UploadCsvMultiploComponent } from "../../../component/upload-csv-multiplo/upload-csv-multiplo.component";
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-3',

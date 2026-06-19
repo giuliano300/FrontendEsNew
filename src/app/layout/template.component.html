@@ -22,51 +22,36 @@
                 </a>
               </div>
       
-              <ul class="header__menu">
-                <li><a routerLink="/dashboard">Home</a></li>
-                <li><a routerLink="/nuovaSpedizione">Nuova spedizione</a></li>
-                <li class="has-chid">
-                  <a>Stato invii</a>
-                  <ul>
-                      <li><a routerLink="/statoInvii/1">Stato invii Raccomandate</a></li>
-                      <li><a routerLink="/statoInvii/2">Stato invii Lettere</a></li>
-                      <li><a routerLink="/statoInvii/3">Stato invii Telegrammi</a></li>
-                      <li><a routerLink="/statoInvii/6">Stato invii Agol</a></li>
-                      <li><a routerLink="/statoInvii/7">Stato richieste Visure/Certificati</a></li>
+              <ul class="header__menu" role="menubar">
+                <li *ngFor="let item of mainNavigation; trackBy: trackByLabel" [class.has-child]="item.children?.length" [class.active]="isActive(item)">
+                  <a *ngIf="item.path; else navGroup" [routerLink]="item.path" [attr.aria-current]="isActive(item) ? 'page' : null">{{ item.label }}</a>
+                  <ng-template #navGroup>
+                    <button type="button" class="nav-button" [attr.aria-expanded]="isActive(item)">
+                      {{ item.label }}
+                    </button>
+                  </ng-template>
+                  <ul *ngIf="item.children as children">
+                      <li *ngFor="let child of children; trackBy: trackByLabel" [class.active]="isActive(child)">
+                        <a [routerLink]="child.path" [attr.aria-current]="isActive(child) ? 'page' : null">{{ child.label }}</a>
+                      </li>
                   </ul>
                 </li>
-                <li class="has-chid">
-                  <a>Archivio</a>
-                  <ul>
-                      <li><a routerLink="/archivioSpedizioni">Archivio spedizioni</a></li>
-                      <li><a routerLink="/archivioVisure">Archivio visure/certificati</a></li>
-                  </ul>
-                </li>
-                <li class="has-chid">
-                      <a>Report</a>
-                      <ul>
-                          <li><a routerLink="/reportSpedizioni">Report spedizioni</a></li>
-                          <li><a routerLink="/reportSpedizioniBollettini">Report spedizioni con bollettini</a></li>
-                      </ul>
-                </li>
-                <li class="has-chid">
-                      <a>Utility</a>
-                      <ul>
-                          <li><a routerLink="/sincBipiol">Sincronizzazione Bipiol</a></li>
-                          <li><a routerLink="/stampaUnione">Stampa & Unione</a></li>
-                          <li><a routerLink="/unionePdf">Unione PDF</a></li>
-                          <li><a routerLink="/comprimiPdf">Comprimi PDF</a></li>
-                          <li><a routerLink="/fileEsempio">File di esempio</a></li>
-                      </ul>
-                </li>
-                <li><a routerLink="/comunicazioni">Comunicazioni</a></li>
               </ul>
 
               <ul class="header__quick">
+                  <li class="nav-search">
+                    <input type="search" [value]="navSearch" placeholder="Cerca funzione" aria-label="Cerca funzione" (input)="onNavigationSearch($event)" (keydown.escape)="clearNavigationSearch()">
+                    <div class="nav-search__results" *ngIf="searchResults.length">
+                      <a *ngFor="let result of searchResults; trackBy: trackByLabel" [routerLink]="result.path" (click)="clearNavigationSearch()">
+                        <span>{{ result.label }}</span>
+                        <small>{{ result.group }}</small>
+                      </a>
+                    </div>
+                  </li>
                   <li>
-                    <a id="open-side-menu" (click)="OpenMenu()">
+                    <button type="button" id="open-side-menu" class="quick-button" aria-label="Apri menu utente" [attr.aria-expanded]="isMenuOpen" (click)="OpenMenu()">
                       <img src="/assets/img/icn-usr-menu.png" />
-                    </a>
+                    </button>
                 </li>
 
               </ul>
@@ -92,10 +77,10 @@
   </header>
 
 
-  <div class="side-menu">
+  <div class="side-menu" [class.open]="isMenuOpen" aria-label="Menu utente">
 
     <div class="close-menu" >
-      <a (click)="CloseMenu()"><i class='bx bx-x'></i></a>
+      <button type="button" aria-label="Chiudi menu utente" (click)="CloseMenu()"><i class='bx bx-x'></i></button>
     </div>
 
     <div class="header__user">
@@ -105,19 +90,24 @@
 
     <div class="user-menu">
       <ul>
-        <li>-&nbsp;&nbsp;<a routerLink="/datiPersonali" (click)="CloseMenu()">DATI PERSONALI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="/utentiList" (click)="CloseMenu()">UTENTI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="/userSenders" (click)="CloseMenu()">RUBRICA MITTENTI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="/rubricaDestinatari" (click)="CloseMenu()">RUBRICA DESTINATARI</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="/personalizzazioneCover" (click)="CloseMenu()">PERSONALIZZAZIONE COVER</a></li>
-        <li>-&nbsp;&nbsp;<a routerLink="/erroriNotificati" (click)="CloseMenu()">ERRORI NOTIFICATI</a></li>
-        <li>-&nbsp;&nbsp;<a (click)="logout()">LOGOUT</a></li>
+        <li *ngFor="let item of userNavigation; trackBy: trackByLabel" [class.active]="isActive(item)">
+          <a [routerLink]="item.path" (click)="CloseMenu()">
+            <i class='bx' [ngClass]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+        <li>
+          <button type="button" class="logout-button" (click)="logout()">
+            <i class='bx bx-log-out'></i>
+            <span>Logout</span>
+          </button>
+        </li>
       </ul>
     </div>
 
   </div>
 
-  <div class="menu-overlay" (click)="CloseMenu()"></div>
+  <div class="menu-overlay" [class.visible]="isMenuOpen" (click)="CloseMenu()"></div>
   
   <main  [ngClass]="{ 'main-old-user': isOldUser }">
     <router-outlet></router-outlet>

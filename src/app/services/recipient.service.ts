@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { Observable } from 'rxjs';
 import { GetDettaglioDestinatario } from '../interfaces/GetDettaglioDestinatario';
 import { GetReportSpedizioniResponse } from '../interfaces/GetReportSpedizioniResponse';

@@ -1,21 +1,27 @@
-import { Component } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormStorageService } from '../../services/form-storage.service';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
-import { TourSeenService } from '../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-nuova-spedizione',
-  imports: [RouterLink],
+  imports: [UiTourRestartComponent, RouterLink],
   templateUrl: './nuova-spedizione.component.html',
   styleUrl: './nuova-spedizione.component.scss'
 })
 export class NuovaSpedizioneComponent {
-    constructor(private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private formStorage: FormStorageService, private shepherdService: ShepherdService) {}
     
     page: number = TourPage.nuovaSpedizione;
     
@@ -43,25 +49,7 @@ export class NuovaSpedizioneComponent {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -72,15 +60,8 @@ export class NuovaSpedizioneComponent {
       this.startTour();
     }
 
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
-
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

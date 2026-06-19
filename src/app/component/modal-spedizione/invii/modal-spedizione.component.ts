@@ -12,7 +12,15 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ModalSpedizioneComponent  {
   currentModalRef: any;
-  @Input() modalData!: GetDettaglioDestinatario;
+  @Input() modalData: GetDettaglioDestinatario = {
+    sender: { businessName: '' },
+    recipient: {
+      businessName: '',
+      code: '',
+      insertDate: new Date().toISOString()
+    },
+    historicRecipientStatuses: []
+  } as unknown as GetDettaglioDestinatario;
 
   constructor(public activeModal: NgbActiveModal) {
   }

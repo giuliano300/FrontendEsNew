@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
 import { SelectSenderComponent } from '../../../component/select-sender/select-sender/select-sender.component';
-import { bulletin, secretKey } from '../../../../main';
+import { bulletin, secretKey } from '@app/config/app-constants';
 import { FormStorageService } from '../../../services/form-storage.service';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 
 
 @Component({
@@ -14,6 +15,7 @@ import * as CryptoJS from 'crypto-js';
   styleUrl: './invio-singolo-raccomandata-3.component.scss'
 })
 export class InvioSingoloRaccomandata3Component {
+  private appStorage = inject(AppStorageService);
 
   constructor(private router: Router,     private formStorage: FormStorageService,
   ) {}  
@@ -22,7 +24,7 @@ export class InvioSingoloRaccomandata3Component {
   bulletin: string | null = "senza bollettino";
 
  getThisUser(){
-  const user = localStorage.getItem('user');
+  const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -35,7 +37,7 @@ export class InvioSingoloRaccomandata3Component {
   ngOnInit(): void {
     this.getThisUser();
 
-      const bul = localStorage.getItem('bulletin')!;
+      const bul = this.appStorage.getItem('bulletin')!;
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
     

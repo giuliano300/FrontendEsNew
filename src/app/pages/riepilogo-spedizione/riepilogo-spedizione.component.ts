@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { secretKey } from '../../../main';
+import { secretKey } from '@app/config/app-constants';
 import { FormStorageService } from '../../services/form-storage.service';
 import { ProductTypes } from '../../interfaces/EnumTypes';
 import { CommonModule } from '@angular/common';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { FncUtils } from '../../fncUtils/fncUtils';
 import { UtilityService } from '../../services/utility.service';
 

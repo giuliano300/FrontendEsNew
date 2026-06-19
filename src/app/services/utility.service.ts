@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ZipStampaUnioneRequest } from '../interfaces/ZipStampaUnioneRequest';
@@ -9,6 +9,7 @@ import { PdfUnioneResponse } from '../interfaces/PdfUnioneResponse';
 import { ComuniItaliani } from '../interfaces/ComuniItaliani';
 import { UserProducts } from '../interfaces/UserProducts';
 import { ProductTypes } from '../interfaces/EnumTypes';
+import { AppStorageService } from './app-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class UtilityService {
 
    private apiUrl = API_URL;
     
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private storage: AppStorageService) {}
 
   SignBullettinPaidAndReturnCSV(txtBase64: string): Observable<string> {
     return this.http.post(this.apiUrl + "Bulletins/SignBullettinPaidAndReturnCSV", 
@@ -42,9 +43,7 @@ export class UtilityService {
   }
 
   getRealProduct(id: number, posteType?: string): number {
-    const userProducts: UserProducts[] = JSON.parse(
-      localStorage.getItem('userProducts') || 'null'
-    );
+    const userProducts: UserProducts[] = this.storage.getUserProducts();
 
     if (!userProducts) {
       return id;

@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { PasswordRecoveryService } from '../../services/passwordRecovery.service';
+import { AppStorageService } from '../../services/app-storage.service';
 
 @Component({
   selector: 'app-password-component',
@@ -11,7 +12,11 @@ import { PasswordRecoveryService } from '../../services/passwordRecovery.service
   styleUrl: './password-recovery.component.scss'
 })
 export class PasswordRecoveryComponent {
-  constructor(private passwordRecoveryService: PasswordRecoveryService, private router: Router) {}
+  constructor(
+    private passwordRecoveryService: PasswordRecoveryService,
+    private router: Router,
+    private storage: AppStorageService
+  ) {}
 
   errorMessage: string | null = null;
   message: string | null = null;
@@ -21,7 +26,7 @@ export class PasswordRecoveryComponent {
   });
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
+    const token = this.storage.getAuthToken();
     if (token) 
       this.router.navigate(['/dashboard']);
   }

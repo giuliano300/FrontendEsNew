@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
 import { SelectSenderComponent } from '../../../component/select-sender/select-sender/select-sender.component';
-import { bulletin } from '../../../../main';
+import { bulletin } from '@app/config/app-constants';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { bulletin } from '../../../../main';
   styleUrl: './invio-singolo-agol-3.component.scss'
 })
 export class InvioSingoloAgol3Component {
+  private appStorage = inject(AppStorageService);
 
   constructor(private router: Router) {}  
   user: Users | null  = null;
@@ -19,7 +21,7 @@ export class InvioSingoloAgol3Component {
   bulletin: string | null = "senza bollettino";
 
  getThisUser(){
-  const user = localStorage.getItem('user');
+  const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -32,7 +34,7 @@ export class InvioSingoloAgol3Component {
   ngOnInit(): void {
     this.getThisUser();
 
-      const bul = localStorage.getItem('bulletin')!;
+      const bul = this.appStorage.getItem('bulletin')!;
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
     

@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -26,8 +22,7 @@
         <input type="submit" value="AVANTI" />
     </div>
 
-    <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
-    <div *ngIf="alertMessage" class="alert-message">
-      <span><i class='bx bxs-error color-orange'></i> Seleziona il tipo di documento da inviare.</span> 
-    </div>
+    <app-ui-alert
+      [visible]="alertMessage"
+      message="Seleziona il tipo di documento da inviare." />
 </form>

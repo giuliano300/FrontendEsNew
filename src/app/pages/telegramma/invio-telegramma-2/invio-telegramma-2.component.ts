@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { Router } from '@angular/router';
 import { SelectSenderComponent } from "../../../component/select-sender/select-sender/select-sender.component";
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from '../../../../main';
+import { CryptoJS } from '@app/utils/crypto';
+import { secretKey } from '@app/config/app-constants';
 import { FormStorageService } from '../../../services/form-storage.service';
 
 
@@ -13,12 +14,13 @@ import { FormStorageService } from '../../../services/form-storage.service';
   styleUrl: './invio-telegramma-2.component.scss'
 })
 export class InvioTelegramma2Component {
+  private appStorage = inject(AppStorageService);
 
   constructor(private router: Router, private formStorage: FormStorageService) {}  
   rr: string = "Con ";
   
  getThisUser(){
-  const user = localStorage.getItem('user');
+  const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;

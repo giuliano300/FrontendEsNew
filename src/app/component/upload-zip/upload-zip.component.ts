@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { PdfBase64List } from '../../classes/PdfBase64List';
 import { Recipients } from '../../classes/Recipients';
 import { checkRecipient } from '../../fncUtils/CheckRecipient';
@@ -9,10 +10,9 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { FormStorageService } from '../../services/form-storage.service';
 import { ShepherdService } from 'angular-shepherd';
-import { TourSeenService } from '../../services/tourSeen.service';
 import { CommonModule } from '@angular/common';
-import { API_URL, secretKey } from '../../../main';
-import * as CryptoJS from 'crypto-js';
+import { API_URL, secretKey } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 
 
 @Component({
@@ -22,14 +22,14 @@ import * as CryptoJS from 'crypto-js';
   styleUrl: './upload-zip.component.scss'
 })
 export class UploadZipComponent {
+  private appStorage = inject(AppStorageService);
   
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private shepherdService: ShepherdService
 
   ) {}
 
@@ -51,7 +51,7 @@ export class UploadZipComponent {
     @Output() checkRecipient = new EventEmitter<checkRecipient[]>();
 
   onFileDrop(files: NgxFileDropEntry[]) {
-    const u = localStorage.getItem('user');
+    const u = this.appStorage.getItem('user');
     let user: Users | null = null;
       if (!u) {
         this.router.navigate(['/']);

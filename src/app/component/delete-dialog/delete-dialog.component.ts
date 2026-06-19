@@ -27,12 +27,10 @@ export class DeleteDialogComponent {
   }
 
   onDelete(): void {
-    console.log('Elemento eliminato:', this.data);
     switch(this.data.type){
       case "userSender":
         this.userSenderService.deleteUserSender(this.data.id).subscribe({
           next: (response) => {
-            console.log('Utente eliminato con successo:', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -43,7 +41,6 @@ export class DeleteDialogComponent {
       case "users":
         this.usersService.deleteUser(this.data.id).subscribe({
           next: (response) => {
-            console.log('Utente eliminato con successo:', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -54,7 +51,6 @@ export class DeleteDialogComponent {
       case "userRecipient":
         this.userRecipientService.deleteUserRecipient(this.data.id).subscribe({
           next: (response) => {
-            console.log('Destinatario eliminato con successo:', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -65,7 +61,6 @@ export class DeleteDialogComponent {
       case "userLogos":
         this.userLogoService.deleteUserLogos(this.data.id).subscribe({
           next: (response) => {
-            console.log('Destinatario eliminato con successo:', response);
             this.dialogRef.close(true);
           },
           error: (error) => {

@@ -1,4 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiEmptyStateComponent } from '@app/shared/ui';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -18,17 +21,20 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-rubrica-destinatari',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule,RouterLink, CommonModule],
+  imports: [UiEmptyStateComponent, UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, RouterLink, CommonModule],
   templateUrl: './rubrica-destinatari.component.html',
   styleUrl: './rubrica-destinatari.component.scss'
 })
 export class RubricaDestinatariComponent {
 
-  constructor(private router: Router, private userRecipientService: UserRecipientsService, private dialog: MatDialog, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private userRecipientService: UserRecipientsService, private dialog: MatDialog, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.rubricaDestinatari;
 
@@ -47,7 +53,7 @@ export class RubricaDestinatariComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -63,7 +69,6 @@ export class RubricaDestinatariComponent {
     this.userRecipientService.getUserRecipients(this.user!.id!)
     .subscribe((data: UserRecipients[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } else {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -120,7 +125,7 @@ export class RubricaDestinatariComponent {
           },
           {
             id: 'archiviovisure1',
-            text: "In questa tabella Ã¨ riportata la lista dei destinatari.",
+            text: "In questa tabella è riportata la lista dei destinatari.",
             attachTo: {
               element: '.step-end',
               on: 'bottom' as PopperPlacement
@@ -133,25 +138,7 @@ export class RubricaDestinatariComponent {
             ]
           }
         ];
-  
-      // Abilita il dark overlay
-      this.shepherdService.modal = true;
-  
-      // Opzioni di default per tutti gli step
-      this.shepherdService.defaultStepOptions = {
-        scrollTo: true,
-        cancelIcon: { enabled: true },
-        classes: 'shepherd-theme-arrows'
-      };
-  
-      // Carica e avvia il tour
-      this.shepherdService.addSteps(steps);
-  
-      // Ritarda il primo step
-      setTimeout(() => {
-        this.shepherdService.start();
-        this.completeTour();
-      }, 300);
+    this.appTour.start(this.page, steps);
   
     }
   
@@ -160,16 +147,9 @@ export class RubricaDestinatariComponent {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
   
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

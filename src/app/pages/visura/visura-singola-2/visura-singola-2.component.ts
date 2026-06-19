@@ -1,13 +1,16 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, alertState } from '../../../enviroments/enviroments';
 import { FormStorageService } from '../../../services/form-storage.service';
-import { secretKey } from '../../../../main';
-import * as CryptoJS from 'crypto-js';
+import {  secretKey  } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 import { UserSendersService } from '../../../services/user-senders.service';
 import { UserSenders } from '../../../interfaces/UserSenders';
 import { Observable, of } from 'rxjs';
@@ -17,17 +20,20 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-visura-singola-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink, NgbModule],
   templateUrl: './visura-singola-2.component.html',
   styleUrl: './visura-singola-2.component.scss'
 })
 export class VisuraSingola2Component {
 
-  constructor(private router: Router, private userSendersService: UserSendersService,  private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private userSendersService: UserSendersService,  private formStorage: FormStorageService, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.visuraSingola2;
 
@@ -75,10 +81,10 @@ export class VisuraSingola2Component {
   });
 
   ngOnInit(): void {
-    const navigationState = history.state;
-    const tipoDestinatario = navigationState.tipoDestinatario;
+    const navigationState = history.state ?? {};
+    const tipoDestinatario = navigationState?.tipoDestinatario;
 
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -91,11 +97,13 @@ export class VisuraSingola2Component {
           this.formStorage.getForm('step2')
         ])
         .then(([step1]) => {
+          if (!step1) {
+            return;
+          }
           const datiDecriptati = JSON.parse(CryptoJS.AES.decrypt(step1, secretKey).toString(CryptoJS.enc.Utf8));
-          console.log(datiDecriptati);
     })
       
-    // Se Ã¨ "DestinatarioSI", mostra i campi destinatarioAR
+    // Se è "DestinatarioSI", mostra i campi destinatarioAR
     if (tipoDestinatario === 'SI') {
       this.form.get('destinatario')?.setValue(false); // Mostra il destinatario alternativo
     } else {
@@ -123,7 +131,6 @@ export class VisuraSingola2Component {
     this.userSendersService.getUserSenders(this.user!.id!)
       .subscribe((data: UserSenders[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -165,7 +172,6 @@ export class VisuraSingola2Component {
     this.userSendersService.getUserSender(id)
       .subscribe((data: UserSenders) => {
         if (!data) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -305,25 +311,7 @@ export class VisuraSingola2Component {
         ]
       }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -332,16 +320,9 @@ export class VisuraSingola2Component {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }
@@ -358,7 +339,7 @@ function checkFormErrors(form: FormGroup | FormArray) {
       //console.warn(`Errore nel campo: ${field}`, control.errors);
     //}
 
-    // Ricorsione se Ã¨ un gruppo o un array
+    // Ricorsione se è un gruppo o un array
     if (control instanceof FormGroup || control instanceof FormArray) {
       checkFormErrors(control);
     }
@@ -376,5 +357,4 @@ function markAllFieldsAsTouched(control: AbstractControl) {
 
   
 }
-
 

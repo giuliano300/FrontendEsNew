@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectionSingleWithWithoutBulletinComponent } from './selection-single-with-without-bulletin.component';
+import { SelectionWithWithoutBulletinComponent } from './selection-with-without-bulletin.component';
 
-describe('SelectionSingleWithWithoutBulletinComponent', () => {
-  let component: SelectionSingleWithWithoutBulletinComponent;
-  let fixture: ComponentFixture<SelectionSingleWithWithoutBulletinComponent>;
+describe('SelectionWithWithoutBulletinComponent', () => {
+  let component: SelectionWithWithoutBulletinComponent;
+  let fixture: ComponentFixture<SelectionWithWithoutBulletinComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectionSingleWithWithoutBulletinComponent]
+      imports: [SelectionWithWithoutBulletinComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SelectionSingleWithWithoutBulletinComponent);
+    fixture = TestBed.createComponent(SelectionWithWithoutBulletinComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

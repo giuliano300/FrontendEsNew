@@ -1,3 +1,4 @@
+import { UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,7 +7,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-invio-pacco',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [UiAlertComponent, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './invio-pacco.component.html',
   styleUrl: './invio-pacco.component.scss'
 })

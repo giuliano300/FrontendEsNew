@@ -1,4 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -15,16 +18,19 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-errori-notificati',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, CommonModule],
+  imports: [UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, CommonModule],
   templateUrl: './errori-notificati.component.html',
   styleUrl: './errori-notificati.component.scss'
 })
 export class ErroriNotificatiComponent {
-    constructor(private router: Router, private recipientService: RecipientService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private recipientService: RecipientService, private shepherdService: ShepherdService) {}
   
     page: number = TourPage.erroriNotificati;
     infoBtnEdit = infoBtnEdit;
@@ -40,7 +46,7 @@ export class ErroriNotificatiComponent {
     @ViewChild(MatSort) sort!: MatSort;
 
     ngOnInit(): void {
-      const user = localStorage.getItem('user');
+      const user = this.appStorage.getItem('user');
       if (!user) {
         this.router.navigate(['/']);
         return;
@@ -56,7 +62,6 @@ export class ErroriNotificatiComponent {
       this.recipientService.getErroriNotificati(this.user!.id!, true)
       .subscribe((data: Recipients[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } else {
           this.dataSource.data = data;
           this.dataSource.paginator = this.paginator;
@@ -92,25 +97,7 @@ export class ErroriNotificatiComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -119,16 +106,9 @@ export class ErroriNotificatiComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

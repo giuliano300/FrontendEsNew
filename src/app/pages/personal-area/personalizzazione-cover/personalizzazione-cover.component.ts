@@ -1,4 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiEmptyStateComponent } from '@app/shared/ui';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -18,23 +21,26 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-personalizzazione-cover',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule,RouterLink, CommonModule],
+  imports: [UiEmptyStateComponent, UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, RouterLink, CommonModule],
   templateUrl: './personalizzazione-cover.component.html',
   styleUrl: './personalizzazione-cover.component.scss'
 })
 export class PersonalizzazioneCoverComponent {
 
-  displayedColumns: string[] = ['name','logo', 'delete'];
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+displayedColumns: string[] = ['name','logo', 'delete'];
 
   UserLogos: UserLogos[] = [];
 
   user: Users | null  = null;
 
-  constructor(private router: Router, private userLogosService: UserLogosService, private dialog: MatDialog, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  constructor(private router: Router, private userLogosService: UserLogosService, private dialog: MatDialog, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.personalizzazioneCover;
 
@@ -56,7 +62,7 @@ export class PersonalizzazioneCoverComponent {
   }
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -72,7 +78,6 @@ export class PersonalizzazioneCoverComponent {
     this.userLogosService.getUserLogos(this.user!.id!)
     .subscribe((data: UserLogos[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } else {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -119,7 +124,7 @@ export class PersonalizzazioneCoverComponent {
         },
         {
           id: 'personalizzazionecover2',
-          text: "In questa tabella Ã¨ riportata la lista dei loghi che puoi utilizzare.",
+          text: "In questa tabella è riportata la lista dei loghi che puoi utilizzare.",
           attachTo: {
             element: '.step-end',
             on: 'bottom' as PopperPlacement
@@ -132,25 +137,7 @@ export class PersonalizzazioneCoverComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -159,16 +146,9 @@ export class PersonalizzazioneCoverComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }
@@ -182,5 +162,4 @@ export class PersonalizzazioneCoverComponent {
 const USER_DATA = [
   { name:'Easyway Technology' },
 ];
-
 

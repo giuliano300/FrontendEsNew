@@ -35,7 +35,6 @@ export class RendicontazioneFattureComponent {
             if (event.type === HttpEventType.UploadProgress && event.total) {
               this.uploadProgress = Math.round((event.loaded / event.total) * 100);
             } else if (event.type === HttpEventType.Response) {
-              console.log('Upload completato', event.body);
               this.uploadProgress = 100;
               this.uploadCompleted = true;
             }

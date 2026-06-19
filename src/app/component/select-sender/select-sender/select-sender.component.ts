@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -18,8 +21,8 @@ import { Comune } from '../../../interfaces/Comune';
 import { filter, map, Observable, of, startWith } from 'rxjs';
 import { GlobalServicesService } from '../../../services/global-services.service';
 import { FormStorageService } from '../../../services/form-storage.service';
-import { secretKey } from '../../../../main';
-import * as CryptoJS from 'crypto-js';
+import {  secretKey  } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 import { ProductTypes } from '../../../interfaces/EnumTypes';
 
 import { ShepherdService } from 'angular-shepherd';
@@ -27,21 +30,24 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 
 
 @Component({
   selector: 'app-select-sender',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
   templateUrl: './select-sender.component.html',
   styleUrl: './select-sender.component.scss'
 })
 export class SelectSenderComponent {
 
-  constructor(private router: Router, private userSendersService: UserSendersService, 
-    private globalServices: GlobalServicesService, private formStorage: FormStorageService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private userSendersService: UserSendersService, 
+    private globalServices: GlobalServicesService, private formStorage: FormStorageService, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.selectSender;
 
@@ -97,7 +103,7 @@ export class SelectSenderComponent {
   
 
   getThisUser(){
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -112,9 +118,9 @@ export class SelectSenderComponent {
         //tipoColore: this.form.value.tipoColore,
         //tipoStampa: this.form.value.tipoStampa,
         //tipoRicevuta: this.form.value.tipoRicevuta,
-        //tipoinvio: localStorage.getItem('sendType'),
-        //prodotto: localStorage.getItem('productType'),
-        //bollettino:  localStorage.getItem('bulletin'),
+        //tipoinvio: this.appStorage.getItem('sendType'),
+        //prodotto: this.appStorage.getItem('productType'),
+        //bollettino:  this.appStorage.getItem('bulletin'),
       //};
 
   }
@@ -123,7 +129,6 @@ export class SelectSenderComponent {
     this.userSendersService.getUserSender(id)
       .subscribe((data: UserSenders) => {
         if (!data) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -175,7 +180,6 @@ export class SelectSenderComponent {
     this.globalServices.getComuni()
       .subscribe((data: Comune[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -344,9 +348,9 @@ export class SelectSenderComponent {
 
     this.form.get('destinatario')?.valueChanges.subscribe((checked) => {
       if (!checked) {
-        this.setDestinatarioARValidators(true); // checkbox NON selezionato → attiva i campi AR
+        this.setDestinatarioARValidators(true); // checkbox NON selezionato ? attiva i campi AR
       } else {
-        this.setDestinatarioARValidators(false); // checkbox selezionato → disattiva i campi AR
+        this.setDestinatarioARValidators(false); // checkbox selezionato ? disattiva i campi AR
       }
     });
 
@@ -361,7 +365,6 @@ export class SelectSenderComponent {
     this.userSendersService.getUserSenders(this.user!.id!)
       .subscribe((data: UserSenders[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -452,14 +455,14 @@ export class SelectSenderComponent {
         indirizzo: 'Indirizzo',
         cap: 'CAP',
         provincia: 'Provincia',
-        citta: 'Città',
+        citta: 'Citt�',
         stato: 'Stato',
 
         nominativo_ar: 'Nominativo AR',
         indirizzo_ar: 'Indirizzo AR',
         cap_ar: 'CAP AR',
         provincia_ar: 'Provincia AR',
-        citta_ar: 'Città AR',
+        citta_ar: 'Citt� AR',
         stato_ar: 'Stato AR'
       };
 
@@ -521,25 +524,7 @@ export class SelectSenderComponent {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -547,16 +532,9 @@ export class SelectSenderComponent {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
 
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

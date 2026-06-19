@@ -1,4 +1,7 @@
-import { ChangeDetectorRef, Component, TemplateRef } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { ChangeDetectorRef, Component, TemplateRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule,Validators,FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
@@ -17,8 +20,8 @@ import { Recipients } from '../../classes/Recipients';
 import { FncUtils } from '../../fncUtils/fncUtils';
 import { checkRecipient, CheckRecipient } from '../../fncUtils/CheckRecipient';
 import { FormStorageService } from '../../services/form-storage.service';
-import { bulletinFields, maxUploadLimit, secretKey } from '../../../main';
-import * as CryptoJS from 'crypto-js';
+import {  bulletinFields, maxUploadLimit, secretKey  } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 import { Bulletins } from '../../classes/Bulletins';
 import { EditRecipientComponent } from '../../component/edit-recipient/edit-recipient.component';
 import { ProductTypes } from '../../interfaces/EnumTypes';
@@ -26,19 +29,22 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
-import { TourSeenService } from '../../services/tourSeen.service';
 import { ComuniItaliani } from '../../interfaces/ComuniItaliani';
 import { UtilityService } from '../../services/utility.service';
 
 
 @Component({
   selector: 'app-upload-csv-multiplo',
-  imports: [CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
+  imports: [UiTourRestartComponent, CommonModule, ReactiveFormsModule, NgxFileDropModule, RouterLink, NgbModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule],
   templateUrl: './upload-csv-multiplo.component.html',
   styleUrl: './upload-csv-multiplo.component.scss'
 })
 export class UploadCsvMultiploComponent {
-  form: FormGroup;
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+form: FormGroup;
   formFinale: FormGroup;
   uploadProgress: number | null = null;
   uploadCompleted: boolean = false;
@@ -82,8 +88,7 @@ export class UploadCsvMultiploComponent {
     private router: Router,
     private formStorage: FormStorageService,
     private modalService: NgbModal,
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService,
+    private shepherdService: ShepherdService,
     private utilityService: UtilityService
   ) {
     this.form = this.fb.group({
@@ -230,7 +235,7 @@ export class UploadCsvMultiploComponent {
             const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
 
             if (lines.length > maxUploadLimit) {
-              this.errorMessage = 'Il file non puÃ² contenere piÃ¹ di ' + maxUploadLimit + ' righe.';
+              this.errorMessage = 'Il file non può contenere più di ' + maxUploadLimit + ' righe.';
               this.uploadProgress = 0;
               this.checking = false;
               return;
@@ -267,7 +272,7 @@ export class UploadCsvMultiploComponent {
       } 
       else 
       {
-        this.errorMessage = 'Non Ã¨ stato caricato un file valido.';
+        this.errorMessage = 'Non è stato caricato un file valido.';
       }
     }
     
@@ -397,7 +402,7 @@ export class UploadCsvMultiploComponent {
         },
         {
           id: 'uploadmulti2',
-          text: 'In questa sezione verrÃ  visualizzato il risultato del caricamento con eventuali errori.',
+          text: 'In questa sezione verrà visualizzato il risultato del caricamento con eventuali errori.',
           attachTo: {
             element: '.step-2',
             on: 'bottom' as PopperPlacement
@@ -426,25 +431,7 @@ export class UploadCsvMultiploComponent {
         }
 
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -453,16 +440,9 @@ export class UploadCsvMultiploComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

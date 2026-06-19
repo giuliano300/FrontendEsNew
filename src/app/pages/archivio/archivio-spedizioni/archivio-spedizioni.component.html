@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 
 <div class="container">
@@ -100,13 +96,11 @@
                (page)="onPaginateChange($event)">
             </mat-paginator>
 
-            <div *ngIf="(!dataSource.data || dataSource.data.length === 0) && !firstLoading" class="text-center">
-                Nessun dato disponibile.
-            </div>
+            <app-ui-empty-state
+                [visible]="(!dataSource.data || dataSource.data.length === 0) && !firstLoading"
+                message="Nessun dato disponibile." />
 
-            <div *ngIf="firstLoading" class="text-center loading">
-                 <i class="fas fa-spinner fa-spin"></i>
-            </div>
+            <app-ui-loading-state [visible]="firstLoading" />
 
         </div>
     </div>

@@ -1,3 +1,4 @@
+import { UiAlertComponent } from '@app/shared/ui';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,7 +17,7 @@ import { CheckRecipient } from '../../fncUtils/CheckRecipient';
 @Component({
   selector: 'edit-recipient',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgbTooltipModule, MatAutocompleteModule],
+  imports: [UiAlertComponent, CommonModule, ReactiveFormsModule, NgbTooltipModule, MatAutocompleteModule],
   templateUrl: './edit-recipient.component.html',
   styleUrls: ['./edit-recipient.component.scss']
 })
@@ -147,7 +148,6 @@ export class EditRecipientComponent {
      this.globalServices.getComuni()
        .subscribe((data: Comune[]) => {
          if (!data || data.length === 0) {
-           console.log('Nessun dato disponibile');
          } 
          else 
          {

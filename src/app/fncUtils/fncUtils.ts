@@ -181,7 +181,6 @@ export class FncUtils {
       }
 
       const code = utilService.getCodiceClienteBollettino(lowerCaseRow['eseguitodacap'], lowerCaseRow['anno'], comuni);
-      console.log(code);
       return {
         id: 0,
         productType: 0,

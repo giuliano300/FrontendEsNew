@@ -1,9 +1,12 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { bulletin, secretKey } from '../../../../main';
+import {  bulletin, secretKey  } from '@app/config/app-constants';
 import { UserLogos } from '../../../interfaces/UserLogos';
 import { UserLogosService } from '../../../services/user-logos.service';
 import { Users } from '../../../interfaces/Users';
@@ -12,7 +15,7 @@ import { alertName,alertComplName,alertAddress,alertComplAddress,alertProvince, 
 import { FormStorageService } from '../../../services/form-storage.service';
 import { UserSendersService } from '../../../services/user-senders.service';
 import { UserSenders } from '../../../interfaces/UserSenders';
-import * as CryptoJS from 'crypto-js';
+import { CryptoJS } from '@app/utils/crypto';
 import { filter, map, Observable, of, startWith } from 'rxjs';
 import { Comune } from '../../../interfaces/Comune';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -21,25 +24,27 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 
 @Component({
   selector: 'app-invio-multiplo-raccomandata-2',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatAutocompleteModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink, NgbModule, MatAutocompleteModule],
   templateUrl: './invio-multiplo-raccomandata-2.component.html',
   styleUrl: './invio-multiplo-raccomandata-2.component.scss'
 })
 export class InvioMultiploRaccomandata2Component {
-  constructor(
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(
     private router: Router, 
     private userSendersService: UserSendersService, 
     private userLogosService: UserLogosService, 
     private globalServices: GlobalServicesService,     
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService, 
-    private tourService: TourSeenService
+    private shepherdService: ShepherdService
     ) {}
 
   page: number = TourPage.raccomandataMultipla2;
@@ -95,7 +100,6 @@ export class InvioMultiploRaccomandata2Component {
      this.globalServices.getComuni()
        .subscribe((data: Comune[]) => {
          if (!data || data.length === 0) {
-           console.log('Nessun dato disponibile');
          } 
          else 
          {
@@ -128,7 +132,6 @@ export class InvioMultiploRaccomandata2Component {
        map(value => this._filterCAP(value, capsUnici))
      );
 
-    console.log("attivo");
 
    }
  
@@ -173,7 +176,6 @@ export class InvioMultiploRaccomandata2Component {
     this.userSendersService.getUserSenders(this.user!.id!)
       .subscribe((data: UserSenders[]) => {
         if (!data || data.length === 0) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -186,7 +188,6 @@ export class InvioMultiploRaccomandata2Component {
     this.userSendersService.getUserSender(id)
       .subscribe((data: UserSenders) => {
         if (!data) {
-          console.log('Nessun dato disponibile');
         } 
         else 
         {
@@ -207,7 +208,7 @@ export class InvioMultiploRaccomandata2Component {
 
 
   ngOnInit() {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
       if (!user) {
         this.router.navigate(['/']);
         return;
@@ -223,7 +224,7 @@ export class InvioMultiploRaccomandata2Component {
       }
       
     });
-    const bul = localStorage.getItem('bulletin')!;
+    const bul = this.appStorage.getItem('bulletin')!;
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
 
@@ -238,7 +239,6 @@ export class InvioMultiploRaccomandata2Component {
     this.userLogosService.getUserLogos(this.user!.id!)
     .subscribe((data: UserLogos[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } 
       else 
       {
@@ -255,7 +255,7 @@ enableARValidators() {
   this.form.get('citta_ar')?.setValidators([Validators.required]);
   this.form.get('stato_ar')?.setValidators([Validators.required]);
 
-  // aggiorna lo stato di validit√†
+  // aggiorna lo stato di validit‡
   this.form.get('nominativo_ar')?.updateValueAndValidity();
   this.form.get('indirizzo_ar')?.updateValueAndValidity();
   this.form.get('cap_ar')?.updateValueAndValidity();
@@ -275,7 +275,6 @@ disableARValidators() {
 
 selectMittente(){
   const senderId = this.form.value.sel_mittente;
-  console.log(senderId);
 }
 
 onSubmit(): void {
@@ -301,7 +300,7 @@ onSubmit(): void {
           { key: 'indirizzo_ar', label: 'Indirizzo AR' },
           { key: 'cap_ar', label: 'CAP AR' },
           { key: 'provincia_ar', label: 'Provincia AR' },
-          { key: 'citta_ar', label: 'Citt√† AR' },
+          { key: 'citta_ar', label: 'Citt‡ AR' },
           { key: 'stato_ar', label: 'Stato AR' },
         ];
         
@@ -324,9 +323,9 @@ onSubmit(): void {
         tipoColore: this.form.value.tipoColore,
         tipoStampa: this.form.value.tipoStampa,
         tipoRicevuta: this.form.value.tipoRicevuta,
-        tipoinvio: localStorage.getItem('sendType'),
-        prodotto: localStorage.getItem('productType'),
-        bollettino:  localStorage.getItem('bulletin'),
+        tipoinvio: this.appStorage.getItem('sendType'),
+        prodotto: this.appStorage.getItem('productType'),
+        bollettino:  this.appStorage.getItem('bulletin'),
       };
 
       const encryptedStep2 = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();
@@ -389,7 +388,7 @@ onSubmit(): void {
       },
       {
         id: 'multipleraccomandata2',
-        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparir√† nel frontespizio della tua comunicazione.",
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparir‡ nel frontespizio della tua comunicazione.",
         attachTo: {
           element: '.step-2',
           on: 'bottom' as PopperPlacement,
@@ -447,25 +446,7 @@ onSubmit(): void {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -473,16 +454,9 @@ onSubmit(): void {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
   
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

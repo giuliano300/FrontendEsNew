@@ -6,6 +6,7 @@ import { FncUtils } from '../../fncUtils/fncUtils';
 import { UsersService } from '../../services/users.service';
 import { ChangePassword } from '../../interfaces/ChangePassword';
 import { Responses } from '../../interfaces/Responses';
+import { AppStorageService } from '../../services/app-storage.service';
 
 @Component({
   selector: 'app-password-change',
@@ -15,7 +16,12 @@ import { Responses } from '../../interfaces/Responses';
 })
 export class PasswordChangeComponent {
   token: string | null = null;
-  constructor(private usersService: UsersService, private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private usersService: UsersService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private storage: AppStorageService
+  ) {
     this.route.queryParamMap.subscribe(params => {
       this.token = params.get('token');
     });
@@ -33,7 +39,11 @@ export class PasswordChangeComponent {
   });
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
+    this.form.controls.password.valueChanges.subscribe(value => {
+      this.password = value ?? '';
+    });
+
+    const token = this.storage.getAuthToken();
     if (token) 
       this.router.navigate(['/dashboard']);
   }

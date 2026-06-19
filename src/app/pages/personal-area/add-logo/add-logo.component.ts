@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,17 +14,20 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-add-logo',
-  imports: [ReactiveFormsModule, CommonModule, NgbModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, NgbModule],
   templateUrl: './add-logo.component.html',
   styleUrl: './add-logo.component.scss'
 })
 export class AddLogoComponent {
-    constructor(private router: Router, private userLogosService: UserLogosService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+    
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private userLogosService: UserLogosService, private shepherdService: ShepherdService) {}
 
     page: number = TourPage.addLogo;
 
@@ -40,7 +46,7 @@ export class AddLogoComponent {
     });
 
     ngOnInit(): void {
-      const user = localStorage.getItem('user');
+      const user = this.appStorage.getItem('user');
       if (!user) {
         this.router.navigate(['/']);
         return;
@@ -87,7 +93,6 @@ export class AddLogoComponent {
           this.userLogosService.setUserLogos(dataToSend)
             .subscribe((data: UserLogos) => {
             if (!data) {
-              console.log('Nessun dato disponibile');
             } 
             this.router.navigate(['/personalizzazioneCover']);
           });
@@ -114,25 +119,7 @@ export class AddLogoComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -141,16 +128,9 @@ export class AddLogoComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

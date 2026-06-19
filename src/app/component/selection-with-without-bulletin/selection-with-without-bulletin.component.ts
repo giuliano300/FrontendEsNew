@@ -1,26 +1,32 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { sendType } from '../../../main';
+import {  sendType  } from '@app/config/app-constants';
 import { ProductTypes } from '../../interfaces/EnumTypes';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
-import { TourSeenService } from '../../services/tourSeen.service';
 
 
 
 @Component({
   selector: 'app-selection-with-without-bulletin',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './selection-with-without-bulletin.component.html',
   styleUrl: './selection-with-without-bulletin.component.scss'
 })
 export class SelectionWithWithoutBulletinComponent {
 
-  constructor(private router: Router, private shepherdService: ShepherdService, private tourService: TourSeenService){}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private shepherdService: ShepherdService){}
 
   page: number = TourPage.withWithoutBulletin;
 
@@ -37,7 +43,7 @@ export class SelectionWithWithoutBulletinComponent {
   });
 
   ngOnInit(): void{
-    const sendTypes = localStorage.getItem("sendType");
+    const sendTypes = this.appStorage.getItem("sendType");
     this.sType = sendType[parseInt(sendTypes!)];
 
     this.getTourInThisPage();
@@ -46,9 +52,9 @@ export class SelectionWithWithoutBulletinComponent {
 
   onSubmit(): void {
     if (this.form.valid) {
-      localStorage.setItem('bulletin', this.form.value.tipoDocumento!);
+      this.appStorage.setItem('bulletin', this.form.value.tipoDocumento!);
 
-      const tipoProdotto = parseInt(localStorage.getItem("productType")!);
+      const tipoProdotto = parseInt(this.appStorage.getItem("productType")!);
 
       switch(tipoProdotto){
         case ProductTypes.ROL:
@@ -137,25 +143,7 @@ export class SelectionWithWithoutBulletinComponent {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -163,16 +151,9 @@ export class SelectionWithWithoutBulletinComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

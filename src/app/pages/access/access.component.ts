@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
-import { decryptToken } from '../../../main';
+import { decryptToken } from '@app/config/app-constants';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../services/users.service';
+
+interface LegacyAccessTokenPayload {
+  guid: string;
+  pwd: string;
+}
 
 @Component({
   selector: 'app-access',
@@ -26,9 +31,9 @@ export class AccessComponent {
       return;
     }
 
-    const data = decryptToken(token);
+    const data = decryptToken(token) as LegacyAccessTokenPayload | null;
 
-    if(data){
+    if(data?.guid && data?.pwd){
       const loginData = {
         email: data.guid,
         pwd: data.pwd

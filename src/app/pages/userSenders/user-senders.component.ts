@@ -1,4 +1,5 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -21,6 +22,7 @@ import { infoBtnDelete, infoBtnEdit } from '../../enviroments/enviroments';
 })
 
 export class UserSendersComponent {
+  private appStorage = inject(AppStorageService);
 
   userSenders: UserSenders[] = [];
 
@@ -38,7 +40,7 @@ export class UserSendersComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -53,7 +55,6 @@ export class UserSendersComponent {
     this.userSenderService.getUserSenders(this.user!.id!)
     .subscribe((data: UserSenders[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } else {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -73,7 +74,6 @@ export class UserSendersComponent {
   }
 
   onEdit(element: any): void {
-    console.log('Modifica elemento:', element);
     // Qui puoi aprire un dialog, navigare ad una pagina, ecc.
   }
   

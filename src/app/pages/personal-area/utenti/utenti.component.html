@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 <div class="container">
     <div class="row">
@@ -77,9 +73,7 @@
               
             </table>
               
-            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
-                Nessun utente disponibile.
-            </div>
+            <app-ui-empty-state [visible]="!dataSource.data || dataSource.data.length === 0" message="Nessun utente disponibile." />
 
         </div>
     </div>

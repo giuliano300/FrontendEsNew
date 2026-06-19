@@ -1,4 +1,7 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent } from '@app/shared/ui';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClient } from '@angular/common/http';
@@ -9,15 +12,18 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-unione-pdf',
-  imports: [CommonModule, NgxFileDropModule, ReactiveFormsModule],
+  imports: [UiTourRestartComponent, CommonModule, NgxFileDropModule, ReactiveFormsModule],
   templateUrl: './unione-pdf.component.html',
   styleUrl: './unione-pdf.component.scss'
 })
 export class UnionePdfComponent {
+
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
 @ViewChild('uplPdf') uplPdfRef!: ElementRef<HTMLInputElement>;
 
 uploadProgress: number | null = null;
@@ -30,7 +36,7 @@ preload: boolean = false;
 form!: FormGroup;
 zipFile!: File;
   
-constructor(private http: HttpClient, private fb: FormBuilder, private utilityService: UtilityService, private shepherdService: ShepherdService, private tourService: TourSeenService) {
+constructor(private http: HttpClient, private fb: FormBuilder, private utilityService: UtilityService, private shepherdService: ShepherdService) {
   this.form = this.fb.group({
     sel_unione: ['']
   });
@@ -58,7 +64,7 @@ onFileDrop(files: NgxFileDropEntry[]) {
 
       fileEntry.file((file: File) => {
         if (!file.name.endsWith('.zip')) {
-          this.erroreMessage = "Ãˆ necessario caricare un file .zip";
+          this.erroreMessage = "È necessario caricare un file .zip";
           return;
         }
         this.zipFile = file;
@@ -153,25 +159,7 @@ async onSubmit(formValue: any) {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -180,16 +168,9 @@ async onSubmit(formValue: any) {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

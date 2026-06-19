@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { CompleteOperation } from '../ViewModel/CompleteOperation';
 import { Observable } from 'rxjs';
 import { Operations } from '../classes/Operations';

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { sendType } from '../../../../main';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { sendType } from '@app/config/app-constants';
 import { SelectionWithWithoutBulletinComponent } from '../../../component/selection-with-without-bulletin/selection-with-without-bulletin.component';
 
 @Component({
@@ -9,10 +10,11 @@ import { SelectionWithWithoutBulletinComponent } from '../../../component/select
   styleUrl: './invio-multiplo-lettera.component.scss'
 })
 export class InvioMultiploLetteraComponent {
+  private appStorage = inject(AppStorageService);
   constructor() {}
   tipoInvio = sendType.mutiplo
   
   ngOnInit(): void{
-    localStorage.setItem('sendType', this.tipoInvio!.toString());
+    this.appStorage.setItem('sendType', this.tipoInvio!.toString());
   }
 }

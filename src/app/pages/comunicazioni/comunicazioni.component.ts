@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Users } from '../../interfaces/Users';
@@ -15,6 +16,7 @@ import { NotificationType } from '../../interfaces/EnumTypes';
   styleUrl: './comunicazioni.component.scss'
 })
 export class ComunicazioniComponent {
+  private appStorage = inject(AppStorageService);
 
   public NotificationType!: typeof NotificationType;
 
@@ -50,7 +52,7 @@ export class ComunicazioniComponent {
     }
 
     ngOnInit(): void {
-      const userStr = localStorage.getItem('user');
+      const userStr = this.appStorage.getItem('user');
       if (!userStr) {
         this.router.navigate(['/']);
         return;

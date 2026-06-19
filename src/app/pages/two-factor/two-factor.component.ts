@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Users } from '../../interfaces/Users';
+import { AppStorageService } from '../../services/app-storage.service';
 
 @Component({
   selector: 'app-two-factor',
@@ -12,7 +13,7 @@ import { Users } from '../../interfaces/Users';
   styleUrl: './two-factor.component.scss'
 })
 export class TwoFactorComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private storage: AppStorageService) {}
 
   errorMessage: string | null = null;
   user: Users  | null = null;
@@ -23,7 +24,7 @@ export class TwoFactorComponent {
   });
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
+    const token = this.storage.getAuthToken();
     if (token) 
       this.router.navigate(['/dashboard']);
   }
@@ -35,13 +36,11 @@ export class TwoFactorComponent {
 
       const code = this.form.value.code!;
 
-      const pending2faData = localStorage.getItem('pending2faData');
-      if (!pending2faData) {
+      const p = this.storage.getPending2faData<any>();
+      if (!p) {
         this.router.navigate(['/']);
         return;
       }
-
-      const p = JSON.parse(pending2faData);
 
       const verificationRequest = {
         userId: p.user?.id!,

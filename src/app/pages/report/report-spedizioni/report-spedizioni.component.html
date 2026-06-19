@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 <div class="container">
     <div class="row">
@@ -60,16 +56,17 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" name="search" (click)="filterResults()">
-                        <span [hidden]="search">CERCA</span>
-                        <span [hidden]="!search"><i class="fas fa-spinner fa-spin"></i></span>
-                    </button>
+                    <app-ui-submit-button
+                        (click)="filterResults()"
+                        [loading]="search"
+                        label="CERCA" />
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" name="remove" (click)="removeFilter()" class="button-red">
-                        <span [hidden]="remove">RIMUOVI FILTRI</span>
-                        <span [hidden]="!remove"><i class="fas fa-spinner fa-spin"></i></span>
-                    </button>
+                    <app-ui-submit-button
+                        (click)="removeFilter()"
+                        [loading]="remove"
+                        label="RIMUOVI FILTRI"
+                        buttonClass="button-red" />
                 </div>
             </div>
         </div>
@@ -173,13 +170,11 @@
                (page)="onPaginateChange($event)">
             </mat-paginator>
 
-            <div *ngIf="!dataSource.data || dataSource.data.length === 0" class="text-center">
-                Nessun dato disponibile.
-            </div>
+            <app-ui-empty-state
+                [visible]="!dataSource.data || dataSource.data.length === 0"
+                message="Nessun dato disponibile." />
 
-            <div *ngIf="firstLoading" #fullHeightDiv class="text-center loading">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
+            <app-ui-loading-state [visible]="firstLoading" />
 
         </div>
     </div>

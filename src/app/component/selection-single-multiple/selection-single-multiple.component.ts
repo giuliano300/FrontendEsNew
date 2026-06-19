@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ProductTypes } from '../../interfaces/EnumTypes';
@@ -7,18 +10,21 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../interfaces/EnumTypes';
 import { TourSeen } from '../../interfaces/TourSeen';
-import { TourSeenService } from '../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-selection-single-multiple',
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
+  imports: [UiAlertComponent, UiTourRestartComponent, RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './selection-single-multiple.component.html',
   styleUrl: './selection-single-multiple.component.scss'
 })
 export class SelectionSingleMultipleComponent {
 
-  constructor(private router: Router, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.sigleMultiple;
 
@@ -109,25 +115,7 @@ export class SelectionSingleMultipleComponent {
         ]
       }
     ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -135,16 +123,9 @@ export class SelectionSingleMultipleComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

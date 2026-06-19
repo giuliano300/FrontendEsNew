@@ -1,4 +1,7 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiEmptyStateComponent } from '@app/shared/ui';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -16,11 +19,10 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 @Component({
   selector: 'app-user-senders',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule,RouterLink, NgbModule, CommonModule],
+  imports: [UiEmptyStateComponent, UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, RouterLink, NgbModule, CommonModule],
   templateUrl: './user-senders.component.html',
   styleUrl: './user-senders.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -28,14 +30,18 @@ import { TourSeenService } from '../../../services/tourSeen.service';
 
 export class UserSendersComponent {
 
-  userSenders: UserSenders[] = [];
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+userSenders: UserSenders[] = [];
 
   user: Users | null  = null;
 
   infoBtnDelete=infoBtnDelete
   infoBtnEdit=infoBtnEdit
 
-  constructor(private userSenderService: UserSendersService, private router: Router, private dialog: MatDialog, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  constructor(private userSenderService: UserSendersService, private router: Router, private dialog: MatDialog, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.userSender;
 
@@ -46,7 +52,7 @@ export class UserSendersComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -62,7 +68,6 @@ export class UserSendersComponent {
     this.userSenderService.getUserSenders(this.user!.id!)
     .subscribe((data: UserSenders[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } else {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -118,7 +123,7 @@ export class UserSendersComponent {
           },
           {
             id: 'archiviovisure1',
-            text: "In questa tabella Ã¨ riportata la lista dei mittenti.",
+            text: "In questa tabella è riportata la lista dei mittenti.",
             attachTo: {
               element: '.step-end',
               on: 'bottom' as PopperPlacement
@@ -131,25 +136,7 @@ export class UserSendersComponent {
             ]
           }
         ];
-  
-      // Abilita il dark overlay
-      this.shepherdService.modal = true;
-  
-      // Opzioni di default per tutti gli step
-      this.shepherdService.defaultStepOptions = {
-        scrollTo: true,
-        cancelIcon: { enabled: true },
-        classes: 'shepherd-theme-arrows'
-      };
-  
-      // Carica e avvia il tour
-      this.shepherdService.addSteps(steps);
-  
-      // Ritarda il primo step
-      setTimeout(() => {
-        this.shepherdService.start();
-        this.completeTour();
-      }, 300);
+    this.appTour.start(this.page, steps);
   
     }
   
@@ -158,16 +145,9 @@ export class UserSendersComponent {
     restartTour(){
       this.startTour();
     }
-    
-    completeTour()
-    {
-      this.shepherdService.tourObject?.on('complete', () => {
-        this.tourService.setTourSeen(this.page).subscribe();
-      });
-    }
   
     getTourInThisPage(){
-      let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+      let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
       if(!userTourPage.some(tour => tour.page === this.page))
         this.startTour();
     }

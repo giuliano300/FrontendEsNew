@@ -1,4 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiLoadingStateComponent, UiTourRestartComponent, UiEmptyStateComponent } from '@app/shared/ui';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -12,19 +15,18 @@ import { OperationService } from '../../../services/operation.service';
 import { Users } from '../../../interfaces/Users';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
-import { constPageSize } from '../../../../main';
+import {  constPageSize  } from '@app/config/app-constants';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 
 
 @Component({
   selector: 'app-archivio-spedizioni',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  imports: [UiEmptyStateComponent, UiTourRestartComponent, UiLoadingStateComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
   providers: [
     { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
   ],
@@ -32,7 +34,11 @@ import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
   styleUrl: './archivio-spedizioni.component.scss'
 })
 export class ArchivioSpedizioniComponent {
-  constructor(private router: Router, private operationService: OperationService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private operationService: OperationService, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.archivioSpedizioni;
 
@@ -50,7 +56,7 @@ export class ArchivioSpedizioniComponent {
   pageSize = 50;
 
   ngOnInit() {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -159,7 +165,7 @@ export class ArchivioSpedizioniComponent {
         },
         {
           id: 'archiviosped2',
-          text: "La tabella mostra i risultati del fitro, nello specifico Ã¨ possibile visualizzare in anteprima la data/ora di creazione, il prodotto postale, il numero di destinatari e il prezzo.",
+          text: "La tabella mostra i risultati del fitro, nello specifico è possibile visualizzare in anteprima la data/ora di creazione, il prodotto postale, il numero di destinatari e il prezzo.",
           attachTo: {
             element: '.step-2',
             on: 'bottom' as PopperPlacement
@@ -187,25 +193,7 @@ export class ArchivioSpedizioniComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -214,16 +202,9 @@ export class ArchivioSpedizioniComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

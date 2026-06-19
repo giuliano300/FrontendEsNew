@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppStorageService } from '@app/services/app-storage.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { bulletin } from '../../../../main';
+import { bulletin } from '@app/config/app-constants';
 import { SelectRecipientComponent } from "../../../component/select-recipient/select-recipient/select-recipient.component";
 
 
@@ -12,6 +13,7 @@ import { SelectRecipientComponent } from "../../../component/select-recipient/se
   styleUrl: './invio-singolo-agol-4.component.scss'
 })
 export class InvioSingoloAgol4Component {
+  private appStorage = inject(AppStorageService);
 
   bulletin: string | null = "senza bollettino";
 
@@ -19,7 +21,7 @@ export class InvioSingoloAgol4Component {
 
   ngOnInit(): void {
 
-    const bul = localStorage.getItem('bulletin')!;
+    const bul = this.appStorage.getItem('bulletin')!;
     if(parseInt(bul) == bulletin.si)
       this.bulletin = "con bollettino";
     

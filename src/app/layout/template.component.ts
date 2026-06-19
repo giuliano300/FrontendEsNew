@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Users } from '../interfaces/Users';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmailService } from '../services/email.service';
-import { expiredDate, loginIV, loginSecretKey, loginUrl } from '../../main';
-import * as CryptoJS from 'crypto-js';
+import { expiredDate, loginIV, loginSecretKey, loginUrl } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
+import { filter, Subscription } from 'rxjs';
+import { NavigationItem, NavigationSearchItem } from '@app/navigation/navigation.model';
+import { NavigationService } from '../navigation/navigation.service';
+import { AppStorageService } from '../services/app-storage.service';
 
 @Component({
   selector: 'app-template',
@@ -15,7 +19,7 @@ import * as CryptoJS from 'crypto-js';
   templateUrl: './template.component.html',
   styleUrls: ['./template.component.scss']
 })
-export class TemplateComponent {
+export class TemplateComponent implements OnInit, OnDestroy {
 
   form!: FormGroup;
 
@@ -23,7 +27,9 @@ export class TemplateComponent {
     private router: Router, 
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private navigationService: NavigationService,
+    private storage: AppStorageService
     ) {
     this.form = this.fb.group({
       sel_assistenza: ['', [Validators.required]],
@@ -31,6 +37,8 @@ export class TemplateComponent {
       telephone: ['', [Validators.required]],
       message: ['', [Validators.required]]
     });
+    this.mainNavigation = this.navigationService.mainNavigation;
+    this.userNavigation = this.navigationService.userNavigation;
   }
 
 
@@ -42,29 +50,27 @@ export class TemplateComponent {
   date: string = expiredDate;
 
   isOldUser: boolean = false;
+  isMenuOpen = false;
+  navSearch = '';
+  searchResults: NavigationSearchItem[] = [];
+  mainNavigation: NavigationItem[] = [];
+  userNavigation: NavigationItem[] = [];
+
+  private routerSubscription?: Subscription;
+  private readonly resizeHandler = () => this.checkScreenSize();
   
   logout(){
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-
-    //ELIMINAZIONE DEI VALORI RELATIVI 
-    //ALLE SELEZIONI DEI PRODOTTI 
-    localStorage.removeItem('productType');    
-    localStorage.removeItem('sendType');    
-    localStorage.removeItem('bulletin');    
-    localStorage.removeItem('userTourPage');    
-
+    this.storage.clearAuthSession();
     this.router.navigate(['/']);
   }
 
-  ngOnInit() {
-    const user = localStorage.getItem('user');
-      if (!user) {
+  ngOnInit(): void {
+    this.user = this.storage.getUser();
+      if (!this.user) {
         this.router.navigate(['/']);
         return;
       }
   
-    this.user! = JSON.parse(user!);    
     this.userName = this.user!.businessName;
     if(this.user!.passwordOldSite && this.user!.usernameOldSite)
       this.isOldUser = true;
@@ -73,7 +79,19 @@ export class TemplateComponent {
     this.checkScreenSize();
 
     // Listener per resize
-    window.addEventListener('resize', this.checkScreenSize.bind(this));
+    window.addEventListener('resize', this.resizeHandler);
+
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.clearNavigationSearch();
+        this.CloseMenu()
+      });
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.resizeHandler);
+    this.routerSubscription?.unsubscribe();
   }
 
   openOldSite(): void {
@@ -102,7 +120,7 @@ export class TemplateComponent {
       }
     );
 
-    const token = encrypted.ciphertext.toString(
+    const token = encrypted.ciphertext!.toString(
       CryptoJS.enc.Base64
     );
 
@@ -121,9 +139,6 @@ export class TemplateComponent {
       const dataToSend = this.form.value;
       this.emailService.setAssistenceRequest(dataToSend)
         .subscribe((data: boolean) => {
-        if (!data) {
-          console.log('Nessun dato disponibile');
-        } 
         if (this.currentModalRef) {
           this.currentModalRef.close();
         }
@@ -137,17 +152,30 @@ export class TemplateComponent {
   }
 
  OpenMenu(){
-    document.querySelector('.side-menu')!.classList.add('open');
-    document.querySelector('.menu-overlay')!.classList.add('visible');
-    document.querySelector('.menu-overlay')!.classList.remove('hidden');
+    this.isMenuOpen = true;
   }
 
   CloseMenu(){
-    document.querySelector('.side-menu')!.classList.remove('open');
-    document.querySelector('.menu-overlay')!.classList.remove('visible');
-    document.querySelector('.menu-overlay')!.classList.add('hidden');
+    this.isMenuOpen = false;
   }
 
+  isActive(item: NavigationItem): boolean {
+    return this.navigationService.isActive(item, this.router.url);
+  }
+
+  onNavigationSearch(event: Event): void {
+    this.navSearch = (event.target as HTMLInputElement).value;
+    this.searchResults = this.navigationService.search(this.navSearch);
+  }
+
+  clearNavigationSearch(): void {
+    this.navSearch = '';
+    this.searchResults = [];
+  }
+
+  trackByLabel(_: number, item: { label: string }): string {
+    return item.label;
+  }
 
     // Metodo per aprire il modal e salvare il riferimento
     openModal(content: any) {

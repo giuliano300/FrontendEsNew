@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 <div class="container">
     <div class="row">
@@ -77,17 +73,16 @@
 
                 <div class="row" *ngIf="alertMessage">
                     <div class="col-md-12">
-                    <div class="alert-message">
-                        <span><i class='bx bxs-error color-orange'></i> {{ alertText }}</span>
-                    </div>
+                    <app-ui-alert [message]="alertText" />
                     </div>
                 </div>
 
                 <div class="row" *ngIf="updateOk">
                     <div class="col-md-12">
-                    <div class="alert-message">
-                        <span><i class='bx bx-check-circle color-green'></i>  Modifica effettuata con successo</span>
-                    </div>
+                    <app-ui-alert
+                        message="Modifica effettuata con successo"
+                        icon="bx bx-check-circle"
+                        iconClass="color-green" />
                     </div>
                 </div>
             </form>
@@ -111,7 +106,7 @@
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <label>NUOVA PASSWORD</label>
-                        <input type="password" formControlName="new_pwd" [(ngModel)]="new_pwd" />
+                        <input type="password" formControlName="new_pwd" />
                         <div *ngIf="new_pwd && showStrength" [ngClass]="getPasswordClass()">
                             Forza password: <strong>{{ FncUtils.checkPasswordStrength(new_pwd) }}</strong>
                         </div>
@@ -131,12 +126,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div *ngIf="alertMessagePwd" class="alert-message">
-                            <span><i class='bx bxs-error color-orange'></i> {{ alertTextPwd }}</span>
-                        </div>
-                        <div class="row" *ngIf="updatePwdOk" class="alert-message">
-                            <span><i class='bx bx-check-circle color-green'></i>  Modifica effettuata con successo</span>
-                        </div>
+                        <app-ui-alert [visible]="alertMessagePwd" [message]="alertTextPwd" />
+                        <app-ui-alert
+                            [visible]="updatePwdOk"
+                            message="Modifica effettuata con successo"
+                            icon="bx bx-check-circle"
+                            iconClass="color-green" />
                     </div>
                 </div>
             </form>

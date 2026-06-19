@@ -1,4 +1,7 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiEmptyStateComponent } from '@app/shared/ui';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -9,7 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoBtnDownload } from '../../../enviroments/enviroments';
 import { Users } from '../../../interfaces/Users';
-import { constPageIndex, constPageSize } from '../../../../main';
+import {  constPageIndex, constPageSize  } from '@app/config/app-constants';
 import { OperationService } from '../../../services/operation.service';
 import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
@@ -17,18 +20,21 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-archivio-visure',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  imports: [UiEmptyStateComponent, UiTourRestartComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
   templateUrl: './archivio-visure.component.html',
   styleUrl: './archivio-visure.component.scss'
 })
 export class ArchivioVisureComponent {
 
-  constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService, private shepherdService: ShepherdService, private tourService: TourSeenService) {}
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(private router: Router, private  route: ActivatedRoute, private operationService: OperationService, private shepherdService: ShepherdService) {}
 
   page: number = TourPage.archivioVisure;
 
@@ -52,7 +58,7 @@ export class ArchivioVisureComponent {
   
 
   ngOnInit() {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -150,7 +156,7 @@ export class ArchivioVisureComponent {
       const steps = [
         {
           id: 'archiviovisure1',
-          text: "Filtra le tue spedizioni effettuate inserendo un intervallo di date, il codice fiscale o la Partita IVA, oppure il nome dellâ€™intestatario.",
+          text: "Filtra le tue spedizioni effettuate inserendo un intervallo di date, il codice fiscale o la Partita IVA, oppure il nome dell’intestatario.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement
@@ -193,25 +199,7 @@ export class ArchivioVisureComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -220,16 +208,9 @@ export class ArchivioVisureComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { HttpClient } from '@angular/common/http';
 import { Users } from '../interfaces/Users';
 import { BehaviorSubject, catchError, Observable } from 'rxjs';

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TipoSpedizioneComponent } from './tipo-spedizione.component';
+import { TipoSpedizioneRaccomandataComponent } from './tipo-spedizione.component';
 
-describe('TipoSpedizioneComponent', () => {
-  let component: TipoSpedizioneComponent;
-  let fixture: ComponentFixture<TipoSpedizioneComponent>;
+describe('TipoSpedizioneRaccomandataComponent', () => {
+  let component: TipoSpedizioneRaccomandataComponent;
+  let fixture: ComponentFixture<TipoSpedizioneRaccomandataComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TipoSpedizioneComponent]
+      imports: [TipoSpedizioneRaccomandataComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TipoSpedizioneComponent);
+    fixture = TestBed.createComponent(TipoSpedizioneRaccomandataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

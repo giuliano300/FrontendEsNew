@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormStorageService } from '../../../services/form-storage.service';
-import { secretKey } from '../../../../main';
+import { secretKey } from '@app/config/app-constants';
+import { CryptoJS } from '@app/utils/crypto';
 import { SelectRecipientComponent } from "../../../component/select-recipient/select-recipient/select-recipient.component";
 
 

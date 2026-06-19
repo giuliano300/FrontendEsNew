@@ -1,5 +1,8 @@
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserSendersService } from '../../../services/user-senders.service';
@@ -14,18 +17,21 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 
 
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatListModule, CapitalizePipe],
+  imports: [UiAlertComponent, UiTourRestartComponent, ReactiveFormsModule, CommonModule, MatListModule, CapitalizePipe],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss'
 })
 export class AddUserComponent {
-  alertMessage = false;
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+alertMessage = false;
   alertText = '';
   user: Users | null = null;
   oldUser: Users | null = null;
@@ -44,7 +50,7 @@ export class AddUserComponent {
 
   constructor(private router: Router, private fb: FormBuilder, 
     private userSenderService: UserSendersService, private userService: UsersService, 
-    private route: ActivatedRoute, private shepherdService: ShepherdService, private tourService: TourSeenService) {
+    private route: ActivatedRoute, private shepherdService: ShepherdService) {
     this.form = this.fb.group({
       userTypes: ['', [Validators.required]],
       businessName: ['', [Validators.required, Validators.maxLength(44)]],
@@ -63,7 +69,7 @@ export class AddUserComponent {
   page: number = TourPage.userAdd;
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -89,7 +95,6 @@ export class AddUserComponent {
        this.userService.getUserById(id)
         .subscribe((data: Users) => {
         if (!data) {
-          console.log("errore nella risposta");
         } 
         else 
           this.form.patchValue({
@@ -119,7 +124,6 @@ export class AddUserComponent {
     this.userSenderService.getUserSenders(this.user!.id!)
     .subscribe((data: UserSenders[]) => {
       if (!data || data.length === 0) {
-        console.log('Nessun dato disponibile');
       } 
       else 
       {
@@ -160,7 +164,6 @@ export class AddUserComponent {
         this.userService.setUser(userData)
           .subscribe((data: Users) => {
           if (!data) {
-            console.log('Nessun dato disponibile');
           } 
           this.router.navigate(['/utentiList']);
         });
@@ -170,7 +173,6 @@ export class AddUserComponent {
         this.userService.updateUser(userData)
           .subscribe((data: Users) => {
           if (!data) {
-            console.log('Nessun dato disponibile');
           } 
           this.router.navigate(['/utentiList']);
         });
@@ -202,7 +204,7 @@ export class AddUserComponent {
       const steps = [
         {
           id: 'archiviovisure1',
-          text: "Compila i dati del nuovo utente e specifica se puÃ² solo visualizzare o anche inserire contenuti.",
+          text: "Compila i dati del nuovo utente e specifica se può solo visualizzare o anche inserire contenuti.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement
@@ -217,7 +219,7 @@ export class AddUserComponent {
         },
         {
           id: 'archiviovisure1',
-          text: "Seleziona uno o piÃ¹ mittenti con cui l'utente potrÃ  spedire o visualizzare le comunicazioni",
+          text: "Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni",
           attachTo: {
             element: '.step-end',
             on: 'bottom' as PopperPlacement
@@ -230,25 +232,7 @@ export class AddUserComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -257,16 +241,9 @@ export class AddUserComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }

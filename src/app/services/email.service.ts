@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { API_URL } from '../../main';
+import { API_URL } from '@app/config/app-constants';
 import { Observable } from 'rxjs';
 import { AssistenceRequest } from '../interfaces/AssistenceRequest';
 import { HttpLoggingService } from '../wrapper/http-logging.service';

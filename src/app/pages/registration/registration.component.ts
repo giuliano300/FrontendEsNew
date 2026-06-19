@@ -13,6 +13,7 @@ import { FncUtils } from '../../fncUtils/fncUtils';
 import { Users } from '../../interfaces/Users';
 import { v4 as uuidv4 } from 'uuid';
 import { UserTypes } from '../../interfaces/EnumTypes';
+import { AppStorageService } from '../../services/app-storage.service';
 
 @Component({
   selector: 'app-registration',
@@ -21,7 +22,12 @@ import { UserTypes } from '../../interfaces/EnumTypes';
   styleUrl: './registration.component.scss'
 })
 export class RegistrationComponent {
-  constructor(private userService: UsersService, private router: Router, private modalService: NgbModal) {}
+  constructor(
+    private userService: UsersService,
+    private router: Router,
+    private modalService: NgbModal,
+    private storage: AppStorageService
+  ) {}
  
   @ViewChild('content') content: TemplateRef<any> | undefined;
 
@@ -57,7 +63,11 @@ export class RegistrationComponent {
   accessValid: boolean = false;
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
+    this.form.controls.password.valueChanges.subscribe(value => {
+      this.password = value ?? '';
+    });
+
+    const token = this.storage.getAuthToken();
     if (token) 
       this.router.navigate(['/dashboard']);
   }
@@ -90,7 +100,7 @@ export class RegistrationComponent {
             this.errorMessage = "Errore nel salvataggio dei dati.";
           else
           {
-            localStorage.setItem('userId', data?.id!.toString());
+            this.storage.setRegistrationUserId(data?.id!);
             this.router.navigate(['/registrationFinalStep']);
           }
         })

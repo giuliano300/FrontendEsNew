@@ -6,6 +6,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProducts } from '../../interfaces/UserProducts';
 import { UsersProductsService } from '../../services/userProducts.service';
 import { ProductTypes } from '../../interfaces/EnumTypes';
+import { AppStorageService } from '../../services/app-storage.service';
 
 
 @Component({
@@ -15,7 +16,11 @@ import { ProductTypes } from '../../interfaces/EnumTypes';
   styleUrl: './registrationFinalStep.component.scss'
 })
 export class RegistrationFinalStepComponent {
-  constructor(private userProductService: UsersProductsService, private router: Router) {}
+  constructor(
+    private userProductService: UsersProductsService,
+    private router: Router,
+    private storage: AppStorageService
+  ) {}
  
   @ViewChild('content') content: TemplateRef<any> | undefined;
 
@@ -26,8 +31,8 @@ export class RegistrationFinalStepComponent {
   });
 
   ngOnInit(): void {
-    const token = localStorage.getItem('authToken');
-    const userId = localStorage.getItem('userId');
+    const token = this.storage.getAuthToken();
+    const userId = this.storage.getRegistrationUserId();
     if (token) 
       this.router.navigate(['/dashboard']);
     if (!userId) 
@@ -37,7 +42,7 @@ export class RegistrationFinalStepComponent {
   onSubmit() {
     if (this.form.valid) 
     {      
-      const userId = localStorage.getItem('userId');
+      const userId = this.storage.getRegistrationUserId();
 
       //AGOL
       if(this.form.value.agolCode != null && this.form.value.agolCode != "")

@@ -1,8 +1,4 @@
-<div class="restart-tour">
-  <a (click)="restartTour()">
-    <span>Riprendi tour</span> <i class='bx bx-fast-forward'></i>
-  </a>
-</div>
+<app-ui-tour-restart (restart)="restartTour()" />
 
 <div class="container">
     <div class="row">
@@ -123,9 +119,7 @@
             </div>
 
             <!-- ERRORE MOSTRATO SOLO DOPO SUBMIT -->
-            <div *ngIf="alertMessage" class="alert-message">
-                <span><i class='bx bxs-error color-orange'></i> Seleziona:&nbsp;<strong class="color-red">{{ alertText }}</strong></span> 
-            </div>
+            <app-ui-alert [visible]="alertMessage" prefix="Seleziona:" [strongMessage]="alertText" />
 
         </form>
     </div>

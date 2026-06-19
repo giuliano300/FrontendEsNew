@@ -1,4 +1,7 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AppTourService } from '@app/services/app-tour.service';
+import { AppStorageService } from '@app/services/app-storage.service';
+import { UiLoadingStateComponent, UiTourRestartComponent, UiEmptyStateComponent, UiSubmitButtonComponent } from '@app/shared/ui';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -8,7 +11,7 @@ import { Router } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { infoBtnDownload } from '../../../enviroments/enviroments';
-import { constPageIndex, constPageSize } from '../../../../main';
+import {  constPageIndex, constPageSize  } from '@app/config/app-constants';
 import { RecipientService } from '../../../services/recipient.service';
 import { Users } from '../../../interfaces/Users';
 import { FncUtils } from '../../../fncUtils/fncUtils';
@@ -18,7 +21,6 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
-import { TourSeenService } from '../../../services/tourSeen.service';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +29,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-report-spedizioni-bollettini',
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
+  imports: [UiSubmitButtonComponent, UiEmptyStateComponent, UiTourRestartComponent, UiLoadingStateComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatIconModule, MatProgressBarModule, NgbModule, ReactiveFormsModule, CommonModule],
   providers: [
     { provide: MatPaginatorIntl, useValue: getItalianPaginatorIntl() }
   ],
@@ -36,13 +38,16 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ReportSpedizioniBollettiniComponent {
 
-  constructor(
+  
+  
+  private appTour = inject(AppTourService);
+private appStorage = inject(AppStorageService);
+constructor(
     private router: Router,
     private modalService: NgbModal,
     private recipientService: RecipientService,
     private shepherdService: ShepherdService, 
-    private dialog: MatDialog,
-    private tourService: TourSeenService
+    private dialog: MatDialog
 
   ) {}
 
@@ -90,7 +95,7 @@ export class ReportSpedizioniBollettiniComponent {
   });
   
   ngOnInit() {
-    const user = localStorage.getItem('user');
+    const user = this.appStorage.getItem('user');
     if (!user) {
       this.router.navigate(['/']);
       return;
@@ -216,7 +221,7 @@ export class ReportSpedizioniBollettiniComponent {
     .subscribe(response => {
       if(!response)
       {
-        this.openDialog("Documento non disponibile","Il documento richiesto non Ã¨ disponibile per il download.");
+        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
         return;
       }
 
@@ -288,25 +293,7 @@ export class ReportSpedizioniBollettiniComponent {
           ]
         }
       ];
-
-    // Abilita il dark overlay
-    this.shepherdService.modal = true;
-
-    // Opzioni di default per tutti gli step
-    this.shepherdService.defaultStepOptions = {
-      scrollTo: true,
-      cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows'
-    };
-
-    // Carica e avvia il tour
-    this.shepherdService.addSteps(steps);
-
-    // Ritarda il primo step
-    setTimeout(() => {
-      this.shepherdService.start();
-      this.completeTour();
-    }, 300);
+    this.appTour.start(this.page, steps);
 
   }
 
@@ -315,16 +302,9 @@ export class ReportSpedizioniBollettiniComponent {
   restartTour(){
     this.startTour();
   }
-  
-  completeTour()
-  {
-    this.shepherdService.tourObject?.on('complete', () => {
-      this.tourService.setTourSeen(this.page).subscribe();
-    });
-  }
 
   getTourInThisPage(){
-    let userTourPage: TourSeen[] = JSON.parse(localStorage.getItem("userTourPage")?.toString() || "[]");
+    let userTourPage: TourSeen[] = JSON.parse(this.appStorage.getItem("userTourPage")?.toString() || "[]");
     if(!userTourPage.some(tour => tour.page === this.page))
       this.startTour();
   }
@@ -332,4 +312,3 @@ export class ReportSpedizioniBollettiniComponent {
   ///////////////////////////
 
 }
-
