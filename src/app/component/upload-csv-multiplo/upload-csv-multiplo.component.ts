@@ -382,6 +382,63 @@ form: FormGroup;
       return this.checkRecipientAll?.some(r => r.valido) ?? false;
     }
 
+    get hasInvalidRecipients(): boolean {
+      return this.checkRecipientAll?.some(r => !r.valido) ?? false;
+    }
+
+    downloadErrorCsv(): void {
+      const rows = this.checkRecipientAll.filter(r => !r.valido);
+      if (!rows.length) return;
+
+      const headers = ['Nominativo', 'Indirizzo completo', 'Nomefile', 'Errore'];
+      const csvRows = [
+        headers,
+        ...rows.map(r => {
+          const recipient = r.recipient;
+          return [
+            recipient?.businessName ?? '',
+            this.getCompleteAddress(recipient),
+            recipient?.fileName ?? this.fileName,
+            r.errore ?? ''
+          ];
+        })
+      ];
+
+      const csvContent = csvRows
+        .map(row => row.map(value => this.escapeCsvValue(value)).join(';'))
+        .join('\r\n');
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'errori-nominativi.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    private getCompleteAddress(recipient?: Recipients | null): string {
+      if (!recipient) return '';
+
+      return [
+        recipient.address,
+        recipient.complementAddress,
+        recipient.zipCode,
+        recipient.city,
+        recipient.province
+      ]
+        .filter(value => !!value)
+        .join(' ');
+    }
+
+    private escapeCsvValue(value: string): string {
+      const normalizedValue = value.replace(/\r?\n|\r/g, ' ');
+      if (/[;"\r\n]/.test(normalizedValue)) {
+        return `"${normalizedValue.replace(/"/g, '""')}"`;
+      }
+
+      return normalizedValue;
+    }
+
 
     startTour() {
       const steps = [

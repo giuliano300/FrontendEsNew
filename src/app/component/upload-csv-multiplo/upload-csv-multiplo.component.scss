@@ -1,0 +1,20 @@
+.download-errors {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    margin-top: 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #d30000;
+    font-size: .9rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+
+.download-errors:hover {
+    color: #a80000;
+    text-decoration: underline;
+}
