@@ -11,6 +11,13 @@ import { UserProducts } from '../interfaces/UserProducts';
 import { ProductTypes } from '../interfaces/EnumTypes';
 import { AppStorageService } from './app-storage.service';
 
+interface StampaUnioneDownloadResponse {
+  success: boolean;
+  errorMessage?: string;
+  downloadId?: string;
+  fileName?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,8 +34,34 @@ export class UtilityService {
     );
   }
 
-  GetStampaEunione(zipStampaUnioneRequest: ZipStampaUnioneRequest): Observable<ZipResponse> {
-    return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/Process", zipStampaUnioneRequest);
+  async downloadStampaEunione(zipFile: File, uid?: number): Promise<void> {
+    const formData = new FormData();
+    formData.append('zipFile', zipFile, zipFile.name);
+    formData.append('uId', (uid ?? 0).toString());
+
+    const headers = new Headers();
+    const token = this.storage.getAuthToken();
+
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    const response = await fetch(this.apiUrl + "StampaUnione/Process", {
+      method: 'POST',
+      body: formData,
+      headers
+    });
+
+    if (!response.ok) {
+      throw new Error(await this.getStampaUnioneErrorMessage(response));
+    }
+
+    const result = await response.json() as StampaUnioneDownloadResponse;
+    if (!result.success || !result.downloadId) {
+      throw new Error(result.errorMessage || "Errore durante la stampa e unione.");
+    }
+
+    this.startNativeDownload(result.downloadId, result.fileName || 'stampa-unione.zip');
   }
 
   GetUnisciPdf(pdfUnioneRequest: PdfUnioneRequest): Observable<PdfUnioneResponse> {
@@ -40,6 +73,28 @@ export class UtilityService {
 
   GetComprimiPdf(zipStampaUnioneRequest: ZipStampaUnioneRequest): Observable<ZipResponse> {
     return this.http.post<ZipResponse>(this.apiUrl + "StampaUnione/ComprimiPdf", zipStampaUnioneRequest);
+  }
+
+  private async getStampaUnioneErrorMessage(response: Response): Promise<string> {
+    const contentType = response.headers.get('content-type') ?? '';
+
+    if (contentType.includes('application/json')) {
+      const error = await response.json().catch(() => null) as { errorMessage?: string } | null;
+      return error?.errorMessage || "Errore durante la stampa e unione.";
+    }
+
+    const text = await response.text().catch(() => '');
+    return text || "Errore durante la stampa e unione.";
+  }
+
+  private startNativeDownload(downloadId: string, fileName: string): void {
+    const a = document.createElement('a');
+    a.href = `${this.apiUrl}StampaUnione/Download/${encodeURIComponent(downloadId)}`;
+    a.download = fileName;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   getRealProduct(id: number, posteType?: string): number {

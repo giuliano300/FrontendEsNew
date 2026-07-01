@@ -96,8 +96,7 @@ form: FormGroup;
           const base64 = (reader.result as string).split(',')[1];
           const byteArray = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
 
-          const arrayBuffer = reader.result as ArrayBuffer;
-          const pdfDoc = await PDFDocument.load(arrayBuffer);
+          const pdfDoc = await PDFDocument.load(byteArray);
           const numPages = pdfDoc.getPageCount();
 
           let file = {
@@ -134,7 +133,7 @@ form: FormGroup;
         reader.readAsDataURL(file);
       });
     } else {
-      this.errorMessage = 'Non è stato caricato un file valido.';
+      this.errorMessage = 'Non Ã¨ stato caricato un file valido.';
     }
   }
 

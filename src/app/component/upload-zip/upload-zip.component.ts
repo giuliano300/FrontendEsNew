@@ -23,6 +23,7 @@ import { CryptoJS } from '@app/utils/crypto';
 })
 export class UploadZipComponent {
   private appStorage = inject(AppStorageService);
+  private readonly maxZipUploadSizeBytes = 2 * 1024 * 1024 * 1024;
   
   constructor(
     private fb: FormBuilder,
@@ -67,6 +68,8 @@ export class UploadZipComponent {
 
     if (files.length !== 1) {
       this.errorMessage = 'Devi caricare un solo file ZIP alla volta.';
+      this.uploadProgress = null;
+      this.checking = false;
       return;
     }
 
@@ -75,6 +78,20 @@ export class UploadZipComponent {
     if (droppedFile.fileEntry.isFile) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
+        if (!file.name.toLowerCase().endsWith('.zip')) {
+          this.errorMessage = 'Il file deve essere in formato ZIP.';
+          this.uploadProgress = null;
+          this.checking = false;
+          return;
+        }
+
+        if (file.size > this.maxZipUploadSizeBytes) {
+          this.errorMessage = 'Il file ZIP supera il limite massimo consentito di 2 GB.';
+          this.uploadProgress = null;
+          this.checking = false;
+          return;
+        }
+
         const formData = new FormData();
         formData.append('file', file, file.name);
 
@@ -142,7 +159,9 @@ export class UploadZipComponent {
             }
           },
           error: error => {
-            this.errorMessage = 'Errore durante l\'upload. Controllare che il file .zip contenga file .pdf';
+            this.errorMessage = error?.status === 413
+              ? 'Il file ZIP supera il limite massimo consentito.'
+              : 'Errore durante l\'upload. Controllare che il file .zip contenga file .pdf';
             console.error(error);
             this.checking = false;
             this.sincro = false;
@@ -153,6 +172,10 @@ export class UploadZipComponent {
           }
         });
       });
+    } else {
+      this.errorMessage = 'Non è stato caricato un file valido.';
+      this.uploadProgress = null;
+      this.checking = false;
     }
   }
 

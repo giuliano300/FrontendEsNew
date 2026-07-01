@@ -4,11 +4,9 @@ import { UiTourRestartComponent } from '@app/shared/ui';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxFileDropEntry, FileSystemFileEntry, NgxFileDropModule } from 'ngx-file-drop';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityService } from '../../../services/utility.service';
 import { Router } from '@angular/router';
 import { Users } from '../../../interfaces/Users';
-import { ZipResponse } from '../../../interfaces/ZipResponse';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
@@ -32,7 +30,7 @@ uploadProgress: number | null = null;
     preload: boolean = false;
     user: Users | null = null;
 
-   constructor(private router: Router, private http: HttpClient, private utilityService: UtilityService, private shepherdService: ShepherdService){}
+   constructor(private router: Router, private utilityService: UtilityService, private shepherdService: ShepherdService){}
 
     page: number = TourPage.stampaUnione;
 
@@ -51,84 +49,53 @@ uploadProgress: number | null = null;
   }
 
    onFileDrop(files: NgxFileDropEntry[]) {
-      for (const droppedFile of files) {
-        if (droppedFile.fileEntry.isFile) {
-          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+      this.resetUploadState();
 
-          this.uploadProgress = 0;
-          this.uploadCompleted = false;
-
-          fileEntry.file((file: File) => {
-            // Controlla se è un file .zip
-            if (!file.name.endsWith('.zip')) {
-              this.erroreMessage = "Sono ammessi solo file zip.";
-              return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = () => {
-            // reader.result è di tipo ArrayBuffer
-              const arrayBuffer = reader.result as ArrayBuffer;
-              
-              // converto ArrayBuffer in Uint8Array
-              const uint8Array = new Uint8Array(arrayBuffer);
-              
-              // converto Uint8Array in base64
-              let binary = '';
-              for (let i = 0; i < uint8Array.byteLength; i++) {
-                binary += String.fromCharCode(uint8Array[i]);
-              }
-              const base64Content = btoa(binary);
-
-              const zipContent = {
-                uid: this.user!.id,
-                base64Zip: base64Content
-              }
-
-              this.uploadProgress = 100;
-              this.uploadCompleted = true;
-              this.preload = true;
-
-              this.utilityService.GetStampaEunione(zipContent)
-                .subscribe((zipStampaUnione: ZipResponse) => {
-                  
-                  this.preload = false;
-
-                  if (!zipStampaUnione) {
-                    this.erroreMessage = "Nessun dato disponibile";
-                    return;
-                  }
-
-                  if (!zipStampaUnione.success) {
-                    this.erroreMessage = zipStampaUnione.errorMessage!;
-                    return;
-                  }
-
-                  // Decodifica Base64 in Uint8Array
-                  const zipBytes = Uint8Array.from(atob(zipStampaUnione.base64Zip!), c => c.charCodeAt(0));
-                  const blobFinale = new Blob([zipBytes], { type: 'application/zip' }); 
-                  const url = window.URL.createObjectURL(blobFinale);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = 'stampa-unione.zip';
-                  a.click();
-
-                  window.URL.revokeObjectURL(url);
-
-                  this.validMessage = "File correttamente creato e scaricato";
-                });            
-            };
-
-            reader.onerror = (error) => {
-              this.erroreMessage = "Errore durante la lettura del file:", error;
-            };
-
-            reader.readAsArrayBuffer(file); 
-          });
-        }
+      const droppedFile = files.find(file => file.fileEntry.isFile);
+      if (!droppedFile) {
+        this.erroreMessage = "Nessun file valido selezionato.";
+        return;
       }
+
+      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+
+      fileEntry.file((file: File) => {
+        if (!file.name.toLowerCase().endsWith('.zip')) {
+          this.erroreMessage = "Sono ammessi solo file ZIP.";
+          this.uploadProgress = null;
+          return;
+        }
+
+        this.processZip(file);
+      });
    }
+
+  private async processZip(file: File) {
+    this.uploadProgress = 100;
+    this.uploadCompleted = true;
+    this.preload = true;
+
+    try {
+      await this.utilityService.downloadStampaEunione(file, this.user!.id);
+      this.validMessage = "File correttamente creato. Download avviato.";
+    } catch (error) {
+      this.erroreMessage = error instanceof Error
+        ? error.message
+        : "Errore nella richiesta al server.";
+      this.uploadProgress = null;
+      this.uploadCompleted = false;
+    } finally {
+      this.preload = false;
+    }
+  }
+
+  private resetUploadState() {
+    this.uploadProgress = 0;
+    this.uploadCompleted = false;
+    this.erroreMessage = null;
+    this.validMessage = null;
+    this.preload = false;
+  }
 
        startTour() {
       const steps = [

@@ -279,7 +279,7 @@ form: FormGroup;
     onSubmit() {
       if (this.formFinale.valid) {
 
-        let destinatari = this.checkRecipient.filter(r => r.valido).map(r => r.recipient);
+        let destinatari = this.checkRecipientAll.filter(r => r.valido).map(r => r.recipient);
 
         const destinatariEnc = CryptoJS.AES.encrypt(JSON.stringify(destinatari), secretKey).toString();
 

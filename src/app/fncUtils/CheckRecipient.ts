@@ -110,6 +110,13 @@ export function CheckRecipient(
    }
   }
 
+  const crtTag = verificaTag(recipient);
+  if (!crtTag.valido) {
+    ctrl.valido = false;
+    ctrl.errore = crtTag.errore + ' - destinatario';
+    return ctrl;
+  }
+
   return ctrl;
 }
 
@@ -397,6 +404,24 @@ export function verificaCitta(city: string): Crt {
   return { valido: true, errore: '' };
 }
 
+function verificaTag(recipient: Recipients): Crt {
+  const tags = [
+    { label: 'Tag1', value: recipient.tag1 },
+    { label: 'Tag2', value: recipient.tag2 },
+    { label: 'Tag3', value: recipient.tag3 },
+    { label: 'Tag4', value: recipient.tag4 },
+    { label: 'Tag5', value: recipient.tag5 },
+    { label: 'Tag6', value: recipient.tag6 }
+  ];
+
+  const invalidTag = tags.find(tag => (tag.value?.length ?? 0) > 50);
+
+  if (invalidTag) {
+    return { valido: false, errore: `${invalidTag.label} supera la lunghezza massima di 50 caratteri` };
+  }
+
+  return { valido: true, errore: '' };
+}
 
 export function onlyNumbers(value: string): boolean {
     return /^[0-9]+$/.test(value);

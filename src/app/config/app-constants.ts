@@ -1,7 +1,7 @@
 import { CryptoCipherParams, CryptoJS } from '@app/utils/crypto';
 
 export const API_URL = 'https://backendnew.easysender.it/Api/';
-// export const API_URL = 'http://localhost:5105/Api/';
+ //export const API_URL = 'http://localhost:5105/Api/';
 
 export const secretKey = 'easysender2025!EWT';
 export const maxUploadLimit = 5000;
