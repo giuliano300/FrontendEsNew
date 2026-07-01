@@ -21,6 +21,22 @@ export class FncUtils {
 
    constructor(private http: HttpClient) {}
 
+    private static readonly dbOffsetHours = 2;
+
+    static AddDbOffset(date: Date): Date {
+      const adjusted = new Date(date);
+      adjusted.setHours(adjusted.getHours() + this.dbOffsetHours);
+      return adjusted;
+    }
+
+    static GetAdjustedNowIso(): string {
+      return this.AddDbOffset(new Date()).toISOString();
+    }
+
+    static GetTodayInputValue(): string {
+      return this.GetAdjustedNowIso().split('T')[0];
+    }
+
     static checkPasswordStrength(password: string): 'debole' | 'media' | 'forte' {
       const lengthScore = password.length >= 12 ? 2 : password.length >= 8 ? 1 : 0;
       const hasUpper = /[A-Z]/.test(password);
@@ -39,7 +55,7 @@ export class FncUtils {
 
       
     static GetFormattedData(d: string): string{
-      const data = new Date(d);
+      const data = this.AddDbOffset(new Date(d));
         const dataFormattata = data.toLocaleString('it-IT', {
           day: '2-digit',
           month: '2-digit',
@@ -129,7 +145,7 @@ export class FncUtils {
 
       return {
           id: 0,
-          insertDate: new Date().toISOString(),
+          insertDate: this.GetAdjustedNowIso(),
           operationId: 0,
           logoId: 0,
           productType: 0,

@@ -23,7 +23,7 @@ export const bulletinFields = [
 export const constPageIndex = 0;
 export const constPageSize = 20;
 
-export const expiredDate = new Date(2026, 8, 30).toLocaleDateString('it-IT', {
+export const expiredDate = new Date(2026, 12, 31).toLocaleDateString('it-IT', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric'

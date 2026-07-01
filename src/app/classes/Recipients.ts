@@ -2,7 +2,7 @@ import { FncUtils } from "../fncUtils/fncUtils";
 
 export class Recipients {
   id?: number = 0;
-  insertDate: string = new Date().toISOString();
+  insertDate: string = FncUtils.GetAdjustedNowIso();
   operationId: number = 0;
   logoId?: number  = 0;
   productType: number = 0;

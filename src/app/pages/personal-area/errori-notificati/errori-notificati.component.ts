@@ -18,6 +18,7 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { FncUtils } from '../../../fncUtils/fncUtils';
 
 @Component({
   selector: 'app-errori-notificati',
@@ -78,6 +79,10 @@ constructor(private router: Router, private recipientService: RecipientService, 
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
       this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    getDate(date: string): string {
+      return FncUtils.GetFormattedData(date);
     }
 
     startTour() {

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggingService } from '../services/logging.service';
+import { FncUtils } from '../fncUtils/fncUtils';
 
 @Injectable({ providedIn: 'root' })
 export class HttpLoggingService {
@@ -19,13 +20,13 @@ export class HttpLoggingService {
           level: 'Information',
           message: `HTTP GET ${url} - SUCCESS`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString()
+          clientTime: FncUtils.GetAdjustedNowIso()
         }),
         error: (err) => this.logger.log({
           level: 'Error',
           message: `HTTP GET ${url} - ERROR: ${err.message}`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString(),
+          clientTime: FncUtils.GetAdjustedNowIso(),
           exception: err.message
         })
       })
@@ -39,13 +40,13 @@ export class HttpLoggingService {
           level: 'Information',
           message: `HTTP GET ${url} - SUCCESS`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString()
+          clientTime: FncUtils.GetAdjustedNowIso()
         }),
         error: (err) => this.logger.log({
           level: 'Error',
           message: `HTTP GET ${url} - ERROR: ${err.message}`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString(),
+          clientTime: FncUtils.GetAdjustedNowIso(),
           exception: err.message
         })
       })
@@ -59,13 +60,13 @@ export class HttpLoggingService {
           level: 'Information',
           message: `HTTP POST ${url} - SUCCESS`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString()
+          clientTime: FncUtils.GetAdjustedNowIso()
         }),
         error: (err) => this.logger.log({
           level: 'Error',
           message: `HTTP POST ${url} - ERROR: ${err.message}`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString(),
+          clientTime: FncUtils.GetAdjustedNowIso(),
           exception: err.message
         })
       })
@@ -79,13 +80,13 @@ export class HttpLoggingService {
           level: 'Information',
           message: `HTTP PUT ${url} - SUCCESS`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString()
+          clientTime: FncUtils.GetAdjustedNowIso()
         }),
         error: (err) => this.logger.log({
           level: 'Error',
           message: `HTTP PUT ${url} - ERROR: ${err.message}`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString(),
+          clientTime: FncUtils.GetAdjustedNowIso(),
           exception: err.message
         })
       })
@@ -99,13 +100,13 @@ export class HttpLoggingService {
           level: 'Information',
           message: `HTTP DELETE ${url} - SUCCESS`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString()
+          clientTime: FncUtils.GetAdjustedNowIso()
         }),
         error: (err) => this.logger.log({
           level: 'Error',
           message: `HTTP DELETE ${url} - ERROR: ${err.message}`,
           sourceContext: 'HttpLoggingService',
-          clientTime: new Date().toISOString(),
+          clientTime: FncUtils.GetAdjustedNowIso(),
           exception: err.message
         })
       })

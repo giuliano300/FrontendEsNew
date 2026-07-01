@@ -57,7 +57,7 @@ constructor(
   user: Users | null  = null;  
   dataSource = new MatTableDataSource<GetReportSpedizioni>([]);
 
-  startDateInit: string | null = new Date().toISOString().split('T')[0];
+  startDateInit: string | null = FncUtils.GetTodayInputValue();
   startDate: string | null = null;
   endDate: string | null = null;
   code: string | null = null;

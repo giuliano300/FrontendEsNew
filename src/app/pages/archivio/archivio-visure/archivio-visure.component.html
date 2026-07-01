@@ -85,7 +85,7 @@
                     <!-- Colonna ACCETTAZIONE -->
                     <ng-container matColumnDef="date">
                         <th mat-header-cell *matHeaderCellDef > ACCETTAZIONE </th>
-                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                        <td mat-cell *matCellDef="let element"> {{getDate(element.date)}} </td>
                     </ng-container>
 
                     <!-- Colonna prezzo -->

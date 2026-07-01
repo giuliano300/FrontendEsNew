@@ -337,7 +337,7 @@ private appStorage = inject(AppStorageService);
       o = {
         operation: {
           id: 0,
-          insertDate: new Date().toISOString(),
+          insertDate: FncUtils.GetAdjustedNowIso(),
           userId: this.user!.id!,
           userParentId: this.user!.parentId!,
           operationType: this.productType!,
@@ -371,7 +371,7 @@ private appStorage = inject(AppStorageService);
 
           this.send = false;
           if(res.operationId == 0)
-            this.errorMessage = "Si è verificato un errore nella creazione della spedizione.";
+            this.errorMessage = "Si Ã¨ verificato un errore nella creazione della spedizione.";
           else
           {
             this.formStorage.saveForm("riepilogo", res);

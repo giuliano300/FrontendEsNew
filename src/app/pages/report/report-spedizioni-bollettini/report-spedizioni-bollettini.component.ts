@@ -75,7 +75,7 @@ constructor(
   remove: boolean = false;
   firstLoading: boolean = false;
 
-  startDateInit: string | null = new Date().toISOString().split('T')[0];
+  startDateInit: string | null = FncUtils.GetTodayInputValue();
 
   pageIndex = 0;
   pageSize = 20;

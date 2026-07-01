@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { FrontendLogEntry } from '../interfaces/FrontendLogEntry';
 import { API_URL } from '@app/config/app-constants';
 import { AppStorageService } from './app-storage.service';
+import { FncUtils } from '../fncUtils/fncUtils';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class LoggingService {
     entry.userId = userId;
     entry.correlationId = this.getOrCreateCorrelationId();
     entry.browser = navigator.userAgent;
-    entry.clientTime ??= new Date().toISOString();
+    entry.clientTime ??= FncUtils.GetAdjustedNowIso();
 
     this.http.post(this.apiUrl, entry)
       .pipe(catchError(err => { console.error('Errore invio log', err); return of(null); }))

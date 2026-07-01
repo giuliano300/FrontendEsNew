@@ -17,7 +17,7 @@ export class ModalSpedizioneComponent  {
     recipient: {
       businessName: '',
       code: '',
-      insertDate: new Date().toISOString()
+      insertDate: FncUtils.GetAdjustedNowIso()
     },
     historicRecipientStatuses: []
   } as unknown as GetDettaglioDestinatario;

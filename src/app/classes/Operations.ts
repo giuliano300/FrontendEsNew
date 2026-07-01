@@ -1,6 +1,8 @@
+import { FncUtils } from "../fncUtils/fncUtils";
+
 export class Operations {
   id: number = 0;
-  insertDate: string = new Date().toISOString();
+  insertDate: string = FncUtils.GetAdjustedNowIso();
   userId: number = 0;
   userParentId: number = 0;
   operationType: number = 0;
