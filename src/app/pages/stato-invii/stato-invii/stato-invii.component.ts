@@ -60,6 +60,8 @@ id!: number;
   user: Users | null  = null;  
 
   firstLoading: boolean = false;
+  private pollTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private readonly pollIntervalMs = 10000;
 
   displayedColumns: string[] = ['date', 'numberOfRecipient', 'transferPercentage'];
   dataSource = new MatTableDataSource<any>([]);
@@ -102,7 +104,8 @@ id!: number;
           break;
       }
 
-      this.getStatoInvii();
+      this.stopPolling();
+      this.getStatoInvii(true);
 
     })
 
@@ -110,19 +113,46 @@ id!: number;
 
   }
 
-  getStatoInvii(){
-    this.firstLoading = true;
+  getStatoInvii(showLoading = false){
+    if (showLoading) {
+      this.firstLoading = true;
+    }
+
     this.operationService.getStatoInvii(this.user!.id!, this.id!)
-    .subscribe((data: GetStatoInvii[]) => {
-      if (!data || data.length === 0) {
-        this.dataSource.data = [];
-      } else {
-        this.dataSource.data = data;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    .subscribe({
+      next: (data: GetStatoInvii[]) => {
+        if (!data || data.length === 0) {
+          this.dataSource.data = [];
+          this.stopPolling();
+        } else {
+          this.dataSource.data = data;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.schedulePolling();
+        }
+        this.firstLoading = false;
+      },
+      error: () => {
+        this.firstLoading = false;
+        this.stopPolling();
       }
-      this.firstLoading = false;
     });
+  }
+
+  private schedulePolling(): void {
+    this.stopPolling();
+    this.pollTimeoutId = setTimeout(() => this.getStatoInvii(), this.pollIntervalMs);
+  }
+
+  private stopPolling(): void {
+    if (this.pollTimeoutId) {
+      clearTimeout(this.pollTimeoutId);
+      this.pollTimeoutId = null;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling();
   }
   
   ngAfterViewInit() {

@@ -21,7 +21,7 @@ export class FncUtils {
 
    constructor(private http: HttpClient) {}
 
-    private static readonly dbOffsetHours = 2;
+    private static readonly dbOffsetHours = 0;
 
     static AddDbOffset(date: Date): Date {
       const adjusted = new Date(date);
