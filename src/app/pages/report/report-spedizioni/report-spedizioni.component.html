@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md">
                     <label>PRODOTTO POSTALE</label>
                     <select formControlName="product">
                         <option [ngValue]="null">-- SELEZIONA PRODOTTO --</option>
@@ -47,7 +47,7 @@
                         <option [ngValue]="7">VISURA/CERTIFICATO</option>
                     </select>               
                 </div>
-                <div class="col-md-3">
+                <div class="col-md">
                     <label>ESITO</label>
                     <select formControlName="esito">
                         <option value="">--SELEZIONA ESITO--</option>
@@ -55,13 +55,22 @@
                         <option value="false">ERRORE</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md">
+                    <label>STATO CORRENTE</label>
+                    <select formControlName="current_state">
+                        <option [ngValue]="null">-- TUTTI --</option>
+                        <option *ngFor="let state of currentStateOptions" [ngValue]="state.value">
+                            {{state.label}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md">
                     <app-ui-submit-button
                         (click)="filterResults()"
                         [loading]="search"
                         label="CERCA" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md">
                     <app-ui-submit-button
                         (click)="removeFilter()"
                         [loading]="remove"

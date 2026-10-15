@@ -75,6 +75,15 @@
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <label>STATO CORRENTE</label>
+                    <select formControlName="current_state">
+                        <option [ngValue]="null">-- TUTTI --</option>
+                        <option *ngFor="let state of currentStateOptions" [ngValue]="state.value">
+                            {{state.label}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <app-ui-submit-button
                         (click)="filterResults()"
                         [loading]="search"

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
-import { TourPage } from '../../../interfaces/EnumTypes';
+import { CurrentStateOptions, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { getItalianPaginatorIntl } from '../../../mat-paginator-it';
 import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
@@ -66,6 +66,8 @@ constructor(
   paymentDataS: string | null = null;
   paymentDataE: string | null = null;
   paid: string | null = null;
+  currentState: number | null = null;
+  currentStateOptions = CurrentStateOptions;
   
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
@@ -92,6 +94,7 @@ constructor(
     start_date_pay: new FormControl(''),
     end_date_pay: new FormControl(''),
     sel_pagamento: new FormControl(''),
+    current_state: new FormControl<number | null>(null),
   });
   
   ngOnInit() {
@@ -146,7 +149,8 @@ constructor(
       this.totalCounts,
       this.paymentDataS,
       this.paymentDataE,
-      this.paid
+      this.paid,
+      this.currentState
     )
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
@@ -177,6 +181,7 @@ constructor(
     this.paymentDataS = this.form.value.start_date_pay || null;
     this.paymentDataE = this.form.value.end_date_pay || null;
     this.paid = this.form.value.sel_pagamento || null;
+    this.currentState = this.form.value.current_state ?? null;
     this.totalCounts = 0;
     this.pageIndex = 0;
   
@@ -196,7 +201,8 @@ constructor(
       esito: '',
       start_date_pay: '',
       end_date_pay: '',
-      sel_pagamento: ''
+      sel_pagamento: '',
+      current_state: null
     });
     this.remove = true;
     this.startDate = null;
@@ -208,6 +214,7 @@ constructor(
     this.paymentDataS = null;
     this.paymentDataE = null;
     this.paid = null;
+    this.currentState = null;
     this.totalCounts = 0;
     this.pageIndex = 0;
     if (this.paginator) 
@@ -221,7 +228,7 @@ constructor(
     .subscribe(response => {
       if(!response)
       {
-        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        this.openDialog("Documento non disponibile","Il documento richiesto non Ã¨ disponibile per il download.");
         return;
       }
 
@@ -264,7 +271,7 @@ constructor(
       const steps = [
         {
           id: 'reportspedizioni1',
-          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto, l'esito e lo stato dei pagamenti.",
+          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto, l'esito, lo stato corrente, la presenza del codice identificativo e lo stato dei pagamenti.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ModalSpedizioneComponent } from '../../../component/modal-spedizione/invii/modal-spedizione.component';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
-import { TourPage } from '../../../interfaces/EnumTypes';
+import { CurrentStateOptions, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
@@ -64,6 +64,8 @@ constructor(
   businessName: string | null = null;
   productType: number | null = 0;
   valid: string | null = null;
+  currentState: number | null = null;
+  currentStateOptions = CurrentStateOptions;
   
   totalRecords: number = 0;
   constPageSize: number = constPageSize;
@@ -100,7 +102,8 @@ constructor(
     nominativo: new FormControl(''),
     codice: new FormControl(''),
     product: new FormControl<number | null>(null),    
-    esito: new FormControl('')
+    esito: new FormControl(''),
+    current_state: new FormControl<number | null>(null)
   });
 
 
@@ -135,7 +138,11 @@ constructor(
       this.businessName,
       this.code,
       this.valid?.toString(),
-      this.totalCounts
+      this.totalCounts,
+      null,
+      null,
+      null,
+      this.currentState
     )
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
@@ -164,6 +171,7 @@ constructor(
     this.businessName = this.form.value.nominativo || null;
     this.productType = this.form.value.product! || null;
     this.valid = this.form.value.esito || null;
+    this.currentState = this.form.value.current_state ?? null;
     this.totalCounts = 0;
     this.pageIndex = 0;
     if (this.paginator) 
@@ -177,7 +185,7 @@ constructor(
     .subscribe(response => {
       if(!response)
       {
-        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        this.openDialog("Documento non disponibile","Il documento richiesto non Ã¨ disponibile per il download.");
         return;
       }
 
@@ -225,6 +233,7 @@ constructor(
       codice: '',
       product: null,
       esito: '',
+      current_state: null
     });
     
     this.remove = true;
@@ -234,6 +243,7 @@ constructor(
     this.businessName = null;
     this.productType = null;
     this.valid = null;
+    this.currentState = null;
     this.totalCounts = 0;
     this.pageIndex = 0;
     
@@ -247,7 +257,7 @@ constructor(
       const steps = [
         {
           id: 'reportspedizioni1',
-          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto e l'esito.",
+          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto, l'esito, lo stato corrente e la presenza del codice identificativo.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement

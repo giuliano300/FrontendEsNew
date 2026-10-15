@@ -39,7 +39,7 @@
                     style="height:7px; margin-top: 7px;">
                     </mat-progress-bar>
                     <div class="text-center mt-1 perc-numb">
-                    {{ element.transfer }}%
+                       {{ element.transferPercentage | number:'1.2-2' }}%
                     </div>
                 </td>
                 </ng-container>

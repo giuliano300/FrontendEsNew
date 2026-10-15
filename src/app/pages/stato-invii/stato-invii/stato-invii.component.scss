@@ -1,0 +1,5 @@
+:host ::ng-deep mat-progress-bar,
+:host ::ng-deep mat-progress-bar * {
+  transition: none !important;
+  animation: none !important;
+}

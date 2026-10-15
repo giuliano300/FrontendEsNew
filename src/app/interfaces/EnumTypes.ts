@@ -79,6 +79,31 @@ export enum NotificationType
   FromEs = 2
 }
 
+export enum CurrentState
+{
+  InAttesa = 0,
+  PresaInCarico = 1,
+  InLavorazione = 2,
+  ErroreSubmit = 5,
+  ErroreValidazione = 6,
+  ErroreConfirm = 7,
+  AccettatoOnline = 9,
+  DocumentoValidato = 11,
+  ErroreGenerico = 100
+}
+
+export const CurrentStateOptions: { value: CurrentState; label: string }[] = [
+  { value: CurrentState.InAttesa, label: 'In attesa' },
+  { value: CurrentState.PresaInCarico, label: 'Presa in carico' },
+  { value: CurrentState.InLavorazione, label: 'In lavorazione' },
+  { value: CurrentState.AccettatoOnline, label: 'Accettato on line' },
+  { value: CurrentState.DocumentoValidato, label: 'Documento validato' },
+  { value: CurrentState.ErroreSubmit, label: 'Errore submit' },
+  { value: CurrentState.ErroreValidazione, label: 'Errore validazione' },
+  { value: CurrentState.ErroreConfirm, label: 'Errore confirm' },
+  { value: CurrentState.ErroreGenerico, label: 'Errore generico' }
+];
+
 export enum TourPage
 {
   dashboard = 1,

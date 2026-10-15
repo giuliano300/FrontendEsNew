@@ -74,7 +74,8 @@ export class RecipientService {
         totalCounts: number = 0,
         paymentDateS?: string | null,
         paymentDateE?: string | null,
-        paid?: string | null
+        paid?: string | null,
+        currentState?: number | null
       ): Observable<GetReportSpedizioniResponse>
       {
         const params = new URLSearchParams({
@@ -91,6 +92,7 @@ export class RecipientService {
           paymentDateS: paymentDateS ?? '',
           paymentDateE: paymentDateE ?? '',
           paid: paid ?? '',
+          currentState: currentState != null ? currentState.toString() : '',
           totalCounts: totalCounts.toString() ?? '0'
         })
         return this.http.get<GetReportSpedizioniResponse>(`${this.apiUrl}/GetReportSpedizioni?${params.toString()}`);
