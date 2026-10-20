@@ -192,7 +192,17 @@ constructor(
         else 
         {
           this.userSender = data;
-          this.form.get('nominativo_ar')?.setValue(this.userSender!.businessName);
+          this.isOne = true;
+          this.form.patchValue({
+            nominativo_ar: data.businessName || '',
+            comp_nominativo_ar: data.complementNames || '',
+            indirizzo_ar: data.address || '',
+            comp_indirizzo_ar: data.complementAddress || '',
+            cap_ar: data.zipCode || '',
+            citta_ar: data.city || '',
+            provincia_ar: data.province || '',
+            stato_ar: data.state || 'ITALIA'
+          });
         }
     });
   }
@@ -200,8 +210,19 @@ constructor(
   setFormSenderUser(){
     this.removeErroMessage();
     const selectedValue = this.form.get('sel_mittente')?.value;
-    if(selectedValue == "")
-      this.form.get('nominativo_ar')?.setValue('');
+    if(selectedValue == "") {
+      this.userSender = null;
+      this.form.patchValue({
+        nominativo_ar: '',
+        comp_nominativo_ar: '',
+        indirizzo_ar: '',
+        comp_indirizzo_ar: '',
+        cap_ar: '',
+        citta_ar: '',
+        provincia_ar: '',
+        stato_ar: ''
+      });
+    }
     else
       this.getUserSender(parseInt(selectedValue!));
   }
@@ -255,7 +276,7 @@ enableARValidators() {
   this.form.get('citta_ar')?.setValidators([Validators.required]);
   this.form.get('stato_ar')?.setValidators([Validators.required]);
 
-  // aggiorna lo stato di validit‡
+  // aggiorna lo stato di validit√†
   this.form.get('nominativo_ar')?.updateValueAndValidity();
   this.form.get('indirizzo_ar')?.updateValueAndValidity();
   this.form.get('cap_ar')?.updateValueAndValidity();
@@ -300,7 +321,7 @@ onSubmit(): void {
           { key: 'indirizzo_ar', label: 'Indirizzo AR' },
           { key: 'cap_ar', label: 'CAP AR' },
           { key: 'provincia_ar', label: 'Provincia AR' },
-          { key: 'citta_ar', label: 'Citt‡ AR' },
+          { key: 'citta_ar', label: 'Citt√† AR' },
           { key: 'stato_ar', label: 'Stato AR' },
         ];
         
@@ -388,7 +409,7 @@ onSubmit(): void {
       },
       {
         id: 'multipleraccomandata2',
-        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparir‡ nel frontespizio della tua comunicazione.",
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparir√† nel frontespizio della tua comunicazione.",
         attachTo: {
           element: '.step-2',
           on: 'bottom' as PopperPlacement,

@@ -151,12 +151,17 @@ constructor(private router: Router,
 
   setProvince(event: Event){
     const v = (event.target as HTMLSelectElement).value;
-    const comune = this.comuni.filter(comune =>
-          comune.denominazione_ita.startsWith(v!)
+    const comune = this.comuni.find(comune =>
+          comune.denominazione_ita === v
     );
 
+    if (!comune) {
+      return;
+    }
+
     this.form.patchValue({
-      provincia: comune[0].sigla_provincia
+      provincia: comune.sigla_provincia,
+      stato: "ITALIA"
     });
 
   }
@@ -337,7 +342,7 @@ constructor(private router: Router,
         indirizzo: 'Indirizzo',
         cap: 'CAP',
         provincia: 'Provincia',
-        citta: 'Citt‡',
+        citta: 'Citt√†',
         stato: 'Stato',
         email: 'Email',
         pec: 'PEC',

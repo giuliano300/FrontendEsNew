@@ -109,8 +109,9 @@ alertMessage = false;
             pec: data.pec || '',
             id: data.id
           });
-          this.selectedSenderIds = JSON.parse(data.arraySenderId!);  
-          this.selectedOptions = JSON.parse(data.arraySenderId!);
+          const selectedSenderIds = this.parseSenderIds(data.arraySenderId);
+          this.selectedSenderIds = selectedSenderIds;
+          this.selectedOptions = selectedSenderIds;
       });
     });
 
@@ -123,13 +124,23 @@ alertMessage = false;
   getUserSenders(){
     this.userSenderService.getUserSenders(this.user!.id!)
     .subscribe((data: UserSenders[]) => {
-      if (!data || data.length === 0) {
-      } 
-      else 
-      {
-        this.options = data;
-      }
+      this.options = data || [];
     });
+  }
+
+  private parseSenderIds(value?: string): number[] {
+    if (!value) {
+      return [];
+    }
+
+    try {
+      const senderIds = JSON.parse(value);
+      return Array.isArray(senderIds)
+        ? senderIds.filter((id): id is number => typeof id === 'number')
+        : [];
+    } catch {
+      return [];
+    }
   }
 
   onCheckboxChange(event: MatSelectionListChange) {
@@ -141,8 +152,8 @@ alertMessage = false;
   onSubmit(): void {
     if (this.form.valid) {
      const formValues = this.form.value;
-     const userData: Users = this.user!;
-      Object.assign(userData, {
+     const userData: Users = {
+      ...this.user!,
         userTypes: formValues.userTypes,
         businessName: formValues.businessName,
         address: formValues.address,
@@ -154,7 +165,7 @@ alertMessage = false;
         password: formValues.pwd,
         pec: formValues.pec,
         parentId: this.user!.id
-      });
+      };
 
       userData.arraySenderId =  JSON.stringify(this.selectedOptions);
       userData.id = formValues.id;
@@ -163,19 +174,15 @@ alertMessage = false;
       {
         this.userService.setUser(userData)
           .subscribe((data: Users) => {
-          if (!data) {
-          } 
           this.router.navigate(['/utentiList']);
-        });
+        }, error => this.showSaveError(error));
       }
       else
       {
         this.userService.updateUser(userData)
           .subscribe((data: Users) => {
-          if (!data) {
-          } 
           this.router.navigate(['/utentiList']);
-        });
+        }, error => this.showSaveError(error));
       }
       
     }
@@ -184,6 +191,11 @@ alertMessage = false;
       this.alertMessage = true;
       this.alertText = 'Compila tutti i campi obbligatori correttamente.';
     }
+  }
+
+  private showSaveError(error: any): void {
+    this.alertMessage = true;
+    this.alertText = error?.error || 'Non Ã¨ stato possibile salvare lâ€™utente. Riprova.';
   }
 
 
@@ -204,7 +216,7 @@ alertMessage = false;
       const steps = [
         {
           id: 'archiviovisure1',
-          text: "Compila i dati del nuovo utente e specifica se può solo visualizzare o anche inserire contenuti.",
+          text: "Compila i dati del nuovo utente e specifica se puÃ² solo visualizzare o anche inserire contenuti.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement
@@ -219,7 +231,7 @@ alertMessage = false;
         },
         {
           id: 'archiviovisure1',
-          text: "Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni",
+          text: "Seleziona uno o piÃ¹ mittenti con cui l'utente potrÃ  spedire o visualizzare le comunicazioni",
           attachTo: {
             element: '.step-end',
             on: 'bottom' as PopperPlacement

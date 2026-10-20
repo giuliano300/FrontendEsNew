@@ -81,13 +81,16 @@
                     </div>
                 </div>
                 <div class="col-md-4 step-end">
-                    <h4 class="color-blue">SCEGLI I MITTENTI</h4>
-                    <p class="textsize-6">Seleziona uno o più mittenti con cui l'utente potrà spedire o visualizzare le comunicazioni.</p>
-                    <mat-selection-list class="sender-selection" (selectionChange)="onCheckboxChange($event)">
+                    <h4 class="color-blue">MITTENTI DELL'UTENZA PRINCIPALE</h4>
+                    <p class="textsize-6">Associa uno o più mittenti già inseriti dall'utenza principale: il sottoutente potrà usare solo quelli selezionati.</p>
+                    <mat-selection-list *ngIf="options.length; else noSenders" class="sender-selection" (selectionChange)="onCheckboxChange($event)">
                         <mat-list-option *ngFor="let option of options" [value]="option.id" [selected]="selectedSenderIds.includes(option.id!)">
                             {{ option.businessName }}
                         </mat-list-option>
                     </mat-selection-list>
+                    <ng-template #noSenders>
+                        <p class="textsize-6 sender-empty-state">L'utenza principale non ha ancora mittenti disponibili.</p>
+                    </ng-template>
                 </div>
             </div>
 

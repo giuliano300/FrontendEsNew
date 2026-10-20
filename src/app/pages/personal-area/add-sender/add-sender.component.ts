@@ -117,6 +117,7 @@ form: FormGroup;
       const userData = this.form.value;
       userData.id = this.form.value.id;
       userData.userId = this.user!.id!;
+      userData.userParentId = this.user!.parentId || 0;
 
       //let x = JSON.stringify(userData);
 

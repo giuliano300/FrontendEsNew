@@ -68,6 +68,7 @@ userSenders: UserSenders[] = [];
     this.userSenderService.getUserSenders(this.user!.id!)
     .subscribe((data: UserSenders[]) => {
       if (!data || data.length === 0) {
+        this.dataSource.data = [];
       } else {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -123,7 +124,7 @@ userSenders: UserSenders[] = [];
           },
           {
             id: 'archiviovisure1',
-            text: "In questa tabella è riportata la lista dei mittenti.",
+            text: "In questa tabella Ã¨ riportata la lista dei mittenti.",
             attachTo: {
               element: '.step-end',
               on: 'bottom' as PopperPlacement

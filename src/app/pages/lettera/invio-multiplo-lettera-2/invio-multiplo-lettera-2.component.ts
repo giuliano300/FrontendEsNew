@@ -20,8 +20,9 @@ import { UserSenders } from '../../../interfaces/UserSenders';
 import { CryptoJS } from '@app/utils/crypto';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
-import { TourPage } from '../../../interfaces/EnumTypes';
+import { ProductTypes, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { UserProducts } from '@app/interfaces/UserProducts';
 
 
 @Component({
@@ -70,7 +71,9 @@ constructor(private router: Router,
     userSender: UserSenders | null = null;
 
     user: Users | null  = null;
-  
+
+    isHidden: boolean = true;
+
 
   form = new FormGroup({
     sel_logo: new FormControl(''),
@@ -78,7 +81,7 @@ constructor(private router: Router,
     tipoFormato: new FormControl('A4', [Validators.required]),
     tipoColore: new FormControl('', [Validators.required]),
     tipoStampa: new FormControl('', [Validators.required]),
-    tipoLettera: new FormControl('Posta4', [Validators.required]),
+    tipoLettera: new FormControl('Posta1', [Validators.required]),
 
   });
 
@@ -97,9 +100,12 @@ constructor(private router: Router,
       if(parseInt(bul) == bulletin.si)
         this.bulletin = "con bollettino";
 
-      this.getUserLogos();
-      this.getUserSenders();
-      
+    this.getUserLogos();
+    this.getUserSenders();
+
+    const userProducts: UserProducts[] = JSON.parse(this.appStorage.getItem('userProducts') || 'null');
+      if(userProducts.some(product => product.type == ProductTypes.COL1))
+        this.isHidden = false;
   }
 
   setFormSenderUser(){
@@ -217,7 +223,7 @@ constructor(private router: Router,
       },
       {
         id: 'multipleletter2',
-        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirà nel frontespizio della tua comunicazione.",
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirï¿½ nel frontespizio della tua comunicazione.",
         attachTo: {
           element: '.step-2',
           on: 'bottom' as PopperPlacement,

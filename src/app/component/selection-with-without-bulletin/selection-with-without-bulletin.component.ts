@@ -24,7 +24,7 @@ export class SelectionWithWithoutBulletinComponent {
 
   
   
-  private appTour = inject(AppTourService);
+private appTour = inject(AppTourService);
 private appStorage = inject(AppStorageService);
 constructor(private router: Router, private shepherdService: ShepherdService){}
 
@@ -35,6 +35,7 @@ constructor(private router: Router, private shepherdService: ShepherdService){}
   navigation: string | null = null;
 
   sType: string | null = "";
+  tipoSpedizione: string = "tipoSpedizioneRaccomandata";
 
   alertMessage = false;
 
@@ -45,6 +46,52 @@ constructor(private router: Router, private shepherdService: ShepherdService){}
   ngOnInit(): void{
     const sendTypes = this.appStorage.getItem("sendType");
     this.sType = sendType[parseInt(sendTypes!)];
+    const tipoProdotto = parseInt(this.appStorage.getItem("productType")!);
+
+      switch(tipoProdotto){
+        case ProductTypes.ROL:
+          switch(this.tipoInvio){
+            case sendType.mutiplo:
+              this.tipoSpedizione = "/tipoSpedizioneRaccomandata";
+              break;
+            case sendType.singolo:
+              this.tipoSpedizione = "/tipoSpedizioneRaccomandata";
+              break;
+            default:
+              this.tipoSpedizione = "/not-found";
+              break;
+          }
+          break;
+          case ProductTypes.LOL:
+            switch(this.tipoInvio){
+              case sendType.mutiplo:
+                this.tipoSpedizione = "/tipoSpedizioneLettera";
+                break;
+              case sendType.singolo:
+                this.tipoSpedizione = "/tipoSpedizioneLettera";
+                break;
+              default:
+                this.navigation = "/not-found";
+                break;
+            }
+            break;
+            case ProductTypes.AGOL:
+              switch(this.tipoInvio){
+                case sendType.mutiplo:
+                  this.tipoSpedizione = "/tipoSpedizioneAgol";
+                  break;
+                case sendType.singolo:
+                  this.tipoSpedizione = "/tipoSpedizioneAgol";
+                  break;
+                default:
+                  this.navigation = "/not-found";
+                  break;
+              }
+              break;
+          default:
+          this.navigation = "/not-found";
+          break;
+    }
 
     this.getTourInThisPage();
 

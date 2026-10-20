@@ -54,7 +54,7 @@ form = new FormGroup({
   tipoFormato: new FormControl('A4', [Validators.required]),
   tipoColore: new FormControl('', [Validators.required]),
   tipoStampa: new FormControl('', [Validators.required]),
-  tipoLettera: new FormControl('Posta4', [Validators.required])
+  tipoLettera: new FormControl('Posta1', [Validators.required])
 });
 
 ngOnInit() {
@@ -142,7 +142,7 @@ removeErroMessage(): void {
     const steps = [
       {
         id: 'singlelettera',
-        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirà nel frontespizio della tua comunicazione.",
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirï¿½ nel frontespizio della tua comunicazione.",
         attachTo: {
           element: '.step-1',
           on: 'bottom' as PopperPlacement,

@@ -89,7 +89,7 @@ export class EditRecipientComponent {
       tempGuid: new FormControl('', [Validators.required])
     });
 
-    // Se c'è il bollettino, aggiungiamo i campi relativi
+    // Se c'Ã¨ il bollettino, aggiungiamo i campi relativi
     if (this.haveBulletin) {
       this.form.addControl('conto_corrente', new FormControl('', [Validators.required]));
       this.form.addControl('eseguito_nominativo', new FormControl('', [Validators.required]));
@@ -159,12 +159,17 @@ export class EditRecipientComponent {
  
    setProvince(event: Event){
      const v = (event.target as HTMLSelectElement).value;
-     const comune = this.comuni.filter(comune =>
-           comune.denominazione_ita.startsWith(v!)
-     );
+      const comune = this.comuni.find(comune =>
+            comune.denominazione_ita === v
+      );
+
+      if (!comune) {
+        return;
+      }
  
      this.form.patchValue({
-       provincia: comune[0].sigla_provincia
+        provincia: comune.sigla_provincia,
+        stato: "ITALIA"
      });
  
    }

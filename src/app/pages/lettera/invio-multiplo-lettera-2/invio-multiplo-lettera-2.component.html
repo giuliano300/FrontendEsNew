@@ -47,8 +47,8 @@
                     </section>
                 </div>
             </div>  
-            <div class="row step-3">
-                <div class="col-md-4">
+            <div class="row step-2">
+                <div class="col-md-4" [ngClass]="{'col-md-3': !isHidden, 'col-md-4': isHidden}">
                     <h3>
                         <img src="/assets/img/icn-formato.png" alt="Formato"> Formato
                     </h3>
@@ -67,7 +67,11 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-3 hidden">
+                <div class="col-md-3" [ngClass]="{
+                    'hidden': isHidden,
+                    'col-md-3': !isHidden,
+                    'col-md-4': isHidden
+                    }">
                     <h3>
                         <img src="/assets/img/icn-tipo-lettera.png" alt="Tipo lettera"> Tipo lettera
                     </h3>
@@ -86,7 +90,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" [ngClass]="{'col-md-3': !isHidden, 'col-md-4': isHidden}">
                     <h3>
                         <img src="/assets/img/icn-tipo-stampa.png" alt="Tipo stampa"> Tipo di stampa
                     </h3>
@@ -105,7 +109,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" [ngClass]="{'col-md-3': !isHidden, 'col-md-4': isHidden}">
                     <h3>
                         <img src="/assets/img/icn-fronte-retro.png" alt="Stampa fronte retro"> Stampa fronte/retro
                     </h3>
