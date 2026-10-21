@@ -161,7 +161,7 @@ export class UploadZipComponent {
           error: error => {
             this.errorMessage = error?.status === 413
               ? 'Il file ZIP supera il limite massimo consentito.'
-              : 'Errore durante l\'upload. Controllare che il file .zip contenga file .pdf';
+              : error?.error?.message || 'Errore durante l\'upload. Controllare che il file .zip contenga file .pdf';
             console.error(error);
             this.checking = false;
             this.sincro = false;
