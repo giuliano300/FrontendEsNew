@@ -1,0 +1,41 @@
+<section class="container segnalazioni-page">
+  <div class="row">
+    <div class="col-12 text-center mt-4">
+      <span class="page-kicker"><i class="bx bx-flag"></i> AREA PERSONALE</span>
+      <h1>Segnalazioni</h1>
+      <p class="mt-2 textsize-4">Qui trovi le spedizioni segnalate dal nostro staff perché non correggibili. Restano consultabili ma non sono più in lavorazione.</p>
+    </div>
+  </div>
+
+  <div class="row mt-4 relative">
+    <div class="col-12">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="dataSource.data.length">
+        <ng-container matColumnDef="insertDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+          <td mat-cell *matCellDef="let item">{{ getDate(item.insertDate) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="productType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Prodotto</th>
+          <td mat-cell *matCellDef="let item">{{ getProductName(item.productType) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="businessName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Destinatario</th>
+          <td mat-cell *matCellDef="let item">{{ item.businessName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Indirizzo</th>
+          <td mat-cell *matCellDef="let item">{{ item.address }}, {{ item.zipCode }} {{ item.city }} ({{ item.province }})</td>
+        </ng-container>
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef>Ultimo messaggio</th>
+          <td mat-cell *matCellDef="let item" class="report-message">{{ item.message || 'Spedizione segnalata' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator *ngIf="dataSource.data.length" [pageSize]="20" [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
+      <app-ui-empty-state [visible]="!loading && !dataSource.data.length" message="Non sono presenti spedizioni segnalate." />
+      <app-ui-loading-state [visible]="loading" />
+    </div>
+  </div>
+</section>

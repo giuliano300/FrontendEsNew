@@ -59,6 +59,11 @@ export class RecipientService {
         return this.http.get<Recipients[]>(`${this.apiUrl}?${params.toString()}`);
       }
 
+    getReportedRecipients(userId: number): Observable<Recipients[]> {
+      const params = new URLSearchParams({ userId: userId.toString() });
+      return this.http.get<Recipients[]>(`${this.apiUrl}/Reported?${params.toString()}`);
+    }
+
 
     getReportSpedizioni(
         userId:number,

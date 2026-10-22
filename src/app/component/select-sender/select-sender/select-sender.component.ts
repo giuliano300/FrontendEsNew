@@ -174,6 +174,10 @@ constructor(private router: Router, private userSendersService: UserSendersServi
         stato: u.state,
         nominativo_ar: u.businessName
       });
+
+      if (this.ricevutaDiRitorno && !this.form.get('destinatario')?.value) {
+        this.copySenderToReturnReceipt();
+      }
   }
 
   getComuni(){
@@ -349,6 +353,7 @@ constructor(private router: Router, private userSendersService: UserSendersServi
     this.form.get('destinatario')?.valueChanges.subscribe((checked) => {
       if (!checked) {
         this.setDestinatarioARValidators(true); // checkbox NON selezionato ? attiva i campi AR
+        this.copySenderToReturnReceipt();
       } else {
         this.setDestinatarioARValidators(false); // checkbox selezionato ? disattiva i campi AR
       }
@@ -391,6 +396,19 @@ constructor(private router: Router, private userSendersService: UserSendersServi
         control?.clearValidators();
       }
       control?.updateValueAndValidity();
+    });
+  }
+
+  private copySenderToReturnReceipt(): void {
+    this.form.patchValue({
+      nominativo_ar: this.form.value.nominativo || '',
+      comp_nominativo_ar: this.form.value.comp_nominativo || '',
+      indirizzo_ar: this.form.value.indirizzo || '',
+      comp_indirizzo_ar: this.form.value.comp_indirizzo || '',
+      cap_ar: this.form.value.cap || '',
+      citta_ar: this.form.value.citta || '',
+      provincia_ar: this.form.value.provincia || '',
+      stato_ar: this.form.value.stato || ''
     });
   }
 
@@ -455,14 +473,14 @@ constructor(private router: Router, private userSendersService: UserSendersServi
         indirizzo: 'Indirizzo',
         cap: 'CAP',
         provincia: 'Provincia',
-        citta: 'Citt‡',
+        citta: 'Citt√†',
         stato: 'Stato',
 
         nominativo_ar: 'Nominativo AR',
         indirizzo_ar: 'Indirizzo AR',
         cap_ar: 'CAP AR',
         provincia_ar: 'Provincia AR',
-        citta_ar: 'Citt‡ AR',
+        citta_ar: 'Citt√† AR',
         stato_ar: 'Stato AR'
       };
 

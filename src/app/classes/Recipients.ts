@@ -48,6 +48,7 @@ export class Recipients {
   pec?: string | null = null;
   cron?: string | null = null;
   notified?: boolean | null = false;
+  reported?: boolean = false;
   fromApi: boolean = false;
   tempGuid: string = FncUtils.generateGuid();
 

@@ -304,6 +304,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'segnalazioni',
+        loadComponent: () => import('./pages/personal-area/segnalazioni/segnalazioni.component').then(m => m.SegnalazioniComponent),
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'personalizzazioneCover',
         loadComponent: () => import('./pages/personal-area/personalizzazione-cover/personalizzazione-cover.component').then(m => m.PersonalizzazioneCoverComponent),
         canActivate: [AuthGuard]

@@ -79,7 +79,8 @@ export const userNavigation: NavigationItem[] = [
   { label: 'Rubrica mittenti', path: '/userSenders', icon: 'bx-send' },
   { label: 'Rubrica destinatari', path: '/rubricaDestinatari', icon: 'bx-book-content' },
   { label: 'Personalizzazione cover', path: '/personalizzazioneCover', icon: 'bx-image' },
-  { label: 'Errori notificati', path: '/erroriNotificati', icon: 'bx-error-circle' }
+  { label: 'Errori notificati', path: '/erroriNotificati', icon: 'bx-error-circle' },
+  { label: 'Segnalazioni', path: '/segnalazioni', icon: 'bx-flag' }
 ];
 
 export const routeTitles: Record<string, string> = {
@@ -134,6 +135,7 @@ export const routeTitles: Record<string, string> = {
   reportSpedizioniBollettini: 'Report spedizioni con bollettini',
   datiPersonali: 'Dati personali',
   erroriNotificati: 'Errori notificati',
+  segnalazioni: 'Segnalazioni',
   personalizzazioneCover: 'Personalizzazione cover',
   rubricaDestinatari: 'Rubrica destinatari',
   utentiList: 'Utenti',

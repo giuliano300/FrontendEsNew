@@ -96,7 +96,8 @@ alertMessage = false;
         .subscribe((data: Users) => {
         if (!data) {
         } 
-        else 
+        else {
+          this.oldUser = data;
           this.form.patchValue({
             userTypes: data.userTypes || '',
             businessName: data.businessName || '',
@@ -112,6 +113,7 @@ alertMessage = false;
           const selectedSenderIds = this.parseSenderIds(data.arraySenderId);
           this.selectedSenderIds = selectedSenderIds;
           this.selectedOptions = selectedSenderIds;
+        }
       });
     });
 
@@ -153,7 +155,7 @@ alertMessage = false;
     if (this.form.valid) {
      const formValues = this.form.value;
      const userData: Users = {
-      ...this.user!,
+      ...(this.oldUser ?? this.user!),
         userTypes: formValues.userTypes,
         businessName: formValues.businessName,
         address: formValues.address,
@@ -164,11 +166,14 @@ alertMessage = false;
         email: formValues.email,
         password: formValues.pwd,
         pec: formValues.pec,
-        parentId: this.user!.id
+        parentId: this.oldUser?.parentId ?? this.user!.id
       };
 
-      userData.arraySenderId =  JSON.stringify(this.selectedOptions);
-      userData.id = formValues.id;
+      userData.arraySenderId = JSON.stringify(this.selectedOptions);
+      // In modifica il record caricato è la fonte dell'id: il controllo del form
+      // può contenere una stringa o un valore non ancora aggiornato.
+      const formId = Number(formValues.id);
+      userData.id = this.oldUser?.id ?? (Number.isFinite(formId) ? formId : 0);
 
       if(userData.id == 0)
       {

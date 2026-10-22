@@ -86,14 +86,26 @@ form!: FormGroup;
       const updatedUser = Object.assign({}, this.user, userData);
 
       this.userService.updateUser(updatedUser)
-        .subscribe(response => {
-          if(response){
+        .subscribe({
+          next: response => {
+          if (response) {
             this.user = response;
             this.appStorage.setItem('user', JSON.stringify(this.user!));
             
             this.userService.setUserName(this.user!.businessName);
 
             this.updateOk = true;
+          }
+        },
+          error: error => {
+            this.alertMessage = true;
+            const response = error?.error;
+            const validationErrors = response?.errors
+              ? Object.values(response.errors).flat().join(' ')
+              : null;
+            this.alertText = validationErrors || response?.detail || response?.title ||
+              (typeof response === 'string' ? response : null) ||
+              'Non è stato possibile salvare i dati personali.';
           }
         });
       this.alertMessage = false;
