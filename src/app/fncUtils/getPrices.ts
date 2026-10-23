@@ -12,123 +12,133 @@ function GetVat(amount: number): number {
   return amount * 0.22;
 }
 
-export function GetFilePrice(productType:number, numberOfPages: number, colori: boolean, tipoPosta: string = 'Posta4'): Prices 
-{
+export function GetFilePrice(
+  productType: number,
+  numberOfPages: number,
+  colori: boolean,
+  tipoPosta: string = 'Posta4'
+): Prices {
   let type = 'LOL';
-  if(productType == ProductTypes.ROL)
+
+  if (productType === ProductTypes.ROL) {
     type = 'ROL';
-  if(productType == ProductTypes.TOL)
+  }
+
+  if (productType === ProductTypes.TOL) {
     type = 'TOL';
+  }
 
-  let totale = 0;
+  // TOL - prezzo minimo previsto dal listino: € 4,07 + IVA
+  if (type === 'TOL') {
+    const price = 4.07;
+    const vatPrice = Math.round(price * 0.22 * 100) / 100;
 
-  if(type == 'TOL'){
     return {
-      vatPrice: 0.90,
-      totalPrice: 4.97,
-      price: 4.07
+      price,
+      vatPrice,
+      totalPrice: Math.round((price + vatPrice) * 100) / 100
     } as Prices;
   }
 
   const count = numberOfPages;
 
-  if (count === 1) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 2.49 : 2.32;
-      } else {
-        totale = colori ? 1.24 : 1.07;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 4.00 : 3.70;
-    }
+  if (count <= 0) {
+    return {
+      vatPrice: 0,
+      totalPrice: 0,
+      price: 0
+    } as Prices;
   }
 
-  else if (count === 2) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 2.60 : 2.40;
-      } else {
-        totale = colori ? 1.35 : 1.15;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 4.15 : 3.80;
-    }
+  // Il listino arriva fino a 50 fogli
+  if (count > 50) {
+    throw new Error('Numero di pagine non supportato: massimo 50');
   }
 
-  else if (count === 3) {
-    if (tipoPosta === 'Posta1') {
-      totale = colori ? 2.69 : 2.46;
+  // Costo stampa / imbustamento:
+  // 1 foglio = 0,22 €
+  // ogni foglio successivo aggiunge 0,06 €
+  const printingPrice = 0.22 + ((count - 1) * 0.06);
+
+  /*
+   * ROL - Raccomandata Online nazionale
+   *
+   * 1-4 fogli   -> tariffa postale 4,30 €
+   * 5-20 fogli  -> tariffa postale 5,70 €
+   * 21-50 fogli -> tariffa postale 6,87 €
+   *
+   * Servizio e stampa sono esenti IVA.
+   */
+  if (type === 'ROL') {
+    let postalPrice = 0;
+
+    if (count <= 4) {
+      postalPrice = 4.30;
+    } else if (count <= 20) {
+      postalPrice = 5.70;
     } else {
-      totale = colori ? 1.44 : 1.21;
+      postalPrice = 6.87;
     }
-    if (type === 'ROL') {
-      totale = colori ? 4.30 : 3.90;
-    }
+
+    const totale = postalPrice + printingPrice;
+
+    return {
+      vatPrice: 0,
+      price: Math.round(totale * 100) / 100,
+      totalPrice: Math.round(totale * 100) / 100
+    } as Prices;
   }
 
-  else if (count === 4 || count === 5) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 2.81 : 2.55;
-      } else {
-        totale = colori ? 2.66 : 2.40;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 5.35 : 5.05;
-    }
-  }
-
-  else if (count >= 6 && count <= 9) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 3.03 : 2.67;
-      } else {
-        totale = colori ? 2.88 : 2.52;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 5.70 : 5.10;
-    }
-  }
-
-  else if (count >= 10 && count <= 13) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 3.33 : 2.85;
-      } else {
-        totale = colori ? 3.18 : 2.70;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 5.85 : 5.15;
-    }
-  }
-
-  else if (count > 13) {
-    if (type === 'LOL') {
-      if (tipoPosta === 'Posta1') {
-        totale = colori ? 3.78 : 3.15;
-      } else {
-        totale = colori ? 3.63 : 3.00;
-      }
-    } else if (type === 'ROL') {
-      totale = colori ? 6.00 : 5.20;
-    }
-  }
-
-  let p: Prices = {
-    vatPrice: 0,
-    totalPrice: totale,
-    price: totale,
-  };
-
+  /*
+   * LOL - Lettera Online nazionale
+   *
+   * La tariffa postale è esente IVA.
+   * Stampa / imbustamento / rendicontazione sono soggetti a IVA 22%.
+   */
   if (type === 'LOL') {
-    const vat = GetVat(totale);
-    p.vatPrice = vat;
-    p.price = totale - vat;
-  } else if (type === 'ROL') {
-    p.vatPrice = 0;
-    p.price = totale;
+    let postalPrice = 0;
+
+    if (tipoPosta === 'Posta1') {
+      /*
+       * Posta1
+       *
+       * 1-20 fogli  -> 2,44 €
+       * 21-50 fogli -> 5,82 €
+       */
+      postalPrice = count <= 20 ? 2.44 : 5.82;
+    } else {
+      /*
+       * Posta4
+       *
+       * 1-4 fogli   -> 1,10 €
+       * 5-20 fogli  -> 2,39 €
+       * 21-50 fogli -> 3,77 €
+       */
+      if (count <= 4) {
+        postalPrice = 1.10;
+      } else if (count <= 20) {
+        postalPrice = 2.39;
+      } else {
+        postalPrice = 3.77;
+      }
+    }
+
+    // IVA solo sulla quota stampa / imbustamento
+    const vatPrice = Math.round(printingPrice * 0.22 * 100) / 100;
+
+    const price = postalPrice + printingPrice;
+    const totalPrice = price + vatPrice;
+
+    return {
+      price: Math.round(price * 100) / 100,
+      vatPrice,
+      totalPrice: Math.round(totalPrice * 100) / 100
+    } as Prices;
   }
 
-  return p;
+  return {
+    vatPrice: 0,
+    totalPrice: 0,
+    price: 0
+  } as Prices;
 }
