@@ -18,127 +18,159 @@ export function GetFilePrice(
   colori: boolean,
   tipoPosta: string = 'Posta4'
 ): Prices {
-  let type = 'LOL';
 
-  if (productType === ProductTypes.ROL) {
-    type = 'ROL';
-  }
-
-  if (productType === ProductTypes.TOL) {
-    type = 'TOL';
-  }
-
-  // TOL - prezzo minimo previsto dal listino: € 4,07 + IVA
-  if (type === 'TOL') {
-    const price = 4.07;
-    const vatPrice = Math.round(price * 0.22 * 100) / 100;
-
-    return {
-      price,
-      vatPrice,
-      totalPrice: Math.round((price + vatPrice) * 100) / 100
-    } as Prices;
-  }
+  const round2 = (value: number): number =>
+    Math.round(value * 100) / 100;
 
   const count = numberOfPages;
 
   if (count <= 0) {
     return {
+      price: 0,
       vatPrice: 0,
-      totalPrice: 0,
-      price: 0
+      totalPrice: 0
     } as Prices;
   }
 
-  // Il listino arriva fino a 50 fogli
-  if (count > 50) {
-    throw new Error('Numero di pagine non supportato: massimo 50');
+  /*
+   * TOL - Telegramma Online
+   *
+   * Usiamo il prezzo minimo del listino:
+   * € 4,07 + IVA 22%
+   */
+  if (productType === ProductTypes.TOL) {
+
+    const price = 4.07;
+    const vatPrice = round2(price * 0.22);
+
+    return {
+      price: price,
+      vatPrice: vatPrice,
+      totalPrice: round2(price + vatPrice)
+    } as Prices;
   }
 
-  // Costo stampa / imbustamento:
-  // 1 foglio = 0,22 €
-  // ogni foglio successivo aggiunge 0,06 €
-  const printingPrice = 0.22 + ((count - 1) * 0.06);
+  /*
+   * Il listino gestisce fino a 50 fogli.
+   */
+  if (count > 50) {
+    throw new Error('Numero massimo di pagine supportato: 50');
+  }
 
   /*
-   * ROL - Raccomandata Online nazionale
+   * Costo stampa / imbustamento / rendicontazione
    *
-   * 1-4 fogli   -> tariffa postale 4,30 €
-   * 5-20 fogli  -> tariffa postale 5,70 €
-   * 21-50 fogli -> tariffa postale 6,87 €
-   *
-   * Servizio e stampa sono esenti IVA.
+   * 1 foglio = € 0,22
+   * ogni foglio successivo = + € 0,06
    */
-  if (type === 'ROL') {
-    let postalPrice = 0;
+  const printingPrice = round2(
+    0.22 + ((count - 1) * 0.06)
+  );
+
+  /*
+   * =========================================================
+   * ROL - RACCOMANDATA ONLINE
+   * =========================================================
+   *
+   * Tutto esente IVA.
+   */
+  if (productType === ProductTypes.ROL) {
+
+    let postalPrice: number;
 
     if (count <= 4) {
       postalPrice = 4.30;
-    } else if (count <= 20) {
+    }
+    else if (count <= 20) {
       postalPrice = 5.70;
-    } else {
+    }
+    else {
       postalPrice = 6.87;
     }
 
-    const totale = postalPrice + printingPrice;
+    const price = round2(
+      postalPrice + printingPrice
+    );
 
     return {
+      price: price,
       vatPrice: 0,
-      price: Math.round(totale * 100) / 100,
-      totalPrice: Math.round(totale * 100) / 100
+      totalPrice: price
     } as Prices;
   }
 
   /*
-   * LOL - Lettera Online nazionale
+   * =========================================================
+   * LOL - LETTERA ONLINE
+   * =========================================================
    *
-   * La tariffa postale è esente IVA.
-   * Stampa / imbustamento / rendicontazione sono soggetti a IVA 22%.
+   * Lettera normale = POSTA4
+   *
+   * La tariffa postale è ESENTE IVA.
+   * La quota stampa/imbustamento/rendicontazione
+   * è soggetta a IVA 22%.
    */
-  if (type === 'LOL') {
-    let postalPrice = 0;
 
-    if (tipoPosta === 'Posta1') {
-      /*
-       * Posta1
-       *
-       * 1-20 fogli  -> 2,44 €
-       * 21-50 fogli -> 5,82 €
-       */
-      postalPrice = count <= 20 ? 2.44 : 5.82;
-    } else {
-      /*
-       * Posta4
-       *
-       * 1-4 fogli   -> 1,10 €
-       * 5-20 fogli  -> 2,39 €
-       * 21-50 fogli -> 3,77 €
-       */
-      if (count <= 4) {
-        postalPrice = 1.10;
-      } else if (count <= 20) {
-        postalPrice = 2.39;
-      } else {
-        postalPrice = 3.77;
-      }
+  let postalPrice: number;
+
+  /*
+   * POSTA1
+   *
+   * Utilizzata solo quando richiesta esplicitamente.
+   
+  if (tipoPosta === 'Posta1') {
+
+    if (count <= 20) {
+      postalPrice = 2.44;
     }
-
-    // IVA solo sulla quota stampa / imbustamento
-    const vatPrice = Math.round(printingPrice * 0.22 * 100) / 100;
-
-    const price = postalPrice + printingPrice;
-    const totalPrice = price + vatPrice;
-
-    return {
-      price: Math.round(price * 100) / 100,
-      vatPrice,
-      totalPrice: Math.round(totalPrice * 100) / 100
-    } as Prices;
+    else {
+      postalPrice = 5.82;
+    }
   }
 
+  /*
+   * POSTA4
+   *
+   * È la lettera normale/default.
+   
+  else {*/
+
+    if (count <= 4) {
+      postalPrice = 1.10;
+    }
+    else if (count <= 20) {
+      postalPrice = 2.39;
+    }
+    else {
+      postalPrice = 3.77;
+    }
+  /*}
+
+  /*
+   * Prezzo NETTO:
+   *
+   * tariffa postale
+   * +
+   * stampa/imbustamento
+   */
+  const price = round2(
+    postalPrice + printingPrice
+  );
+
+  /*
+   * IVA SOLO sulla quota stampa.
+   */
+  const vatPrice = round2(
+    printingPrice * 0.22
+  );
+
+  const totalPrice = round2(
+    price + vatPrice
+  );
+
   return {
-    vatPrice: 0,
-    totalPrice: 0,
-    price: 0
+    price: price,
+    vatPrice: vatPrice,
+    totalPrice: totalPrice
   } as Prices;
 }
