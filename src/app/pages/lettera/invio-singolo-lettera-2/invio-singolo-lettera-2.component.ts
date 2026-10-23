@@ -17,6 +17,7 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { ProductTypes, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { UserProducts } from '../../../interfaces/UserProducts';
+import { UtilityService } from '@app/services/utility.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class InvioSingoloLettera2Component {
   
   private appTour = inject(AppTourService);
 private appStorage = inject(AppStorageService);
+private utilityService = inject(UtilityService);
 bulletin: string | null = "senza bollettino";
   constructor(private router: Router,  
     private userLogosService: UserLogosService,
@@ -112,6 +114,10 @@ onSubmit(): void {
     return;
   }
 
+    const productType = Number(this.appStorage.getItem('productType'));
+    const effectiveProduct = this.utilityService.getRealProduct(productType, tipoLettera!);
+    const effectivePosteType = effectiveProduct === ProductTypes.COL4 ? 'Posta4' : tipoLettera;
+
     const datiForm = {
       selLogo: this.form.value.sel_logo,
       tipoFormato: this.form.value.tipoFormato,
@@ -121,7 +127,7 @@ onSubmit(): void {
       tipoinvio: this.appStorage.getItem('sendType'),
       prodotto: this.appStorage.getItem('productType'),
       bollettino:  this.appStorage.getItem('bulletin'),
-      tipoLettera: this.form.value.tipoLettera
+      tipoLettera: effectivePosteType
     };
 
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(datiForm), secretKey).toString();

@@ -23,6 +23,7 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 import { ProductTypes, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { UserProducts } from '@app/interfaces/UserProducts';
+import { UtilityService } from '@app/services/utility.service';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class InvioMultiploLettera2Component {
   
   private appTour = inject(AppTourService);
 private appStorage = inject(AppStorageService);
+private utilityService = inject(UtilityService);
 constructor(private router: Router, 
       private userSendersService: UserSendersService, 
       private userLogosService: UserLogosService, 
@@ -173,12 +175,16 @@ constructor(private router: Router,
         return;
       }
 
+      const productType = Number(this.appStorage.getItem('productType'));
+      const effectiveProduct = this.utilityService.getRealProduct(productType, tipoLettera!);
+      const effectivePosteType = effectiveProduct === ProductTypes.COL4 ? 'Posta4' : tipoLettera;
+
       const datiForm = {
         selLogo: this.form.value.sel_logo,
         tipoFormato: this.form.value.tipoFormato,
         tipoColore: this.form.value.tipoColore,
         tipoStampa: this.form.value.tipoStampa,
-        tipoLettera: this.form.value.tipoLettera,
+        tipoLettera: effectivePosteType,
         tipoinvio: this.appStorage.getItem('sendType'),
         prodotto: this.appStorage.getItem('productType'),
         bollettino:  this.appStorage.getItem('bulletin'),
