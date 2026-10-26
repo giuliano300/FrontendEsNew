@@ -28,7 +28,7 @@ export class AddSenderModalComponent {
     zipCode: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(5)] }),
     city: new FormControl('', { nonNullable: true, validators: Validators.required }),
     province: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(2)] }),
-    state: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    state: new FormControl('ITALIA', { nonNullable: true, validators: Validators.required }),
     mobile: new FormControl('', { nonNullable: true }),
     email: new FormControl('', { nonNullable: true, validators: Validators.email })
   });
