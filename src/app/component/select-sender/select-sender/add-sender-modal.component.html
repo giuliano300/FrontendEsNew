@@ -1,0 +1,80 @@
+<div class="modal-header">
+  <div class="sender-modal-title-wrap">
+    <span class="sender-modal-title-icon"><i class="bx bx-user-plus" aria-hidden="true"></i></span>
+    <div>
+    <span class="sender-modal-eyebrow">RUBRICA MITTENTI</span>
+    <h4 class="modal-title">Aggiungi un mittente</h4>
+    </div>
+  </div>
+  <button type="button" class="btn-close" aria-label="Chiudi" (click)="dismiss()"></button>
+</div>
+
+<form id="add-sender-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="modal-body">
+    <p class="sender-modal-intro">Completa i dati qui sotto. Il mittente sarà aggiunto alla rubrica e selezionato per questa spedizione.</p>
+    <div class="sender-modal-section">
+      <h5>Dati del mittente</h5>
+      <div class="sender-modal-grid">
+        <label class="sender-modal-field">
+          <span>Nominativo <b>*</b></span>
+          <input type="text" formControlName="businessName" placeholder="Nome o ragione sociale" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Completamento nominativo</span>
+          <input type="text" formControlName="complementNames" placeholder="Es. reparto, ufficio" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Indirizzo <b>*</b></span>
+          <input type="text" formControlName="address" placeholder="Via e numero civico" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Completamento indirizzo</span>
+          <input type="text" formControlName="complementAddress" placeholder="Scala, interno..." />
+        </label>
+      </div>
+    </div>
+
+    <div class="sender-modal-section">
+      <h5>Indirizzo</h5>
+      <div class="sender-modal-grid sender-modal-grid-address">
+        <label class="sender-modal-field">
+          <span>CAP <b>*</b></span>
+          <input type="text" formControlName="zipCode" maxlength="5" placeholder="00000" />
+        </label>
+        <label class="sender-modal-field sender-modal-field-city">
+          <span>Città <b>*</b></span>
+          <input type="text" formControlName="city" placeholder="Città" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Provincia <b>*</b></span>
+          <input type="text" formControlName="province" maxlength="2" placeholder="XX" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Stato <b>*</b></span>
+          <input type="text" formControlName="state" placeholder="Italia" />
+        </label>
+      </div>
+    </div>
+
+    <div class="sender-modal-section sender-modal-section-contact">
+      <h5>Contatti <small>facoltativi</small></h5>
+      <div class="sender-modal-grid">
+        <label class="sender-modal-field">
+          <span>Telefono</span>
+          <input type="text" formControlName="mobile" maxlength="15" placeholder="Numero di telefono" />
+        </label>
+        <label class="sender-modal-field">
+          <span>Email</span>
+          <input type="email" formControlName="email" placeholder="nome@azienda.it" />
+        </label>
+      </div>
+    </div>
+    <app-ui-alert [visible]="alertMessage" [message]="alertText" />
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="sender-modal-cancel" (click)="dismiss()">Annulla</button>
+    <button type="submit" class="sender-modal-save" [disabled]="saving">
+      {{ saving ? 'Salvataggio...' : 'Salva e seleziona' }}
+    </button>
+  </div>
+</form>

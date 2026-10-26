@@ -25,13 +25,14 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-md-6 step-1">
-                    <section class="select-form-type">
+                    <section class="select-form-type sender-select-panel">
                         <span>Seleziona il mittente dalla rubrica</span>
                         <select formControlName="sel_mittente" (change)="setFormSenderUser()">
                             <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
                              <option *ngFor="let option of userSenders" [value]="option.id">
                                 {{ option.businessName }}
-                            </option>  
+                            </option>
+                            <option value="__add_sender__">+ Aggiungi un nuovo mittente</option>
                         </select>
                     </section>
                 </div>

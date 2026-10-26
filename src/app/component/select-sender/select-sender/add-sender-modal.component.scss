@@ -1,0 +1,214 @@
+:host {
+  display: block;
+  color: #223247;
+}
+
+.modal-header {
+  align-items: flex-start;
+  border-bottom: 1px solid #e8edf3;
+  padding: 1.35rem 1.6rem 1.1rem;
+  background: linear-gradient(120deg, #f6faff 0%, #fff 72%);
+}
+
+.sender-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sender-modal-title-icon {
+  display: inline-grid;
+  width: 2.45rem;
+  height: 2.45rem;
+  place-items: center;
+  border-radius: 0.68rem;
+  background: #e4f0f8;
+  color: #1e5b91;
+  font-size: 1.35rem;
+}
+
+.modal-title {
+  margin: 0.25rem 0 0;
+  color: #173b67;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.sender-modal-eyebrow {
+  color: #64809f;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.modal-body {
+  padding: 1.1rem 1.6rem 0.45rem;
+  background: #f8fafc;
+}
+
+.sender-modal-intro {
+  margin: 0 0 1.1rem;
+  color: #61758b;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.sender-modal-section {
+  position: relative;
+  margin: 0 -0.15rem 0.75rem;
+  padding: 0.95rem 1.15rem 1.05rem;
+  border: 1px solid #e4ebf2;
+  border-radius: 0.7rem;
+  background: #fff;
+  box-shadow: 0 3px 10px rgb(37 64 91 / 3%);
+}
+
+.sender-modal-section h5 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.2rem;
+  color: #1e527f;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sender-modal-section h5::before {
+  width: 4px;
+  height: 15px;
+  border-radius: 99px;
+  background: #6ba5d1;
+  content: '';
+}
+
+.sender-modal-section h5 small {
+  margin-left: 0.35rem;
+  color: #8593a3;
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+.sender-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 0.9rem;
+}
+
+.sender-modal-grid-address {
+  grid-template-columns: 0.8fr 1.7fr 0.65fr 1fr;
+}
+
+.sender-modal-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.33rem;
+  margin: 0;
+  color: #536b82;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+/* Etichette dei campi: riprendono la misura e la spaziatura delle modali del sito. */
+.modal-body .sender-modal-field > span {
+  float: left;
+  width: 90%;
+  margin: 15px 0 0;
+  font-size: 13px;
+}
+
+.sender-modal-field b {
+  color: #d34c55;
+}
+
+.sender-modal-field input {
+  width: 100%;
+  min-width: 0;
+  height: 2.5rem;
+  padding: 0 0.72rem;
+  border: 1px solid #d4e0eb;
+  border-radius: 0.42rem;
+  outline: none;
+  background: #fff;
+  color: #26384b;
+  font-size: 0.84rem;
+  font-weight: 400;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sender-modal-field input::placeholder {
+  color: #a2adba;
+}
+
+.sender-modal-field input:focus {
+  border-color: #387db5;
+  box-shadow: 0 0 0 3px rgb(56 125 181 / 13%);
+}
+
+.modal-footer {
+  gap: 0.55rem;
+  border-top: 1px solid #e4ebf2;
+  padding: 0.9rem 1.6rem 1rem;
+  background: #fff;
+}
+
+.sender-modal-cancel,
+.sender-modal-save {
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sender-modal-cancel {
+  border: 1px solid #d4dde7;
+  background: #fff;
+  color: #52657a;
+}
+
+.sender-modal-cancel:hover {
+  background: #f3f6f9;
+}
+
+.sender-modal-save {
+  border: 1px solid #28669b;
+  background: #28669b;
+  color: #fff;
+}
+
+.sender-modal-save:hover:not(:disabled) {
+  border-color: #1f5789;
+  background: #1f5789;
+}
+
+.sender-modal-save:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+@media (max-width: 575px) {
+  .modal-header,
+  .modal-body {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .sender-modal-grid,
+  .sender-modal-grid-address {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sender-modal-section {
+    padding: 0.85rem;
+  }
+
+  .modal-footer {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}

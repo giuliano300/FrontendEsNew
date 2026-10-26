@@ -24,7 +24,7 @@ export function GetFilePrice(
 
   const count = numberOfPages;
 
-  if (count <= 0) {
+  if (count <= 0 && productType !== ProductTypes.TOL) {
     return {
       price: 0,
       vatPrice: 0,

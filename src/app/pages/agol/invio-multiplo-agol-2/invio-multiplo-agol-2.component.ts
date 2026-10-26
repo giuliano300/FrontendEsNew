@@ -24,6 +24,8 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddSenderModalComponent } from '../../../component/select-sender/select-sender/add-sender-modal.component';
 
 
 @Component({
@@ -43,7 +45,8 @@ constructor(private router: Router,
       private userLogosService: UserLogosService, 
       private globalServices: GlobalServicesService,     
       private formStorage: FormStorageService,
-      private shepherdService: ShepherdService
+      private shepherdService: ShepherdService,
+      private modalService: NgbModal
 
   ) {}
 
@@ -228,10 +231,36 @@ form = new FormGroup({
   setFormSenderUser(){
     this.removeErroMessage();
     const selectedValue = this.form.get('sel_mittente')?.value;
+    if (selectedValue === '__add_sender__') {
+      this.addSender(this.userSender?.id?.toString() || '');
+      return;
+    }
     if(selectedValue == "")
       this.form.get('nominativo_ar')?.setValue('');
     else
       this.getUserSender(parseInt(selectedValue!));
+  }
+
+  addSender(previousSelection = ''): void {
+    const modalRef = this.modalService.open(AddSenderModalComponent, {
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+      windowClass: 'sender-quick-add-modal'
+    });
+    modalRef.componentInstance.userId = this.user!.id!;
+    modalRef.componentInstance.userParentId = this.user!.parentId || 0;
+
+    modalRef.closed.subscribe((sender: UserSenders) => {
+      this.userSenders = [...this.userSenders, sender];
+      this.userSender = sender;
+      this.form.patchValue({
+        sel_mittente: sender.id?.toString() || '',
+        nominativo_ar: sender.businessName || ''
+      });
+      this.removeErroMessage();
+    });
+    modalRef.dismissed.subscribe(() => this.form.patchValue({ sel_mittente: previousSelection }));
   }
 
 
@@ -262,7 +291,7 @@ form = new FormGroup({
     if (!nominativo_ar) errors.push('Nominativo');
     if (!indirizzo_ar) errors.push('Indirizzo');
     if (!cap_ar) errors.push('Cap');
-    if (!citta_ar) errors.push('Città');
+    if (!citta_ar) errors.push('Cittï¿½');
     if (!provincia_ar) errors.push('Provincia');
     if (!stato_ar) errors.push('Stato');
 
@@ -325,7 +354,7 @@ form = new FormGroup({
     const steps = [
       {
         id: 'multipleagol',
-        text: "Seleziona un mittente dal menu a tendina.",
+        text: "Seleziona un mittente dal menu a tendina oppure aggiungine uno alla rubrica con il pulsante dedicato.",
         attachTo: {
           element: '.step-1',
           on: 'bottom' as PopperPlacement,
@@ -340,7 +369,7 @@ form = new FormGroup({
       },
       {
         id: 'multipleagol2',
-        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirà nel frontespizio della tua comunicazione.",
+        text: "Seleziona il logo dalla lista.<br>Una volta selezionato apparirï¿½ nel frontespizio della tua comunicazione.",
         attachTo: {
           element: '.step-2',
           on: 'bottom' as PopperPlacement,

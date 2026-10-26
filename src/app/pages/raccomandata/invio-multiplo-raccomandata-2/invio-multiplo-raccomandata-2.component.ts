@@ -24,6 +24,8 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddSenderModalComponent } from '../../../component/select-sender/select-sender/add-sender-modal.component';
 
 
 
@@ -44,7 +46,8 @@ constructor(
     private userLogosService: UserLogosService, 
     private globalServices: GlobalServicesService,     
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService
+    private shepherdService: ShepherdService,
+    private modalService: NgbModal
     ) {}
 
   page: number = TourPage.raccomandataMultipla2;
@@ -210,6 +213,10 @@ constructor(
   setFormSenderUser(){
     this.removeErroMessage();
     const selectedValue = this.form.get('sel_mittente')?.value;
+    if (selectedValue === '__add_sender__') {
+      this.addSender(this.userSender?.id?.toString() || '');
+      return;
+    }
     if(selectedValue == "") {
       this.userSender = null;
       this.form.patchValue({
@@ -225,6 +232,35 @@ constructor(
     }
     else
       this.getUserSender(parseInt(selectedValue!));
+  }
+
+  addSender(previousSelection = ''): void {
+    const modalRef = this.modalService.open(AddSenderModalComponent, {
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+      windowClass: 'sender-quick-add-modal'
+    });
+    modalRef.componentInstance.userId = this.user!.id!;
+    modalRef.componentInstance.userParentId = this.user!.parentId || 0;
+
+    modalRef.closed.subscribe((sender: UserSenders) => {
+      this.userSenders = [...this.userSenders, sender];
+      this.userSender = sender;
+      this.form.patchValue({
+        sel_mittente: sender.id?.toString() || '',
+        nominativo_ar: sender.businessName || '',
+        comp_nominativo_ar: sender.complementNames || '',
+        indirizzo_ar: sender.address || '',
+        comp_indirizzo_ar: sender.complementAddress || '',
+        cap_ar: sender.zipCode || '',
+        citta_ar: sender.city || '',
+        provincia_ar: sender.province || '',
+        stato_ar: sender.state || ''
+      });
+      this.removeErroMessage();
+    });
+    modalRef.dismissed.subscribe(() => this.form.patchValue({ sel_mittente: previousSelection }));
   }
 
 
@@ -394,7 +430,7 @@ onSubmit(): void {
     const steps = [
       {
         id: 'multipleraccomandata',
-        text: "Seleziona un mittente dal menu a tendina.",
+        text: "Seleziona un mittente dal menu a tendina oppure aggiungine uno alla rubrica con il pulsante dedicato.",
         attachTo: {
           element: '.step-1',
           on: 'bottom' as PopperPlacement,

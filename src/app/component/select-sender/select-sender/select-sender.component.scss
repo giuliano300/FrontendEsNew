@@ -1,0 +1,44 @@
+/* Stessa struttura visiva dei normali selettori degli step di spedizione. */
+.generic-form .select-form-type.sender-select-panel {
+  height: 120px !important;
+  padding: 0 !important;
+}
+
+.sender-select-copy {
+  text-align: center;
+}
+
+.generic-form .sender-select-copy > span {
+  display: block;
+  margin: 0 !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+}
+
+.sender-select-copy > span i,
+.sender-select-copy small {
+  display: none;
+}
+
+.sender-select-actions {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generic-form .select-form-type.sender-select-panel select {
+  width: auto !important;
+  min-width: 460px !important;
+  max-width: 70% !important;
+  height: 56px !important;
+  margin-bottom: 30px !important;
+}
+
+@media (max-width: 767px) {
+  .generic-form .select-form-type.sender-select-panel select {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}

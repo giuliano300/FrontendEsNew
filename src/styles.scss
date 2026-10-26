@@ -6,6 +6,21 @@
 
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+.sender-select-panel select {
+    height: 56px!important;
+}
+
+.sender-quick-add-modal .modal-content {
+    overflow: hidden;
+    border: 0;
+    border-radius: 16px;
+    box-shadow: 0 24px 74px rgba(18, 39, 64, .26);
+}
+
+.sender-quick-add-modal .modal-dialog {
+    max-width: 760px;
+}
+
 :root {
     @include mat.dialog-overrides((
       container-shape: rectangle,

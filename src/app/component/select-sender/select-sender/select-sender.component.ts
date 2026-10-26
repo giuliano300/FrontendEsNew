@@ -30,6 +30,8 @@ import { Placement as PopperPlacement } from '@popperjs/core';
 
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { AddSenderModalComponent } from './add-sender-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -47,7 +49,8 @@ export class SelectSenderComponent {
   private appTour = inject(AppTourService);
 private appStorage = inject(AppStorageService);
 constructor(private router: Router, private userSendersService: UserSendersService, 
-    private globalServices: GlobalServicesService, private formStorage: FormStorageService, private shepherdService: ShepherdService) {}
+    private globalServices: GlobalServicesService, private formStorage: FormStorageService, private shepherdService: ShepherdService,
+    private modalService: NgbModal) {}
 
   page: number = TourPage.selectSender;
 
@@ -140,6 +143,10 @@ constructor(private router: Router, private userSendersService: UserSendersServi
 
   setFormSenderUser(){
     const selectedValue = this.form.get('sel_mittente')?.value;
+    if (selectedValue === '__add_sender__') {
+      this.addSender(this.userSender?.id?.toString() || '');
+      return;
+    }
     if(selectedValue == "")
       this.removeFields();
     else
@@ -378,6 +385,24 @@ constructor(private router: Router, private userSendersService: UserSendersServi
       });
   }
 
+  addSender(previousSelection = ''): void {
+    const modalRef = this.modalService.open(AddSenderModalComponent, {
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+      windowClass: 'sender-quick-add-modal'
+    });
+    modalRef.componentInstance.userId = this.user!.id!;
+    modalRef.componentInstance.userParentId = this.user!.parentId || 0;
+
+    modalRef.closed.subscribe((sender: UserSenders) => {
+      this.userSenders = [...this.userSenders, sender];
+      this.form.patchValue({ sel_mittente: sender.id?.toString() || '' });
+      this.setFormValue(sender);
+    });
+    modalRef.dismissed.subscribe(() => this.form.patchValue({ sel_mittente: previousSelection }));
+  }
+
   setDestinatarioARValidators(active: boolean): void {
     const controls = [
       'nominativo_ar',
@@ -499,7 +524,7 @@ constructor(private router: Router, private userSendersService: UserSendersServi
     const steps = [
       {
         id: 'singleraccomandata',
-        text: "Seleziona un mittente dal menu a tendina.",
+        text: "Seleziona un mittente dal menu a tendina oppure aggiungine uno alla rubrica con il pulsante 'AGGIUNGI MITTENTE'.",
         attachTo: {
           element: '.step-1',
           on: 'bottom' as PopperPlacement,

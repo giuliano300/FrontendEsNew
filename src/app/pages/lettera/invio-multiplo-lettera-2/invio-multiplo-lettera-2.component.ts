@@ -24,6 +24,8 @@ import { ProductTypes, TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { UserProducts } from '@app/interfaces/UserProducts';
 import { UtilityService } from '@app/services/utility.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddSenderModalComponent } from '../../../component/select-sender/select-sender/add-sender-modal.component';
 
 
 @Component({
@@ -43,7 +45,8 @@ constructor(private router: Router,
       private userLogosService: UserLogosService, 
       private globalServices: GlobalServicesService,     
       private formStorage: FormStorageService,
-      private shepherdService: ShepherdService
+      private shepherdService: ShepherdService,
+      private modalService: NgbModal
 ) {}
 
     page: number = TourPage.letteraMultipla2;
@@ -113,6 +116,10 @@ constructor(private router: Router,
   setFormSenderUser(){
     this.removeErroMessage();
     const selectedValue = this.form.get('sel_mittente')?.value;
+    if (selectedValue === '__add_sender__') {
+      this.addSender(this.userSender?.id?.toString() || '');
+      return;
+    }
     if(selectedValue != "")
       this.getUserSender(parseInt(selectedValue!));
   }
@@ -139,6 +146,25 @@ constructor(private router: Router,
           this.userSender = data;
         }
     });
+  }
+
+  addSender(previousSelection = ''): void {
+    const modalRef = this.modalService.open(AddSenderModalComponent, {
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+      windowClass: 'sender-quick-add-modal'
+    });
+    modalRef.componentInstance.userId = this.user!.id!;
+    modalRef.componentInstance.userParentId = this.user!.parentId || 0;
+
+    modalRef.closed.subscribe((sender: UserSenders) => {
+      this.userSenders = [...this.userSenders, sender];
+      this.userSender = sender;
+      this.form.patchValue({ sel_mittente: sender.id?.toString() || '' });
+      this.removeErroMessage();
+    });
+    modalRef.dismissed.subscribe(() => this.form.patchValue({ sel_mittente: previousSelection }));
   }
 
   getUserLogos(){
@@ -214,7 +240,7 @@ constructor(private router: Router,
     const steps = [
       {
         id: 'multiplelettera',
-        text: "Seleziona un mittente dal menu a tendina.",
+        text: "Seleziona un mittente dal menu a tendina oppure aggiungine uno alla rubrica con il pulsante dedicato.",
         attachTo: {
           element: '.step-1',
           on: 'bottom' as PopperPlacement,

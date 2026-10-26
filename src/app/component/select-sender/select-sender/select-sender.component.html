@@ -5,21 +5,27 @@
     <div class="generic-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-md-12">
-                    <section class="select-form-type step-1">
-                        <span>Seleziona un mittente dalla rubrica</span>
-                        <select formControlName="sel_mittente" (change)="setFormSenderUser()">
-                            <option value="" selected>-- Seleziona mittente dalla rubrica --</option>
-                             <option *ngFor="let option of userSenders" [value]="option.id">
-                                {{ option.businessName }}
-                            </option>      
-                        </select>
+                <div class="col-md-12 step-1">
+                    <section class="select-form-type sender-select-panel">
+                        <div class="sender-select-copy">
+                            <span><i class="bx bx-user-pin" aria-hidden="true"></i> Mittente della spedizione</span>
+                            <small>Selezionalo dalla rubrica oppure aggiungilo senza uscire dal flusso.</small>
+                        </div>
+                        <div class="sender-select-actions">
+                            <select formControlName="sel_mittente" (change)="setFormSenderUser()">
+                                <option value="" selected>Seleziona un mittente dalla rubrica</option>
+                                <option *ngFor="let option of userSenders" [value]="option.id">
+                                    {{ option.businessName }}
+                                </option>
+                                <option value="__add_sender__">+ Aggiungi un nuovo mittente</option>
+                            </select>
+                        </div>
                     </section>
                 </div>
             </div>  
             <div class="row">
                 <div class="col-md-12">
-                    <h3 class="text-center color-blue mt-4 mb-5">Compila i campi per inserire un nuovo mittente</h3>
+                    <h3 class="text-center color-blue mt-4 mb-5">Inserisci i dati del mittente per questa spedizione</h3>
                 </div>
             </div>
             <div class="row step-2">
