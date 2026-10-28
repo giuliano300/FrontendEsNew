@@ -103,4 +103,30 @@ export class RecipientService {
         return this.http.get<GetReportSpedizioniResponse>(`${this.apiUrl}/GetReportSpedizioni?${params.toString()}`);
       }
 
+    exportReportSpedizioniCsv(
+      userId: number,
+      haveBulletins: boolean,
+      startDate?: string | null,
+      endDate?: string | null,
+      productType: number | null = 0,
+      businessName?: string | null,
+      code?: string | null,
+      valid?: string | null,
+      currentState?: number | null
+    ): Observable<Blob> {
+      const params = new URLSearchParams({
+        userId: userId.toString(),
+        haveBulletins: haveBulletins.toString(),
+        businessName: businessName ?? '',
+        productType: productType != null ? productType.toString() : '0',
+        code: code ?? '',
+        valid: valid ?? '',
+        startDate: startDate ?? '',
+        endDate: endDate ?? '',
+        currentState: currentState != null ? currentState.toString() : ''
+      });
+
+      return this.http.getBlob(`${this.apiUrl}/GetReportSpedizioniCsv?${params.toString()}`);
+    }
+
 }

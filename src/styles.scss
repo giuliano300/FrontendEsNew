@@ -1438,3 +1438,7 @@ a.download-csv:link, a.download-csv:visited{
         padding:0;
     }
 }
+
+ngb-modal-window .component-host-scrollable {
+    overflow-y: auto !important;
+}

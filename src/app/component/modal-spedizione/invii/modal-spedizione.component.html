@@ -1,70 +1,78 @@
-  <div class="modal-header">
-    <h4 class="modal-title flex-start">
-      Storico spedizione
-    </h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+<div class="shipment-detail">
+  <div class="modal-header shipment-detail__header">
+    <div>
+      <span class="shipment-detail__eyebrow">DETTAGLIO SPEDIZIONE</span>
+      <h4 class="modal-title">Spedizione <span>#{{ modalData.recipient.id }}</span></h4>
+    </div>
+    <button type="button" class="btn-close" aria-label="Chiudi" (click)="closeModal()"></button>
   </div>
-  <div class="modal-body">
-    <div class="info-spedizione__top">
-        <ul>
-            <li>
-                <strong>NOME CLIENTE</strong>
-            </li>
-            <li>
-                <span class="color-blue">{{modalData.sender.businessName}}</span>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <strong>CODICE SPEDIZIONE</strong>
-            </li>
-            <li>
-                <span class="color-blue">{{modalData.recipient.code}}</span>
-            </li>
-        </ul>
-                <ul>
-            <li>
-                <strong>DESTINATARIO</strong>
-            </li>
-            <li>
-                <span class="color-blue">{{modalData.recipient.businessName}}</span>
-            </li>
-        </ul>
+
+  <div class="modal-body shipment-detail__body">
+    <section class="shipment-summary">
+      <div class="shipment-summary__state"><span>Stato corrente</span><strong>{{ currentStateLabel }}</strong></div>
+      <div><span>Codice spedizione</span><strong>{{ modalData.recipient.code || 'Non disponibile' }}</strong></div>
+      <div><span>Data e ora invio</span><strong>{{ getDate(modalData.recipient.insertDate) }}</strong></div>
+      <div><span>Prodotto</span><strong>{{ productName }}</strong></div>
+    </section>
+
+    <div class="shipment-detail__grid">
+      <section class="shipment-card">
+        <h5>Mittente</h5>
+        <p><strong>{{ modalData.sender.businessName || '—' }}</strong></p>
+        <p>{{ modalData.sender.address || '—' }}{{ modalData.sender.complementAddress ? ', ' + modalData.sender.complementAddress : '' }}</p>
+        <p>{{ modalData.sender.zipCode || '—' }} {{ modalData.sender.city || '' }}{{ modalData.sender.province ? ' (' + modalData.sender.province + ')' : '' }}</p>
+        <p>{{ modalData.sender.state || '—' }}</p>
+      </section>
+
+      <section class="shipment-card">
+        <h5>Destinatario</h5>
+        <p><strong>{{ modalData.recipient.businessName || '—' }}</strong></p>
+        <p>{{ modalData.recipient.address || '—' }}{{ modalData.recipient.complementAddress ? ', ' + modalData.recipient.complementAddress : '' }}</p>
+        <p>{{ modalData.recipient.zipCode || '—' }} {{ modalData.recipient.city || '' }}{{ modalData.recipient.province ? ' (' + modalData.recipient.province + ')' : '' }}</p>
+        <p>{{ modalData.recipient.state || '—' }}</p>
+      </section>
     </div>
 
-    <div class="info-spedizione__main">
-        <ul>
-            <li>
-                DATA E ORA
-            </li>
-            <li>
-                STATO LAVORAZIONE
-            </li>
-        </ul>
-        <ul *ngFor="let item of modalData.historicRecipientStatuses">
-            <li>
-                <strong>{{getDate(item.outcomeDate)}}</strong>
-            </li>
-            <li>
-                <span>{{item.message?.toUpperCase()}}</span>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <strong>{{getDate(modalData.recipient.insertDate!)}}</strong>
-            </li>
-            <li>
-                <span>CARICAMENTO SUL PORTALE</span>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <strong>{{getDate(modalData.recipient.insertDate!)}}</strong>
-            </li>
-            <li>
-                <span>PRESA IN CARICO</span>
-            </li>
-        </ul>
-    </div>
-    
+    <section class="shipment-card shipment-data" *ngIf="!isTelegram()">
+      <h5>Dati invio</h5>
+      <div class="shipment-data__grid">
+        <div><span>Formato</span><strong>{{ modalData.recipient.format === 0 ? 'A4' : 'Formato speciale' }}</strong></div>
+        <div><span>Pagine</span><strong>{{ modalData.recipient.numberOfPages || '—' }}</strong></div>
+        <div *ngIf="modalData.recipient.posteType"><span>Servizio Poste</span><strong>{{ modalData.recipient.posteType }}</strong></div>
+        <div *ngIf="hasReturnReceipt"><span>Ricevuta di ritorno</span><strong>Richiesta</strong></div>
+        <div *ngIf="isAgol && modalData.recipient.valoreNotificante"><span>Notificante</span><strong>{{ modalData.recipient.valoreNotificante }}</strong></div>
+      </div>
+    </section>
+
+    <section class="shipment-card telegram-message" *ngIf="isTelegram()">
+      <h5>Testo del telegramma</h5>
+      <p>{{ modalData.recipient.telegramText || 'Messaggio non disponibile.' }}</p>
+    </section>
+
+    <section class="shipment-card documents-card" *ngIf="!isTelegram()">
+      <h5>Documenti e ricevute</h5>
+      <div class="document-list">
+        <button type="button" (click)="downloadFile('ra', sentDocumentName)" [disabled]="downloadingDocument !== null || !hasSentDocument">
+          <i class="bx bx-send"></i><span><strong>Documento inviato</strong><small>{{ hasSentDocument ? sentDocumentName : 'Non ancora disponibile' }}</small></span><i class="bx bx-download"></i>
+        </button>
+        <button type="button" (click)="downloadFile('attachedFile', modalData.recipient.fileName || 'documento-originale.pdf')" [disabled]="downloadingDocument !== null">
+          <i class="bx bx-file"></i><span><strong>Documento originale caricato</strong><small>{{ modalData.recipient.fileName || 'Documento originale' }}</small></span><i class="bx bx-download"></i>
+        </button>
+        <button *ngIf="hasReturnReceipt" type="button" (click)="downloadFile('rr', 'ricevuta-di-ritorno.pdf')" [disabled]="downloadingDocument !== null">
+          <i class="bx bx-receipt"></i><span><strong>Ricevuta di ritorno</strong><small>Disponibile dopo la consegna</small></span><i class="bx bx-download"></i>
+        </button>
+      </div>
+      <p *ngIf="documentError" class="document-error">{{ documentError }}</p>
+    </section>
+
+    <section class="shipment-card shipment-history">
+      <h5>Storico lavorazione</h5>
+      <div class="history-row" *ngFor="let item of modalData.historicRecipientStatuses">
+        <strong>{{ getDate(item.outcomeDate) }}</strong><span>{{ item.message || 'Aggiornamento stato' }}</span>
+      </div>
+      <div class="history-row">
+        <strong>{{ getDate(modalData.recipient.insertDate) }}</strong><span>Caricamento sul portale</span>
+      </div>
+    </section>
   </div>
+</div>

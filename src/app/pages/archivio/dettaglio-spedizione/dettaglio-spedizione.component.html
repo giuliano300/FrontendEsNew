@@ -52,6 +52,11 @@
             </div>
             <div class="dettaglio-lotto__button">
                 <button (click)="goBack()" class="back" routerLinkActive="router-link-active" ><i class='bx  bx-reply'></i> Torna alle spedizioni</button>
+                <button (click)="downloadDistinta()" class="download-distinta" [disabled]="isDownloadingDistinta">
+                    <i *ngIf="!isDownloadingDistinta" class='bx bx-file'></i>
+                    <i *ngIf="isDownloadingDistinta" class="fas fa-spinner fa-spin"></i>
+                    {{ isDownloadingDistinta ? 'Creazione distinta...' : 'Scarica distinta' }}
+                </button>
                 <!--<button><i class='bx bxs-file-export' ></i> Richiedi l'export massivo STATI</button>-->
             </div>
         </div>
@@ -103,11 +108,18 @@
     <div class="row">
         <div class="col-md-12">
             <div class="flex-end link-table">
-                <span [hidden]="isDowloadingFiles">
+                <span *ngIf="!isTelegramOperation()" [hidden]="isDowloadingFiles">
                     <a (click)="downloadAllFilesAsZip(false)" class="flex-start">
-                        <i class='bx bxs-file-archive'></i>&nbsp;Scarica tutti i documenti&nbsp;&nbsp;&nbsp;</a>
+                        <i class='bx bxs-file-archive'></i>&nbsp;Scarica documenti originali&nbsp;&nbsp;&nbsp;</a>
                 </span>
-                <span [hidden]="!isDowloadingFiles" class="wait">
+                <span *ngIf="!isTelegramOperation()" [hidden]="!isDowloadingFiles" class="wait">
+                    <i class="fas fa-spinner fa-spin"></i>&nbsp;Creazione file in corso&nbsp;&nbsp;&nbsp;
+                </span>
+                <span *ngIf="!isTelegramOperation()" [hidden]="isDowloadingFinalFiles">
+                    <a (click)="downloadAllFilesAsZip(false, true)" class="flex-start">
+                        <i class='bx bx-send'></i>&nbsp;Scarica documenti inviati&nbsp;&nbsp;&nbsp;</a>
+                </span>
+                <span *ngIf="!isTelegramOperation()" [hidden]="!isDowloadingFinalFiles" class="wait">
                     <i class="fas fa-spinner fa-spin"></i>&nbsp;Creazione file in corso&nbsp;&nbsp;&nbsp;
                 </span>
                 <span [hidden]="isDowloadingFilesRR">
@@ -164,16 +176,24 @@
                     <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Stato </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <a (click)="openModal(element.id)" *ngIf="element.valid">{{element.message}}</a>
+                        <span *ngIf="element.valid">{{element.message}}</span>
                         <span *ngIf="!element.valid" class="error">{{element.message ?? "stato non disponibile"}}</span>
                     </td>
                     </ng-container>
 
-                    <!-- Colonna download raccomandata -->
-                    <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Download documento</th>
+                    <ng-container matColumnDef="details">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Dettaglio </th>
                     <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
-                        <a (click)="downloadFile('attachedFile', element)"><i class='bx bx-envelope' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                        <a (click)="openModal(element.id)" aria-label="Apri dettaglio spedizione"><i class='bx bx-show'></i></a>
+                    </td>
+                    </ng-container>
+
+                    <!-- Colonna documento inviato -->
+                    <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center; font-size: 0.8rem;"> Documento inviato</th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
+                        <a *ngIf="element.attachedFileRAName" (click)="downloadFile('ra', element)"><i class='bx bx-send' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                        <span *ngIf="!element.attachedFileRAName">—</span>
                     </td>
                     </ng-container>
                     

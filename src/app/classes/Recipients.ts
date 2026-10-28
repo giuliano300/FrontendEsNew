@@ -30,6 +30,7 @@ export class Recipients {
   attachedFile?: string | null = null;
   attachedFileRR?: string | null = null;
   attachedFileRA?: string | null = null;
+  attachedFileRAName?: string | null = null;
   fileName?: string | null = null;
   pathRecoveryFile?: string | null = null;
   pathGEDUrl?: string | null = null;

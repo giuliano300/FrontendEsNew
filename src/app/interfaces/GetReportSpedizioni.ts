@@ -13,5 +13,6 @@ export interface GetReportSpedizioni {
   state: string;
   valid: boolean;
   currentState: number;
+  hasSentDocument: boolean;
   historicRecipientStatuses?: HistoricRecipientStatus[] | null;
 }

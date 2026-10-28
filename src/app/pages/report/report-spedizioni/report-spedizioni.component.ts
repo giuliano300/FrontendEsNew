@@ -75,6 +75,7 @@ constructor(
   remove: boolean = false;
 
   firstLoading: boolean = false;
+  exportingCsv: boolean = false;
 
   pageIndex = 0;
   pageSize = 20;
@@ -108,7 +109,7 @@ constructor(
 
 
 
-  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state'];
+  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state', 'details'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -180,6 +181,37 @@ constructor(
     this.getReportSpedizioni();  
   }
 
+  exportCsv(): void {
+    if (this.exportingCsv || !this.user?.id) return;
+
+    this.exportingCsv = true;
+    this.recipientService.exportReportSpedizioniCsv(
+      this.user.id,
+      false,
+      this.startDate,
+      this.endDate,
+      this.productType,
+      this.businessName,
+      this.code,
+      this.valid,
+      this.currentState
+    ).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'report-spedizioni.csv';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.exportingCsv = false;
+      },
+      error: () => {
+        this.openDialog('Esportazione non disponibile', 'Non è stato possibile creare il file CSV del report.');
+        this.exportingCsv = false;
+      }
+    });
+  }
+
   downloadFile(doc: string, element: any){
     this.recipientService.getFile(doc, element.recipientId)
     .subscribe(response => {
@@ -220,7 +252,7 @@ constructor(
 
     this.recipientService.getDettaglioDestinatario(id)
       .subscribe(response => {
-        this.currentModalRef = this.modalService.open(ModalSpedizioneComponent, { size: 'lg' });
+        this.currentModalRef = this.modalService.open(ModalSpedizioneComponent, { size: 'xl', centered: true, scrollable: true, windowClass: 'shipment-detail-modal' });
         this.currentModalRef.componentInstance.modalData = response;
      })
   }

@@ -43,3 +43,26 @@
        background-color: $red-color-hover;
     }
 }
+
+.dettaglio-lotto__button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .download-distinta {
+        background-color: #1e527f;
+        color: #fff;
+        border: 0;
+        padding: 8px 13px;
+        font-size: 13px;
+
+        &:hover:not(:disabled) {
+            background-color: #163e60;
+        }
+
+        &:disabled {
+            cursor: wait;
+            opacity: .7;
+        }
+    }
+}

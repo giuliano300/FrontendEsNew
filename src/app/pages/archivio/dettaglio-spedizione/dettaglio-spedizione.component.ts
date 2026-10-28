@@ -61,7 +61,7 @@ constructor(
 
   page: number = TourPage.dettaglioSpedizione;
 
-  displayedColumns: string[] = ['businessName', 'address', 'valid', 'insertDate', 'code', 'status', 'actions'];
+  displayedColumns: string[] = ['businessName', 'address', 'valid', 'insertDate', 'code', 'status', 'details'];
 
   infoBtnDownload = infoBtnDownload;
   currentModalRef: any;
@@ -82,6 +82,8 @@ constructor(
 
   isDowloadingFiles: boolean = false;
   isDowloadingFilesRR: boolean = false;
+  isDowloadingFinalFiles: boolean = false;
+  isDownloadingDistinta: boolean = false;
 
   search: boolean = false;
 
@@ -115,12 +117,11 @@ constructor(
 
         this.firstLoading = false;
 
+        this.configureColumns(response);
+
         if(response.data.operation.operationType == ProductTypes.ROL && this.userOptions.some(a => a.enabled && a.optionId == Options.rr)){
           this.getRR = true;
-          this.displayedColumns.push('actions2');
         }
-
-        this.displayedColumns.push('action3');
 
         this.totalRecords = response.totalCount;
         
@@ -131,6 +132,23 @@ constructor(
     });
 
     this.getTourInThisPage();
+  }
+
+  private configureColumns(response: GetDettaglioSpedizioneResponse): void {
+    const isTelegram = response.data.operation.operationType === ProductTypes.TOL;
+    this.displayedColumns = ['businessName', 'address', 'valid', 'insertDate', 'code', 'status', 'details'];
+
+    if (!isTelegram) {
+      this.displayedColumns.push('actions');
+      if (response.data.operation.operationType === ProductTypes.ROL && this.userOptions.some(option => option.enabled && option.optionId === Options.rr)) {
+        this.displayedColumns.push('actions2');
+      }
+      this.displayedColumns.push('action3');
+    }
+  }
+
+  isTelegramOperation(): boolean {
+    return this.getDettaglioSpedizioniResponse?.data.operation.operationType === ProductTypes.TOL;
   }
 
   onPaginateChange(event: PageEvent) {
@@ -145,6 +163,7 @@ constructor(
     this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
       .subscribe(response => {
         this.getDettaglioSpedizioniResponse = response;
+        this.configureColumns(response);
         
         this.dataSource = new MatTableDataSource(response.data.recipients); // <-- Ricrea
         this.totalRecords = response.totalCount;      
@@ -165,6 +184,7 @@ constructor(
       this.operationservice.getDettaglioSpedizione(this.id!, businessName, code, valid?.toString(), this.pageIndex, this.pageSize)
         .subscribe(response => {
           this.getDettaglioSpedizioniResponse = response;
+          this.configureColumns(response);
           
           this.dataSource = new MatTableDataSource(response.data.recipients);
           this.totalRecords = response.totalCount;      
@@ -199,7 +219,7 @@ constructor(
     openModal(id: number) {
       this.recipientService.getDettaglioDestinatario(id)
         .subscribe(response => {
-          this.currentModalRef = this.modalService.open(ModalSpedizioneComponent, { size: 'lg' });
+          this.currentModalRef = this.modalService.open(ModalSpedizioneComponent, { size: 'xl', centered: true, scrollable: true, windowClass: 'shipment-detail-modal' });
           this.currentModalRef.componentInstance.modalData = response;
       })
     }
@@ -242,12 +262,35 @@ constructor(
     this.router.navigate(['/archivioSpedizioni']);
   }
 
+  downloadDistinta(): void {
+    if (!this.id || this.isDownloadingDistinta) {
+      return;
+    }
+
+    this.isDownloadingDistinta = true;
+    this.operationservice.downloadDistinta(this.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `distinta-analitica-${this.id}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.isDownloadingDistinta = false;
+      },
+      error: () => {
+        this.openDialog('Distinta non disponibile', 'Non Ã¨ stato possibile creare la distinta analitica della spedizione.');
+        this.isDownloadingDistinta = false;
+      }
+    });
+  }
+
   downloadFile(doc: string, element: any){
     this.recipientService.getFile(doc, element.id)
     .subscribe(response => {
       if(!response)
       {
-        this.openDialog("Documento non disponibile","Il documento richiesto non è disponibile per il download.");
+        this.openDialog("Documento non disponibile","Il documento richiesto non Ã¨ disponibile per il download.");
         return;
       }
 
@@ -283,10 +326,13 @@ constructor(
   }
 
 
-  downloadAllFilesAsZip(rr: boolean = true) {
+  downloadAllFilesAsZip(rr: boolean = true, finalDocument: boolean = false) {
 
     let doc = "attachedFile";
-    if(rr){
+    if (finalDocument) {
+      doc = "ra";
+      this.isDowloadingFinalFiles = true;
+    } else if(rr){
       this.isDowloadingFilesRR = true;
       doc = "rr";
     }
@@ -304,15 +350,17 @@ constructor(
         window.URL.revokeObjectURL(url);
         this.isDowloadingFiles = false;
         this.isDowloadingFilesRR = false;
+        this.isDowloadingFinalFiles = false;
       },
       error: (err) => {
         if (err.status === 404) {
           this.openDialog("Documenti non disponibili","Non ci sono documenti disponibili per il download.");
         } else {
-          this.openDialog("Errore","Si è verificato un errore durante il download.");
+          this.openDialog("Errore","Si Ã¨ verificato un errore durante il download.");
         }
         this.isDowloadingFiles = false;
         this.isDowloadingFilesRR = false;
+        this.isDowloadingFinalFiles = false;
       }
     });  
   }

@@ -15,6 +15,26 @@
     }
 }
 
+.report-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 12px;
+
+    .export-csv {
+        width: auto;
+        height: 36px;
+        margin: 0;
+        padding: 0 14px;
+        background: #1e527f;
+        font-size: 12px;
+        text-transform: uppercase;
+
+        i { margin-right: 6px; font-size: 15px; vertical-align: -1px; }
+        &:hover:not(:disabled) { background: #163e60; }
+        &:disabled { cursor: wait; opacity: .7; }
+    }
+}
+
 .info-spedizione__top{
     width: 100%;
     border: 1px solid $grey-light;

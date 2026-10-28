@@ -48,6 +48,10 @@ export class OperationService {
       );
     }
 
+    downloadDistinta(operationId: number): Observable<Blob> {
+      return this.http.getBlob(`${this.apiUrl}/DownloadDistinta/${operationId}`);
+    }
+
 
     getArchivioSpedizioni(
         userId: number,
