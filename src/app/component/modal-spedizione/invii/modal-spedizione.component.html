@@ -61,6 +61,9 @@
         <button *ngIf="hasReturnReceipt" type="button" (click)="downloadFile('rr', 'ricevuta-di-ritorno.pdf')" [disabled]="downloadingDocument !== null">
           <i class="bx bx-receipt"></i><span><strong>Ricevuta di ritorno</strong><small>Disponibile dopo la consegna</small></span><i class="bx bx-download"></i>
         </button>
+        <button *ngIf="modalData.recipient.productType === 1" type="button" (click)="downloadFile('acceptanceReceipt', modalData.recipient.attachedFileRicevutaAccettazioneName || 'ricevuta-accettazione.pdf')" [disabled]="downloadingDocument !== null || !hasAcceptanceReceipt">
+          <i class="bx bx-receipt"></i><span><strong>Ricevuta di accettazione</strong><small>{{ hasAcceptanceReceipt ? 'Disponibile' : 'Non ancora disponibile' }}</small></span><i class="bx bx-download"></i>
+        </button>
       </div>
       <p *ngIf="documentError" class="document-error">{{ documentError }}</p>
     </section>

@@ -143,7 +143,9 @@ constructor(
       if (response.data.operation.operationType === ProductTypes.ROL && this.userOptions.some(option => option.enabled && option.optionId === Options.rr)) {
         this.displayedColumns.push('actions2');
       }
-      this.displayedColumns.push('action3');
+      if (response.data.operation.operationType === ProductTypes.ROL) {
+        this.displayedColumns.push('action3');
+      }
     }
   }
 

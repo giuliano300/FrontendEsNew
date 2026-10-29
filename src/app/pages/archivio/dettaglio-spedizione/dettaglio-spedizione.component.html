@@ -215,7 +215,8 @@
                         Ricevuta accettazione
                         </th>
                         <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
-                            <a (click)="downloadFile('ra', element.id)" class="step-end"><i class='bx bx-file' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                            <a *ngIf="element.attachedFileRicevutaAccettazioneName" (click)="downloadFile('acceptanceReceipt', element)" class="step-end"><i class='bx bx-file' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                            <span *ngIf="!element.attachedFileRicevutaAccettazioneName">—</span>
                         </td>
                     </ng-container>
                     <!-- Colonna Ricevuta accettazione -->

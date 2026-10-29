@@ -65,11 +65,16 @@ export class ModalSpedizioneComponent  {
     return this.modalData.recipient.attachedFileRAName || 'documento-inviato.pdf';
   }
 
+  get hasAcceptanceReceipt(): boolean {
+    return this.modalData.recipient.productType === ProductTypes.ROL
+      && !!this.modalData.recipient.attachedFileRicevutaAccettazioneName;
+  }
+
   get isAgol(): boolean {
     return this.modalData.recipient.productType === ProductTypes.AGOL;
   }
 
-  downloadFile(type: 'attachedFile' | 'rr' | 'ra', fileName: string): void {
+  downloadFile(type: 'attachedFile' | 'rr' | 'ra' | 'acceptanceReceipt', fileName: string): void {
     const recipientId = this.modalData.recipient.id;
     if (!recipientId) return;
 

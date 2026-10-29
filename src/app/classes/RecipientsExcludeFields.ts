@@ -29,6 +29,7 @@ export class RecipientsExcludeFields {
   totalPrice?: number | null = 0 ;
   fileName?: string | null = null;
   attachedFileRAName?: string | null = null;
+  attachedFileRicevutaAccettazioneName?: string | null = null;
   pathRecoveryFile?: string | null = null;
   pathGEDUrl?: string | null = null;
   digitalReturnReceipt?: boolean | null = false;
