@@ -1,19 +1,14 @@
 <app-ui-tour-restart (restart)="restartTour()" />
 
 
-<div class="container">
-    <div class="row">
-        <div class="col md-12 text-center mt-4">
-            <h1>Stampa e unione</h1>
-            <p class="mt-2 textsize-4 mt-3 mb-4">
-                Inserisci un file zip contenente il csv da cui estrarre i nominativi <br>
-                e il documento word con le variabili da personalizzare
-            </p>
-        </div>
-    </div>
+<div class="container utility-page">
+    <section class="utility-page__hero">
+        <span><i class="bx bx-file-blank"></i> Utility documenti</span>
+        <h1>Stampa e unione</h1>
+        <p>Carica l’archivio ZIP con CSV e modello Word per creare i documenti personalizzati.</p>
+    </section>
 
-
-    <div class="row mt-5 step-1">
+    <div class="utility-page__card step-1">
         <div class="col-md-6">
             <div class="generic-form">
                 <h4>Carica un file <em>(in formato .zip)</em></h4>
@@ -51,7 +46,7 @@
         </div>
         <div class="col-md-6">
             <div class="utility-steps">
-                <h5>Processo di caricamento file stampa/unione.</h5>
+                <h5><i class="bx bx-list-check"></i> Come funziona</h5>
                 <ul>
                     <li><strong>1</strong><span>Carica il file zip contenente sia il .csv che il .doc o .docx.</span></li>
                     <li><strong>2</strong><span>Attendi la unione dei documenti.</span></li>

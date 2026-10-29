@@ -58,12 +58,12 @@ export const mainNavigation: NavigationItem[] = [
     label: 'Utility',
     children: [
       { label: 'Sincronizzazione Bipiol', path: '/sincBipiol', keywords: ['sync', 'bipiol'] },
+      { label: 'Bonifici domiciliati', path: '/bonificiDomiciliati', keywords: ['bonifici', 'bipiol', 'tracciato', 'txt'] },
       { label: 'Stampa & Unione', path: '/stampaUnione', keywords: ['stampa', 'unione'] },
       { label: 'Unione PDF', path: '/unionePdf', keywords: ['pdf', 'merge'] },
       { label: 'Comprimi PDF', path: '/comprimiPdf', keywords: ['pdf', 'compressione', 'zip'] },
       { label: 'Rendicontazione fatture', path: '/rendicontazioneFatture', keywords: ['fatture', 'contabilita'] },
       { label: 'File di esempio', path: '/fileEsempio', keywords: ['template', 'csv', 'tracciati'] },
-      { label: 'Video tutorial', path: '/videoTutorial', keywords: ['guida', 'tutorial'] }
     ]
   },
   {

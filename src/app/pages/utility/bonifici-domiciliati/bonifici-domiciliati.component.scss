@@ -1,0 +1,50 @@
+.bonifici-domiciliati {
+  max-width: 1110px;
+  padding-bottom: 4rem;
+
+  .bonifici-hero { margin: 2.8rem auto 2rem; max-width: 700px; text-align: center; }
+  .bonifici-hero h1 { margin: .45rem 0 .55rem; color: #1d4e7b; font-size: clamp(1.85rem, 3vw, 2.4rem); font-weight: 500; }
+  .bonifici-hero p { margin: 0; color: #5f7080; font-size: 1rem; }
+  .bonifici-eyebrow { color: #5d84ab; font-size: .72rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+  .bonifici-eyebrow i { margin-right: .3rem; font-size: 1rem; vertical-align: -1px; }
+
+  .bonifici-card { overflow: hidden; border: 1px solid #dce5ed; background: #fff; box-shadow: 0 12px 32px rgba(38, 68, 96, .08); }
+  .bonifici-form { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, .9fr); }
+  .bonifici-panel { padding: 2rem 2.2rem; }
+  .excel-panel { border-left: 1px solid #e2e8ee; background: #f7fafc; }
+  .panel-heading { display: flex; align-items: flex-start; gap: .78rem; margin-bottom: 1.65rem; }
+  .panel-icon { display: grid; width: 2.35rem; height: 2.35rem; place-items: center; color: #27618f; border: 1px solid #cbddea; background: #edf5fb; font-size: 1.25rem; }
+  h4 { margin: 0 0 .17rem; color: #263f56; font-size: 1.05rem; font-weight: 600; }
+  .panel-heading p { margin: 0; color: #718191; font-size: .82rem; }
+  .form-row { row-gap: 1rem; }
+  label { display: block; margin-bottom: .42rem; color: #526777; font-size: .68rem; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; }
+  input:not([type='file']) { width: 100%; min-height: 2.65rem; padding: 0 .8rem; border: 1px solid #d5e0e8; border-radius: 0; background: #fff; color: #263f56; font-size: .89rem; outline: none; }
+  input:not([type='file']):focus { border-color: #4d84af; box-shadow: 0 0 0 3px rgba(77, 132, 175, .11); }
+  .file-field { margin-top: 1.55rem; padding-top: 1.35rem; border-top: 1px solid #e4ebf0; }
+  .file-picker { display: flex; align-items: center; gap: .65rem; min-height: 4rem; padding: .6rem .75rem; border: 1px dashed #afc6d9; background: #f9fcfe; }
+  .file-picker > i { color: #3676aa; font-size: 1.65rem; }
+  .file-picker div { min-width: 0; flex: 1; }
+  .file-picker strong, .file-picker small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-picker strong { color: #38566e; font-size: .82rem; font-weight: 600; }
+  .file-picker small { margin-top: .08rem; color: #8291a0; font-size: .72rem; }
+  .file-picker input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .file-picker-button { margin: 0; padding: .5rem .7rem; color: #27618f; border: 1px solid #b9cfe0; background: #fff; cursor: pointer; font-size: .7rem; }
+  .bonifici-submit { display: inline-flex; align-items: center; gap: .42rem; min-height: 2.65rem; margin-top: 1.35rem; padding: 0 1.05rem; border: 0; border-radius: 0; color: #fff; background: #286497; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; transition: background .15s ease; }
+  .bonifici-submit:hover:not(:disabled) { background: #1e527f; }
+  button[disabled] { cursor: wait; opacity: .7; }
+  .columns-list { display: grid; grid-template-columns: 1fr 1fr; gap: .48rem .65rem; }
+  .columns-list span { display: flex; align-items: center; gap: .45rem; color: #455e72; font-size: .82rem; }
+  .columns-list b { display: inline-grid; width: 1.4rem; height: 1.4rem; place-items: center; color: #47779c; border: 1px solid #c8dbe8; background: #fff; font-size: .65rem; }
+  .privacy-note { display: flex; gap: .55rem; margin-top: 1.45rem; padding-top: 1.25rem; border-top: 1px solid #dce6ee; color: #607589; font-size: .78rem; line-height: 1.5; }
+  .privacy-note i { flex: 0 0 auto; color: #4b82a9; font-size: 1.1rem; }
+
+  @media (max-width: 991px) {
+    .bonifici-form { grid-template-columns: 1fr; }
+    .excel-panel { border-top: 1px solid #e2e8ee; border-left: 0; }
+  }
+  @media (max-width: 575px) {
+    .bonifici-hero { margin-top: 1.8rem; }
+    .bonifici-panel { padding: 1.4rem 1.15rem; }
+    .columns-list { grid-template-columns: 1fr; }
+  }
+}

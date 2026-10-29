@@ -1,0 +1,65 @@
+<div class="container bonifici-domiciliati">
+  <section class="bonifici-hero">
+    <span class="bonifici-eyebrow"><i class="bx bx-transfer-alt"></i> Utility BIPIOL</span>
+    <h1>Bonifici domiciliati</h1>
+    <p>Genera il tracciato TXT delle disposizioni in pochi passaggi, senza caricare il file sul server.</p>
+  </section>
+
+  <div class="bonifici-card">
+    <form class="bonifici-form" [formGroup]="form" (ngSubmit)="generate()">
+      <section class="bonifici-panel company-panel">
+        <div class="panel-heading">
+          <span class="panel-icon"><i class="bx bx-buildings"></i></span>
+          <div><h4>Dati della società</h4><p>Inserisci i dati dell’ordinante.</p></div>
+        </div>
+        <div class="row form-row">
+          <div class="col-md-6">
+            <label for="denominazione">Ragione sociale</label>
+            <input id="denominazione" type="text" formControlName="denominazione" placeholder="Denominazione" />
+          </div>
+          <div class="col-md-3">
+            <label for="cab">CAB</label>
+            <input id="cab" type="text" inputmode="numeric" formControlName="cabOrdinante" placeholder="CAB" />
+          </div>
+          <div class="col-md-3">
+            <label for="conto">CC postale</label>
+            <input id="conto" type="text" inputmode="numeric" formControlName="contoOrdinante" placeholder="Conto" />
+          </div>
+          <div class="col-12 mt-3">
+            <label for="contratto">Codice contratto BIPIOL</label>
+            <input id="contratto" type="text" formControlName="codiceContratto" placeholder="Codice contratto" />
+          </div>
+        </div>
+
+        <div class="file-field">
+          <label for="excelFile">File Excel delle disposizioni</label>
+          <div class="file-picker">
+            <i class="bx bx-spreadsheet"></i>
+            <div><strong>{{ fileName || 'Seleziona il file Excel' }}</strong><small>{{ fileName ? 'File pronto per l’elaborazione' : 'Formato richiesto: .xlsx' }}</small></div>
+            <label class="file-picker-button" for="excelFile">Sfoglia</label>
+            <input id="excelFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="onFileSelected($event)" />
+          </div>
+        </div>
+
+        <p class="error error-upload mt-3" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="valid mt-3" *ngIf="successMessage">{{ successMessage }}</p>
+        <button class="bonifici-submit" type="submit" [disabled]="isGenerating">
+          <i class="bx" [class.bx-loader-alt]="isGenerating" [class.bx-spin]="isGenerating" [class.bx-download]="!isGenerating"></i>
+          {{ isGenerating ? 'Generazione in corso...' : 'Genera tracciato TXT' }}
+        </button>
+      </section>
+
+      <aside class="bonifici-panel excel-panel">
+        <div class="panel-heading">
+          <span class="panel-icon"><i class="bx bx-table"></i></span>
+          <div><h4>Struttura del file Excel</h4><p>Una disposizione per ogni riga del primo foglio.</p></div>
+        </div>
+        <div class="columns-list">
+          <span><b>1</b> Nome</span><span><b>2</b> Cognome</span><span><b>3</b> Codice fiscale</span>
+          <span><b>4</b> Indirizzo</span><span><b>5</b> CAP</span><span><b>6</b> Città</span><span><b>7</b> Importo</span>
+        </div>
+        <div class="privacy-note"><i class="bx bx-shield-quarter"></i><span>Le intestazioni vengono riconosciute automaticamente. Senza intestazioni, il sistema individua codice fiscale, CAP e importo dai valori della riga. Il file resta sul tuo dispositivo: non viene caricato sul server.</span></div>
+      </aside>
+    </form>
+  </div>
+</div>

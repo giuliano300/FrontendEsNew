@@ -384,6 +384,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'bonificiDomiciliati',
+        loadComponent: () => import('./pages/utility/bonifici-domiciliati/bonifici-domiciliati.component').then(m => m.BonificiDomiciliatiComponent),
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'stampaUnione',
         loadComponent: () => import('./pages/utility/stampa-unione/stampa-unione.component').then(m => m.StampaUnioneComponent),
         canActivate: [AuthGuard]
@@ -391,11 +396,6 @@ export const routes: Routes = [
       {
         path: 'unionePdf',
         loadComponent: () => import('./pages/utility/unione-pdf/unione-pdf.component').then(m => m.UnionePdfComponent),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'videoTutorial',
-        loadComponent: () => import('./pages/utility/video-tutorial/video-tutorial.component').then(m => m.VideoTutorialComponent),
         canActivate: [AuthGuard]
       },
       {

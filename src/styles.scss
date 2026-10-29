@@ -1442,3 +1442,94 @@ a.download-csv:link, a.download-csv:visited{
 ngb-modal-window .component-host-scrollable {
     overflow-y: auto !important;
 }
+
+/* Shared visual system for every Utility page. */
+.utility-page {
+    max-width: 1110px;
+    padding-bottom: 4rem;
+
+    &__hero {
+        max-width: 720px;
+        margin: 2.8rem auto 2rem;
+        text-align: center;
+
+        > span {
+            color: #5d84ab;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .11em;
+            text-transform: uppercase;
+
+            i { margin-right: .3rem; font-size: 1rem; vertical-align: -1px; }
+        }
+
+        h1 { margin: .45rem 0 .55rem; color: #1d4e7b; font-size: clamp(1.85rem, 3vw, 2.4rem); font-weight: 500; }
+        p { margin: 0; color: #5f7080; font-size: 1rem; line-height: 1.5; }
+    }
+
+    &__card {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+        overflow: hidden;
+        border: 1px solid #dce5ed;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(38, 68, 96, .08);
+
+        &--single { display: block; }
+    }
+
+    &__card > .col-md-6 { width: auto; max-width: none; padding: 0; }
+
+    .generic-form {
+        margin: 0;
+        padding: 2rem 2.2rem;
+
+        h4 { margin: 0 0 1.1rem; color: #263f56; font-size: 1.05rem; font-weight: 600; }
+        h4 em { color: #738392; font-size: .8rem; font-style: normal; font-weight: 400; }
+    }
+
+    .file-upload { margin-top: 0; }
+    .drop-zone {
+        min-height: 170px;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: 1.3rem;
+        border: 1px dashed #afc6d9;
+        background: #f9fcfe;
+        color: #3676aa;
+        font-size: .9rem;
+    }
+    .drop-zone:hover { border-color: #4c83ac; background: #f2f8fc; color: #1e527f; }
+    .progress-container { height: 5px; margin-top: .85rem; background: #e2ebf1; }
+    .progress-bar { line-height: 5px; font-size: 0; background: #2b6a9d; }
+
+    .utility-steps {
+        min-height: 100%;
+        padding: 2rem 2.2rem;
+        border-left: 1px solid #e2e8ee;
+        background: #f7fafc;
+
+        h5 { margin: 0; color: #263f56; font-size: 1.05rem; font-weight: 600; }
+        h5 i { margin-right: .4rem; color: #3876a4; font-size: 1.15rem; vertical-align: -1px; }
+        ul { margin-top: 1.35rem; }
+        li { align-items: flex-start; margin-bottom: .85rem; color: #536a7d; font-size: .85rem; line-height: 1.45; }
+        li strong { flex: 0 0 auto; width: 1.55rem; height: 1.55rem; margin-right: .65rem; background: #edf5fb; border: 1px solid #c9dce9; color: #47799e; font-size: .69rem; }
+        li span { padding-top: .08rem; }
+    }
+
+    .file-list { margin: 0; padding: 1.6rem 1.75rem; }
+    .file-list li { margin-bottom: .7rem; padding: 0; background: transparent; }
+    .file-list li:hover { padding: 0; }
+    .file-list a { min-height: 3.35rem; align-items: center; gap: 1rem; padding: .7rem .9rem; border: 1px solid #dce6ee; color: #3d5e76; background: #fff; font-size: .84rem; }
+    .file-list a:hover { border-color: #96b9d1; color: #1d5b8a; background: #f5faff; }
+    .file-list a i { color: #3778a7; }
+
+    @media (max-width: 767px) {
+        &__hero { margin-top: 1.8rem; }
+        &__card { grid-template-columns: 1fr; }
+        .generic-form, .utility-steps { padding: 1.4rem 1.15rem; }
+        .utility-steps { border-top: 1px solid #e2e8ee; border-left: 0; }
+        .file-list { padding: 1.1rem; }
+    }
+}
