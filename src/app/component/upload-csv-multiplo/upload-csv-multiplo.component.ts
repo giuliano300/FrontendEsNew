@@ -138,7 +138,7 @@ form: FormGroup;
       });
 
       this.http
-      .get<ComuniItaliani[]>('assets/json/comuniItaliani.json')
+      .get<ComuniItaliani[]>('assets/json/gi_comuni_cap.json')
       .subscribe(data => {
         this.comuniItaliani = data;
       });

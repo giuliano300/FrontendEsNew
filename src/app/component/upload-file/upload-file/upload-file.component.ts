@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { FormStorageService } from '../../../services/form-storage.service';
 import {  secretKey  } from '@app/config/app-constants';
 import { CryptoJS } from '@app/utils/crypto';
-import { PDFDocument } from 'pdf-lib'
+import { validateA4Pdf } from '../../../fncUtils/pdf-validation';
 import { ProductTypes } from '../../../interfaces/EnumTypes';
 import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
@@ -88,16 +88,22 @@ form: FormGroup;
         };
 
         reader.onload = async () => {
-          this.base64File = (reader.result as string).split(',')[1];
-          this.uploadCompleted = true;
-          this.uploadProgress = 100;
-
           // Convert base64 in Uint8Array
           const base64 = (reader.result as string).split(',')[1];
           const byteArray = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+          const validation = await validateA4Pdf(byteArray);
+          if (!validation.valid) {
+            this.errorMessage = validation.error || 'Il PDF non è valido.';
+            this.uploadProgress = 0;
+            this.fileName = '';
+            this.base64File = '';
+            return;
+          }
 
-          const pdfDoc = await PDFDocument.load(byteArray);
-          const numPages = pdfDoc.getPageCount();
+          this.base64File = base64;
+          this.uploadCompleted = true;
+          this.uploadProgress = 100;
+          const numPages = validation.pageCount;
 
           let file = {
             name: this.fileName,

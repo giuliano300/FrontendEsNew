@@ -13,6 +13,9 @@ export interface ComuniItaliani {
   provincia?: Provincia | null;
   sigla?: string;
   codiceCatastale?: string;
+  codice_belfiore?: string;
+  denominazione_ita?: string;
+  sigla_provincia?: string;
   cap?: any;
   popolazione?: string;
 }

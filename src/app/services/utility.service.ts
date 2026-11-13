@@ -146,8 +146,11 @@ export class UtilityService {
     const divisore = 93;
     const y = anno.substring(3, 4);
 
-    const code = this.getCodiceCatastale(comune.codiceCatastale!);
-    const numbersCode = this.getCodiceCatastaleNumeri(comune.codiceCatastale!);
+    const codiceCatastale = comune.codiceCatastale || comune.codice_belfiore;
+    if (!codiceCatastale) return '';
+
+    const code = this.getCodiceCatastale(codiceCatastale);
+    const numbersCode = this.getCodiceCatastaleNumeri(codiceCatastale);
 
     let c = '';
 
@@ -177,18 +180,16 @@ export class UtilityService {
 
     cap = cap.replace(/\s/g, '');
 
-    const found = comuni.filter(x =>
-      x.cap.toString().includes(cap)
-    );
+    const found = comuni.filter(x => String(x.cap || '').replace(/\s/g, '') === cap);
 
     if (found.length === 0) return null;
 
     return {
       cap: cap,
       provincia: null,
-      sigla: found[0].sigla,
-      codiceCatastale: found[0].codiceCatastale,
-      nome: found[0].nome
+      sigla: found[0].sigla || found[0].sigla_provincia,
+      codiceCatastale: found[0].codiceCatastale || found[0].codice_belfiore,
+      nome: found[0].nome || found[0].denominazione_ita
     };
   }
 

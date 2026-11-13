@@ -8,7 +8,7 @@ import { HttpLoggingService } from '../wrapper/http-logging.service';
 })
 export class GlobalServicesService {
 
-  private jsonUrl = '/assets/comuni.json';
+  private jsonUrl = '/assets/json/gi_comuni_cap.json';
 
   constructor(private http: HttpLoggingService) {}
 
