@@ -32,6 +32,7 @@ import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { AddSenderModalComponent } from './add-sender-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { cityCannotBeNationValidator, isNationUsedAsCity } from '../../../fncUtils/address-validation';
 
 
 
@@ -91,7 +92,7 @@ constructor(private router: Router, private userSendersService: UserSendersServi
     provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
     comp_nominativo: new FormControl(''),
     comp_indirizzo: new FormControl(''),
-    citta: new FormControl('', [Validators.required]),
+    citta: new FormControl('', [Validators.required, cityCannotBeNationValidator]),
     stato: new FormControl('', [Validators.required]),
     destinatario: new FormControl(true),
     nominativo_ar: new FormControl(''),
@@ -100,7 +101,7 @@ constructor(private router: Router, private userSendersService: UserSendersServi
     comp_indirizzo_ar: new FormControl(''),
     cap_ar: new FormControl('', [Validators.required, Validators.maxLength(5)]),
     provincia_ar: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    citta_ar: new FormControl('', [Validators.required]),
+    citta_ar: new FormControl('', [Validators.required, cityCannotBeNationValidator]),
     stato_ar: new FormControl('', [Validators.required]),
   });
   
@@ -416,7 +417,9 @@ constructor(private router: Router, private userSendersService: UserSendersServi
     controls.forEach(controlName => {
       const control = this.form.get(controlName);
       if (active) {
-        control?.setValidators([Validators.required]);
+        control?.setValidators(controlName === 'citta_ar'
+          ? [Validators.required, cityCannotBeNationValidator]
+          : [Validators.required]);
       } else {
         control?.clearValidators();
       }
@@ -438,6 +441,14 @@ constructor(private router: Router, private userSendersService: UserSendersServi
   }
 
   onSubmit(): void {
+
+    if (isNationUsedAsCity(this.form.value.citta, this.form.value.stato)
+      || (this.ricevutaDiRitorno && !this.form.value.destinatario
+        && isNationUsedAsCity(this.form.value.citta_ar, this.form.value.stato_ar))) {
+      this.alertText = 'Il comune non può coincidere con la nazione.';
+      this.alertMessage = true;
+      return;
+    }
 
     if (this.form.valid) {
 

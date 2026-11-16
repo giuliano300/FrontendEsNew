@@ -26,6 +26,7 @@ import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddSenderModalComponent } from '../../../component/select-sender/select-sender/add-sender-modal.component';
+import { cityCannotBeNationValidator, isNationUsedAsCity } from '../../../fncUtils/address-validation';
 
 
 
@@ -309,7 +310,7 @@ enableARValidators() {
   this.form.get('indirizzo_ar')?.setValidators([Validators.required]);
   this.form.get('cap_ar')?.setValidators([Validators.required, Validators.maxLength(5)]);
   this.form.get('provincia_ar')?.setValidators([Validators.required, Validators.maxLength(2)]);
-  this.form.get('citta_ar')?.setValidators([Validators.required]);
+  this.form.get('citta_ar')?.setValidators([Validators.required, cityCannotBeNationValidator]);
   this.form.get('stato_ar')?.setValidators([Validators.required]);
 
   // aggiorna lo stato di validità
@@ -366,6 +367,9 @@ onSubmit(): void {
             errors.push(field.label);
           }
         });
+        if (isNationUsedAsCity(this.form.value.citta_ar, this.form.value.stato_ar)) {
+          errors.push('Città AR non valida: non può essere la nazione');
+        }
       }
 
       if (errors.length > 0) {
