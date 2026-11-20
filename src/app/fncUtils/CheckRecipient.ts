@@ -191,7 +191,7 @@ function SostituisciLettereOmocodia(cf: string): string {
 
 
 function verificaCapComuneProvincia(
-  comune: ComuniXLS[],
+  comuni: ComuniXLS[],
   cap: string,
   city: string,
   province: string
@@ -203,27 +203,36 @@ function verificaCapComuneProvincia(
 
   const msgerrore = 'i dati cap/provincia/comune non sono congruenti!';
 
-  if (!comune.some(a => a.cap.includes(cap))) {
-    ctrl.errore = msgerrore;
-    ctrl.valido = false;
-    return ctrl;
-  }
+  const normalizedCap = cap.trim();
+  const normalizedCity = normalizeLocationValue(city);
+  const normalizedProvince = normalizeLocationValue(province);
 
-  const cl = city.toLowerCase();
-  if (!comune.some(a => a.comune.toLowerCase().includes(cl))) {
-    ctrl.errore = msgerrore;
-    ctrl.valido = false;
-    return ctrl;
-  }
+  // CAP, comune e provincia devono appartenere alla stessa riga del dataset.
+  // In precedenza i tre valori venivano cercati separatamente nell'intero
+  // elenco, quindi combinazioni incrociate (es. CAP di Roma e comune Milano)
+  // potevano risultare valide.
+  const hasMatchingCombination = comuni.some(comune =>
+    comune.cap.trim() === normalizedCap
+    && normalizeLocationValue(comune.comune) === normalizedCity
+    && normalizeLocationValue(comune.sigla) === normalizedProvince
+  );
 
-  const sig = province.toLowerCase();
-  if (!comune.some(a => a.sigla.toLowerCase().includes(sig))) {
+  if (!hasMatchingCombination) {
     ctrl.errore = msgerrore;
     ctrl.valido = false;
-    return ctrl;
   }
 
   return ctrl;
+}
+
+function normalizeLocationValue(value: string): string {
+  return (value ?? '')
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u2018\u2019`\u00b4]/g, "'")
+    .replace(/\s+/g, ' ')
+    .toUpperCase();
 }
 
 function verificaFileNameFn(fileName: string): Crt {

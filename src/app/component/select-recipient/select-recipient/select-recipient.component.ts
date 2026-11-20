@@ -1,13 +1,13 @@
 import { AppTourService } from '@app/services/app-tour.service';
 import { AppStorageService } from '@app/services/app-storage.service';
 import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { UserRecipientsService } from '../../../services/user-recipients.service';
 import { GlobalServicesService } from '../../../services/global-services.service';
 import { FormStorageService } from '../../../services/form-storage.service';
 import { alertAddress, alertComplAddress, alertComplName, alertMailDest, alertName, alertProvince, alertState, alertCron } from '../../../enviroments/enviroments';
 import { UserRecipients } from '../../../interfaces/UserRecipients';
-import { filter, map, Observable, of, startWith } from 'rxjs';
+import { filter, finalize, map, Observable, of, startWith } from 'rxjs';
 import { Comune } from '../../../interfaces/Comune';
 import { Users } from '../../../interfaces/Users';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +25,8 @@ import { ShepherdService } from 'angular-shepherd';
 import { Placement as PopperPlacement } from '@popperjs/core';
 import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AddressLookupService, AddressSuggestion } from '../../../services/address-lookup.service';
 
 @Component({
   selector: 'app-select-recipient',
@@ -36,12 +38,14 @@ export class SelectRecipientComponent {
   
   
   private appTour = inject(AppTourService);
-private appStorage = inject(AppStorageService);
+  private appStorage = inject(AppStorageService);
+  private destroyRef = inject(DestroyRef);
 constructor(private router: Router, 
     private userRecipientService: UserRecipientsService,
     private globalServices: GlobalServicesService, 
     private formStorage: FormStorageService,
-    private shepherdService: ShepherdService
+    private shepherdService: ShepherdService,
+    private addressLookupService: AddressLookupService
   ) {}
 
   page: number = TourPage.selectRecipent;
@@ -63,6 +67,10 @@ constructor(private router: Router,
   userRecipient: UserRecipients | null = null;
 
   filteredCAPs: Observable<string[]> = of([]);
+  addressSuggestions: AddressSuggestion[] = [];
+  addressLookupLoading = false;
+  addressLookupMessage = '';
+  addressLookupSelectionComplete = false;
 
   comuni: Comune[] = [];
   comuniDaCap: Comune[] = [];
@@ -213,6 +221,131 @@ constructor(private router: Router,
         this.form.get('citta')?.setValue('');
       }
      }
+  }
+
+  lookupAddress(): void {
+    const address = this.form.controls.indirizzo.value?.trim() || '';
+    if (address.length < 4) {
+      this.addressSuggestions = [];
+      this.addressLookupSelectionComplete = false;
+      this.addressLookupMessage = 'Inserisci almeno 4 caratteri dell’indirizzo.';
+      return;
+    }
+
+    const location = [
+      address,
+      this.form.controls.cap.value,
+      this.form.controls.citta.value
+    ].filter(Boolean).join(' ');
+
+    this.addressLookupLoading = true;
+    this.addressLookupSelectionComplete = false;
+    this.addressLookupMessage = '';
+    this.addressSuggestions = [];
+
+    this.addressLookupService.searchItalianAddresses(location, address).pipe(
+      finalize(() => this.addressLookupLoading = false),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: suggestions => {
+        this.addressSuggestions = suggestions.map(suggestion => this.localizeSuggestionCity(suggestion));
+        if (!this.addressSuggestions.length) {
+          this.addressLookupMessage = 'Nessun indirizzo trovato. Aggiungi città o CAP alla ricerca.';
+        }
+      },
+      error: () => {
+        this.addressLookupMessage = 'Servizio di ricerca momentaneamente non disponibile.';
+      }
+    });
+  }
+
+  private localizeSuggestionCity(suggestion: AddressSuggestion): AddressSuggestion {
+    const candidates = this.comuni.filter(comune => comune.cap === suggestion.postcode);
+    const normalizedCity = this.normalizeLocationValue(suggestion.city);
+    const exactMatch = candidates.find(comune =>
+      this.normalizeLocationValue(comune.denominazione_ita) === normalizedCity
+      || this.normalizeLocationValue(comune.denominazione_ita_altra) === normalizedCity
+    );
+    const distinctCities = Array.from(new Set(candidates.map(comune => comune.denominazione_ita)));
+    const cityByPostcode = distinctCities.length === 1 ? distinctCities[0] : undefined;
+    const localizedCity = exactMatch?.denominazione_ita
+      || cityByPostcode
+      || this.translateCommonCityName(suggestion.city);
+
+    if (!localizedCity || localizedCity === suggestion.city) return suggestion;
+
+    return {
+      ...suggestion,
+      city: localizedCity,
+      displayName: [suggestion.address, suggestion.postcode, localizedCity].filter(Boolean).join(', ')
+    };
+  }
+
+  private translateCommonCityName(city: string): string {
+    const translations: Record<string, string> = {
+      ROME: 'Roma',
+      FLORENCE: 'Firenze',
+      MILAN: 'Milano',
+      TURIN: 'Torino',
+      NAPLES: 'Napoli',
+      VENICE: 'Venezia',
+      GENOA: 'Genova',
+      PADUA: 'Padova'
+    };
+    return translations[this.normalizeLocationValue(city)] || city;
+  }
+
+  setAddressSuggestion(suggestion: AddressSuggestion): void {
+    if (!suggestion?.address) return;
+
+    const enteredAddress = this.form.controls.indirizzo.value?.trim();
+    const enteredHouseNumber = this.extractHouseNumber(enteredAddress || '');
+    const civicVerified = !!enteredHouseNumber
+      && this.normalizeLocationValue(enteredHouseNumber) === this.normalizeLocationValue(suggestion.houseNumber);
+    const addressToUse = suggestion.houseNumber
+      ? suggestion.address
+      : [suggestion.address, enteredHouseNumber].filter(Boolean).join(' ');
+    const matchingComuni = this.comuni.filter(comune => comune.cap === suggestion.postcode);
+    const normalizedCity = this.normalizeLocationValue(suggestion.city);
+    const matchingComune = matchingComuni.find(comune =>
+      this.normalizeLocationValue(comune.denominazione_ita) === normalizedCity
+      || this.normalizeLocationValue(comune.denominazione_ita_altra) === normalizedCity
+    ) ?? (matchingComuni.length === 1 ? matchingComuni[0] : undefined);
+
+    this.isOne = true;
+    this.form.patchValue({
+      indirizzo: addressToUse,
+      cap: suggestion.postcode,
+      citta: matchingComune?.denominazione_ita || suggestion.city,
+      provincia: matchingComune?.sigla_provincia || '',
+      stato: 'ITALIA'
+    });
+    this.addressSuggestions = [];
+    this.addressLookupSelectionComplete = true;
+    const selectedLocation = [
+      suggestion.postcode,
+      matchingComune?.denominazione_ita || suggestion.city,
+      matchingComune?.sigla_provincia ? `(${matchingComune.sigla_provincia})` : ''
+    ].filter(Boolean).join(' ');
+    this.addressLookupMessage = civicVerified
+      ? `Selezionato: ${selectedLocation}. Civico verificato.`
+      : `Selezionato: ${selectedLocation}.`;
+  }
+
+  private extractHouseNumber(address: string): string {
+    const matches = address.match(/\b\d+[a-z]?(?:[\/-][a-z0-9]+)?\b/gi) ?? [];
+    const possibleHouseNumbers = matches.filter(value => !/^\d{5}$/.test(value));
+    return possibleHouseNumbers.at(-1) ?? '';
+  }
+
+  private normalizeLocationValue(value: string): string {
+    return (value ?? '')
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\u2018\u2019`\u00b4]/g, "'")
+      .replace(/\s+/g, ' ')
+      .toUpperCase();
   }
 
   getUserRecipients(){
