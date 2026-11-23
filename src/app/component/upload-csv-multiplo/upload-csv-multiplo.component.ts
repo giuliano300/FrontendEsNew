@@ -18,7 +18,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { Recipients } from '../../classes/Recipients';
 import { FncUtils } from '../../fncUtils/fncUtils';
-import { checkRecipient, CheckRecipient } from '../../fncUtils/CheckRecipient';
+import { checkRecipient, CheckRecipient, hasInvalidEncodingCharacters } from '../../fncUtils/CheckRecipient';
 import { FormStorageService } from '../../services/form-storage.service';
 import {  bulletinFields, maxUploadLimit, secretKey  } from '@app/config/app-constants';
 import { CryptoJS } from '@app/utils/crypto';
@@ -163,6 +163,10 @@ form: FormGroup;
       }
 
       const recipient = FncUtils.mapCsvToRecipient(row);
+      const invalidEncodingIndex = rowValues.findIndex(value => hasInvalidEncodingCharacters(value));
+      if (invalidEncodingIndex >= 0) {
+        recipient.encodingError = `Il campo ${headers[invalidEncodingIndex]} contiene caratteri non ammessi (ï¿½, Ãƒ o Ã‚) - destinatario`;
+      }
       const bulletin = hasBulletin ? FncUtils.mapCsvToBulletin(row, recipient.tempGuid, this.comuniItaliani, this.utilityService) : undefined;
 
       this.result.push({ recipient, bulletin });
@@ -235,7 +239,7 @@ form: FormGroup;
             const lines = text.split(/\r\n|\n/).filter(line => line.trim() !== '');
 
             if (lines.length > maxUploadLimit) {
-              this.errorMessage = 'Il file non può contenere più di ' + maxUploadLimit + ' righe.';
+              this.errorMessage = 'Il file non puÃ² contenere piÃ¹ di ' + maxUploadLimit + ' righe.';
               this.uploadProgress = 0;
               this.checking = false;
               return;
@@ -272,7 +276,7 @@ form: FormGroup;
       } 
       else 
       {
-        this.errorMessage = 'Non è stato caricato un file valido.';
+        this.errorMessage = 'Non Ã¨ stato caricato un file valido.';
       }
     }
     
@@ -459,7 +463,7 @@ form: FormGroup;
         },
         {
           id: 'uploadmulti2',
-          text: 'In questa sezione verrà visualizzato il risultato del caricamento con eventuali errori.',
+          text: 'In questa sezione verrÃ  visualizzato il risultato del caricamento con eventuali errori.',
           attachTo: {
             element: '.step-2',
             on: 'bottom' as PopperPlacement

@@ -15,6 +15,17 @@ export interface Crt {
   indirizzovalido?: boolean;
 }
 
+export const POSTAL_TEXT_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'’°\/-]*$/;
+const INVALID_ENCODING_PATTERN = /[�ÃÂ]/;
+
+export function hasOnlyAllowedPostalCharacters(value: string | null | undefined): boolean {
+  return POSTAL_TEXT_PATTERN.test(value ?? '');
+}
+
+export function hasInvalidEncodingCharacters(value: unknown): boolean {
+  return typeof value === 'string' && INVALID_ENCODING_PATTERN.test(value);
+}
+
 export function CheckRecipient(
   recipient: Recipients,
   comuni: ComuniXLS[], // lista dei comuni da controllare
@@ -25,6 +36,21 @@ export function CheckRecipient(
     valido: true,
     errore: ''
   };
+
+  if (recipient.encodingError) {
+    ctrl.valido = false;
+    ctrl.errore = recipient.encodingError;
+    return ctrl;
+  }
+
+  const invalidEncodingField = Object.entries(recipient).find(([, value]) =>
+    hasInvalidEncodingCharacters(value)
+  );
+  if (invalidEncodingField) {
+    ctrl.valido = false;
+    ctrl.errore = `Il campo ${invalidEncodingField[0]} contiene caratteri non ammessi (�, Ã o Â) - destinatario`;
+    return ctrl;
+  }
 
   const cap = recipient.zipCode.replace(/\s+/g, '');
 
@@ -49,6 +75,19 @@ export function CheckRecipient(
   if (!crtAddr.valido) {
     ctrl.valido = false;
     ctrl.errore = crtAddr.errore + ' - destinatario';
+    return ctrl;
+  }
+
+  const optionalPostalFields = [
+    { label: 'Completamento nominativo', value: recipient.complementName },
+    { label: 'Completamento indirizzo', value: recipient.complementAddress }
+  ];
+  const invalidOptionalField = optionalPostalFields.find(field =>
+    !!field.value && !hasOnlyAllowedPostalCharacters(field.value)
+  );
+  if (invalidOptionalField) {
+    ctrl.valido = false;
+    ctrl.errore = `${invalidOptionalField.label} contiene caratteri speciali non ammessi - destinatario`;
     return ctrl;
   }
 
@@ -310,6 +349,10 @@ export function verificaRagioneSociale(
     return { valido: false, errore: 'Inserire Nome e Cognome o Ragione Sociale' };
   }
 
+  if (!hasOnlyAllowedPostalCharacters(ragioneSociale)) {
+    return { valido: false, errore: 'Nominativo contiene caratteri speciali non ammessi' };
+  }
+
   return ctrl;
 }
 
@@ -327,6 +370,10 @@ export function verificaIndirizzo(
       valido: false,
       errore: 'Indirizzo supera la lunghezza massima. Utilizzare il campo complemento indirizzo.'
     };
+  }
+
+  if (!hasOnlyAllowedPostalCharacters(indirizzo)) {
+    return { valido: false, errore: 'Indirizzo contiene caratteri speciali non ammessi' };
   }
 
   return ctrl;
@@ -409,6 +456,9 @@ export function verificaStato(stato: string): Crt {
 export function verificaCitta(city: string): Crt {
   if (city.length === 0) {
     return { valido: false, errore: 'città vuota' };
+  }
+  if (!hasOnlyAllowedPostalCharacters(city)) {
+    return { valido: false, errore: 'Città contiene caratteri speciali non ammessi' };
   }
   return { valido: true, errore: '' };
 }

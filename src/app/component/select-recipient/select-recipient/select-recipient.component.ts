@@ -27,6 +27,7 @@ import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AddressLookupService, AddressSuggestion } from '../../../services/address-lookup.service';
+import { hasInvalidEncodingCharacters, POSTAL_TEXT_PATTERN } from '../../../fncUtils/CheckRecipient';
 
 @Component({
   selector: 'app-select-recipient',
@@ -87,14 +88,14 @@ constructor(private router: Router,
   form = new FormGroup({
     sel_destinatario: new FormControl(''),
     sel_spedizione: new FormControl('Italia'),
-    nominativo: new FormControl('', [Validators.required, Validators.maxLength(44)]),
-    indirizzo: new FormControl('', [Validators.required]),
+    nominativo: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    indirizzo: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
     provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    comp_nominativo: new FormControl(''),
-    comp_indirizzo: new FormControl(''),
-    citta: new FormControl('', [Validators.required]),
-    stato: new FormControl('', [Validators.required]),
+    comp_nominativo: new FormControl('', [Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    comp_indirizzo: new FormControl('', [Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    citta: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    stato: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),
     email: new FormControl(''),
     addRecipient: new FormControl(''),
     pec: new FormControl(''),
@@ -426,6 +427,29 @@ constructor(private router: Router,
 
   onSubmit(): void {
 
+    const labels: Record<string, string> = {
+      nominativo: 'Nominativo',
+      comp_nominativo: 'Completamento nominativo',
+      indirizzo: 'Indirizzo',
+      comp_indirizzo: 'Completamento indirizzo',
+      cap: 'CAP',
+      provincia: 'Provincia',
+      citta: 'Città',
+      stato: 'Stato',
+      email: 'Email',
+      pec: 'PEC',
+      cron: 'Cron'
+    };
+    const campiConCodificaNonValida = Object.keys(this.form.controls)
+      .filter(key => hasInvalidEncodingCharacters(this.form.get(key)?.value))
+      .map(key => labels[key] ?? key);
+
+    if (campiConCodificaNonValida.length) {
+      this.alertMessage = true;
+      this.alertText = 'Caratteri non ammessi (�, Ã o Â) nei seguenti campi: ' + campiConCodificaNonValida.join(', ');
+      return;
+    }
+
     if (this.form.valid) {
 
       const destinatario = {
@@ -470,27 +494,20 @@ constructor(private router: Router,
 
       this.form.markAllAsTouched();
 
-      const labels: any = {
-        nominativo: 'Nominativo',
-        indirizzo: 'Indirizzo',
-        cap: 'CAP',
-        provincia: 'Provincia',
-        citta: 'Città',
-        stato: 'Stato',
-        email: 'Email',
-        pec: 'PEC',
-        cron: 'Cron'
-      };
-
       const campiMancanti = Object.keys(this.form.controls)
         .filter(key => this.form.get(key)?.invalid)
         .map(key => labels[key])
         .filter(label => label);
 
+      const campiConCaratteriSpeciali = Object.keys(this.form.controls)
+        .filter(key => this.form.get(key)?.hasError('pattern'))
+        .map(key => labels[key])
+        .filter(label => label);
+
       this.alertMessage = true;
-      this.alertText =
-        'Compila i seguenti campi obbligatori: ' +
-        campiMancanti.join(', ');
+      this.alertText = campiConCaratteriSpeciali.length
+        ? 'Rimuovi i caratteri speciali non ammessi dai seguenti campi: ' + campiConCaratteriSpeciali.join(', ')
+        : 'Compila i seguenti campi obbligatori: ' + campiMancanti.join(', ');
     }
   }
 

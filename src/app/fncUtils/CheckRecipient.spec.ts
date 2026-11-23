@@ -52,4 +52,49 @@ describe('CheckRecipient - congruenza CAP/comune/provincia', () => {
 
     expect(result.valido).toBeTrue();
   });
+
+  it('rifiuta caratteri speciali nel nominativo', () => {
+    const result = CheckRecipient(createRecipient({ businessName: 'Mario @ Rossi' }), comuni, false);
+
+    expect(result.valido).toBeFalse();
+    expect(result.errore).toContain('caratteri speciali non ammessi');
+  });
+
+  it('rifiuta caratteri speciali nell\'indirizzo', () => {
+    const result = CheckRecipient(createRecipient({ address: 'Via Roma <1>' }), comuni, false);
+
+    expect(result.valido).toBeFalse();
+    expect(result.errore).toContain('caratteri speciali non ammessi');
+  });
+
+  it('accetta accenti e punteggiatura postale ordinaria', () => {
+    const result = CheckRecipient(createRecipient({
+      businessName: "D'Angelo S.p.A.",
+      address: 'Via 1° Maggio, 10/A'
+    }), comuni, false);
+
+    expect(result.valido).toBeTrue();
+  });
+
+  it('rifiuta testo con codifica danneggiata', () => {
+    const result = CheckRecipient(createRecipient({ city: 'Chitt�' }), comuni, false);
+
+    expect(result.valido).toBeFalse();
+    expect(result.errore).toContain('caratteri non ammessi');
+  });
+
+  it('rifiuta anche i marcatori di codifica Ã e Â in qualunque campo', () => {
+    const resultWithAtilde = CheckRecipient(createRecipient({ pec: 'utenteÃ@example.it' }), comuni, false);
+    const resultWithAcircumflex = CheckRecipient(createRecipient({ tag1: 'valoreÂ' }), comuni, false);
+
+    expect(resultWithAtilde.valido).toBeFalse();
+    expect(resultWithAcircumflex.valido).toBeFalse();
+  });
+
+  it('ammette nei campi postali solo lettere italiane', () => {
+    const result = CheckRecipient(createRecipient({ businessName: 'Müller' }), comuni, false);
+
+    expect(result.valido).toBeFalse();
+    expect(result.errore).toContain('caratteri speciali non ammessi');
+  });
 });

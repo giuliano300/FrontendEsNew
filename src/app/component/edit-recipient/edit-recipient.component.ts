@@ -277,6 +277,7 @@ export class EditRecipientComponent {
             });
 
           // Ricalcola validazione e messaggi di errore se necessario
+          this.outPutData.recipient!.encodingError = undefined;
           FncUtils.getComuniList(this.http).subscribe({
             next: data => {
               const check =  CheckRecipient(this.outPutData.recipient!, data, true);
