@@ -109,7 +109,7 @@ constructor(
 
 
 
-  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state', 'details'];
+  displayedColumns: string[] = ['id','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'finalDocument', 'code', 'state', 'details'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

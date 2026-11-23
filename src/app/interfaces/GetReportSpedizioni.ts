@@ -8,6 +8,7 @@ export interface GetReportSpedizioni {
   senderName: string;
   insertDate: string; 
   price: number;
+  bulletinAmount?: number | null;
   doc?: Uint8Array | null;
   code: string;
   state: string;

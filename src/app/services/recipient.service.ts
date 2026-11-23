@@ -112,7 +112,10 @@ export class RecipientService {
       businessName?: string | null,
       code?: string | null,
       valid?: string | null,
-      currentState?: number | null
+      currentState?: number | null,
+      paymentDateS?: string | null,
+      paymentDateE?: string | null,
+      paid?: string | null
     ): Observable<Blob> {
       const params = new URLSearchParams({
         userId: userId.toString(),
@@ -123,7 +126,10 @@ export class RecipientService {
         valid: valid ?? '',
         startDate: startDate ?? '',
         endDate: endDate ?? '',
-        currentState: currentState != null ? currentState.toString() : ''
+        currentState: currentState != null ? currentState.toString() : '',
+        paymentDateS: paymentDateS ?? '',
+        paymentDateE: paymentDateE ?? '',
+        paid: paid ?? ''
       });
 
       return this.http.getBlob(`${this.apiUrl}/GetReportSpedizioniCsv?${params.toString()}`);

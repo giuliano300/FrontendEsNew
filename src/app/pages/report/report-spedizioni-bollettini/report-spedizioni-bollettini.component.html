@@ -14,7 +14,6 @@
     </div>
 </div>
 
-
 <div class="filter pb-5">
     <form [formGroup]="form">
         <div class="container-fluid step-1">
@@ -105,6 +104,12 @@
 <div class="container-fluid">
     <div class="row step-end">
         <div class="col-md-12 mt-4 relative">
+            <div class="report-actions">
+                <button type="button" class="export-csv" (click)="exportCsv()" [disabled]="exportingCsv">
+                    <i [class]="exportingCsv ? 'fas fa-spinner fa-spin' : 'bx bx-download'"></i>
+                    {{ exportingCsv ? 'Preparazione CSV…' : 'Esporta CSV' }}
+                </button>
+            </div>
             <table mat-table [dataSource]="dataSource" matSort class="mat-table">
 
                     <!-- Colonna Id Lotto -->
@@ -152,12 +157,27 @@
                         <td mat-cell *matCellDef="let element"> {{element.price.toFixed(2).replace('.', ',')}} </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="bulletinAmount">
+                        <th mat-header-cell *matHeaderCellDef> importo </th>
+                        <td mat-cell *matCellDef="let element"> {{formatBulletinAmount(element.bulletinAmount)}} </td>
+                    </ng-container>
+
                     <!-- Colonna File -->
                     <ng-container matColumnDef="doc">
-                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File </th>
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File originale </th>
                         <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
                             <a class="step-5"
                             (click)="downloadFile('attachedFile', element)"><i class='bx bx-envelope' ngbTooltip="{{infoBtnDownload}}" placement="left"></i></a>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="finalDocument">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> File definitivo </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 1.2rem;">
+                            <a *ngIf="element.hasSentDocument" (click)="downloadFile('ra', element)" ngbTooltip="{{infoBtnDownload}}" placement="left">
+                                <i class='bx bx-send'></i>
+                            </a>
+                            <span *ngIf="!element.hasSentDocument">—</span>
                         </td>
                     </ng-container>
                     <!-- Colonna CODICE -->

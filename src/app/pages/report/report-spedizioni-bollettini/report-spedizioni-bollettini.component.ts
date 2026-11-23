@@ -76,6 +76,7 @@ constructor(
   search: boolean = false;
   remove: boolean = false;
   firstLoading: boolean = false;
+  exportingCsv: boolean = false;
 
   startDateInit: string | null = FncUtils.GetTodayInputValue();
 
@@ -115,7 +116,7 @@ constructor(
 
   }
   
-  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'doc', 'code', 'state'];
+  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'bulletinAmount', 'doc', 'finalDocument', 'code', 'state'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -128,6 +129,14 @@ constructor(
   
   getDate(date:string): string{
     return FncUtils.GetFormattedData(date);
+  }
+
+  formatBulletinAmount(value: number | string | null | undefined): string {
+    if (value === null || value === undefined || value === '') return '—';
+    const amount = typeof value === 'number' ? value : Number(value.replace(',', '.'));
+    return Number.isFinite(amount)
+      ? `${amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+      : '—';
   }
 
   getReportSpedizioni(){
@@ -221,6 +230,40 @@ constructor(
         this.paginator.firstPage();
 
     this.getReportSpedizioni();  
+  }
+
+  exportCsv(): void {
+    if (this.exportingCsv || !this.user?.id) return;
+
+    this.exportingCsv = true;
+    this.recipientService.exportReportSpedizioniCsv(
+      this.user.id,
+      true,
+      this.startDate,
+      this.endDate,
+      this.productType,
+      this.businessName,
+      this.code,
+      this.valid,
+      this.currentState,
+      this.paymentDataS,
+      this.paymentDataE,
+      this.paid
+    ).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'report-spedizioni-bollettini.csv';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.exportingCsv = false;
+      },
+      error: () => {
+        this.openDialog('Esportazione non disponibile', 'Non è stato possibile creare il file CSV del report.');
+        this.exportingCsv = false;
+      }
+    });
   }
 
   downloadFile(doc: string, element: any){
