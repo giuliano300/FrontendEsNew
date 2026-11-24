@@ -60,6 +60,15 @@ describe('CheckRecipient - congruenza CAP/comune/provincia', () => {
     expect(result.errore).toContain('caratteri speciali non ammessi');
   });
 
+  it('ammette il simbolo & in nominativo e completamento nominativo', () => {
+    const result = CheckRecipient(createRecipient({
+      businessName: 'Rossi & Bianchi',
+      complementName: 'Ufficio & Amministrazione'
+    }), comuni, false);
+
+    expect(result.valido).toBeTrue();
+  });
+
   it('rifiuta caratteri speciali nell\'indirizzo', () => {
     const result = CheckRecipient(createRecipient({ address: 'Via Roma <1>' }), comuni, false);
 

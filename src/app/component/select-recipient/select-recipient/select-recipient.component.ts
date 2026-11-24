@@ -27,7 +27,7 @@ import { TourPage } from '../../../interfaces/EnumTypes';
 import { TourSeen } from '../../../interfaces/TourSeen';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AddressLookupService, AddressSuggestion } from '../../../services/address-lookup.service';
-import { hasInvalidEncodingCharacters, POSTAL_TEXT_PATTERN } from '../../../fncUtils/CheckRecipient';
+import { hasInvalidEncodingCharacters, POSTAL_NAME_PATTERN, POSTAL_TEXT_PATTERN } from '../../../fncUtils/CheckRecipient';
 
 @Component({
   selector: 'app-select-recipient',
@@ -88,11 +88,11 @@ constructor(private router: Router,
   form = new FormGroup({
     sel_destinatario: new FormControl(''),
     sel_spedizione: new FormControl('Italia'),
-    nominativo: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    nominativo: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.pattern(POSTAL_NAME_PATTERN)]),
     indirizzo: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),
     cap: new FormControl('', [Validators.required, Validators.maxLength(5)]),
     provincia: new FormControl('', [Validators.required, Validators.maxLength(2)]),
-    comp_nominativo: new FormControl('', [Validators.pattern(POSTAL_TEXT_PATTERN)]),
+    comp_nominativo: new FormControl('', [Validators.pattern(POSTAL_NAME_PATTERN)]),
     comp_indirizzo: new FormControl('', [Validators.pattern(POSTAL_TEXT_PATTERN)]),
     citta: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),
     stato: new FormControl('', [Validators.required, Validators.pattern(POSTAL_TEXT_PATTERN)]),

@@ -16,10 +16,16 @@ export interface Crt {
 }
 
 export const POSTAL_TEXT_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'’°\/-]*$/;
+// Il simbolo & è ammesso nei nominativi (es. "Rossi & Bianchi"), non negli altri campi postali.
+export const POSTAL_NAME_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'’°\/&-]*$/;
 const INVALID_ENCODING_PATTERN = /[�ÃÂ]/;
 
 export function hasOnlyAllowedPostalCharacters(value: string | null | undefined): boolean {
   return POSTAL_TEXT_PATTERN.test(value ?? '');
+}
+
+export function hasOnlyAllowedNameCharacters(value: string | null | undefined): boolean {
+  return POSTAL_NAME_PATTERN.test(value ?? '');
 }
 
 export function hasInvalidEncodingCharacters(value: unknown): boolean {
@@ -79,11 +85,11 @@ export function CheckRecipient(
   }
 
   const optionalPostalFields = [
-    { label: 'Completamento nominativo', value: recipient.complementName },
-    { label: 'Completamento indirizzo', value: recipient.complementAddress }
+    { label: 'Completamento nominativo', value: recipient.complementName, validator: hasOnlyAllowedNameCharacters },
+    { label: 'Completamento indirizzo', value: recipient.complementAddress, validator: hasOnlyAllowedPostalCharacters }
   ];
   const invalidOptionalField = optionalPostalFields.find(field =>
-    !!field.value && !hasOnlyAllowedPostalCharacters(field.value)
+    !!field.value && !field.validator(field.value)
   );
   if (invalidOptionalField) {
     ctrl.valido = false;
@@ -349,7 +355,7 @@ export function verificaRagioneSociale(
     return { valido: false, errore: 'Inserire Nome e Cognome o Ragione Sociale' };
   }
 
-  if (!hasOnlyAllowedPostalCharacters(ragioneSociale)) {
+  if (!hasOnlyAllowedNameCharacters(ragioneSociale)) {
     return { valido: false, errore: 'Nominativo contiene caratteri speciali non ammessi' };
   }
 
