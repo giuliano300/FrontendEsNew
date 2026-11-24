@@ -3,6 +3,8 @@ import { AppStorageService } from '@app/services/app-storage.service';
 import { UiTourRestartComponent, UiAlertComponent } from '@app/shared/ui';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../../../component/alert-dialog/alert-dialog.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -28,6 +30,7 @@ export class InvioSingoloRaccomandata2Component {
   
   
   private appTour = inject(AppTourService);
+private specialFormatDialog = inject(MatDialog);
 private appStorage = inject(AppStorageService);
 page: number = TourPage.raccomandataSingola2;
 
@@ -108,7 +111,7 @@ onSubmit(): void {
 
   const datiForm = {
     selLogo: this.form.value.sel_logo,
-    tipoFormato: this.form.value.tipoFormato,
+    tipoFormato: 'A4',
     tipoColore: this.form.value.tipoColore,
     tipoStampa: this.form.value.tipoStampa,
     tipoRicevuta: this.form.value.tipoRicevuta,
@@ -123,6 +126,21 @@ onSubmit(): void {
 
   // Se tutti sono presenti, vai alla pagina
   this.router.navigate(['/invioSingoloRaccomandata3']);
+  }
+
+  onSpecialFormatSelected(): void {
+    this.form.controls.tipoFormato.setValue('A4');
+    this.specialFormatDialog.open(AlertDialogComponent, {
+      width: '520px',
+      maxWidth: 'calc(100vw - 32px)',
+      data: {
+        title: 'Spedizione in formato speciale',
+        message: 'Per spedire documenti in formato speciale contatta il nostro servizio clienti.',
+        phone: '351 584 8424',
+        phoneHref: '+393515848424',
+        email: 'customercare@easysender.it'
+      }
+    });
   }
 
   removeErroMessage(): void {

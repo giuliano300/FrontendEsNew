@@ -104,6 +104,20 @@ export const CurrentStateOptions: { value: CurrentState; label: string }[] = [
   { value: CurrentState.ErroreGenerico, label: 'Errore generico' }
 ];
 
+/**
+ * ROL e LOL usano il passaggio 1 come esito della sola preconferma.
+ * Il significato degli stessi codici resta diverso per gli altri prodotti.
+ */
+export function getCurrentStateLabel(productType: number | null | undefined, currentState: number | null | undefined): string {
+  if ((productType === ProductTypes.ROL || productType === ProductTypes.LOL)) {
+    if (currentState === CurrentState.PresaInCarico) return 'In attesa presa in carico Poste';
+    if (currentState === CurrentState.InLavorazione) return 'Presa in carico Poste';
+  }
+
+  return CurrentStateOptions.find(state => state.value === currentState)?.label
+    || (currentState === null || currentState === undefined ? 'Stato non disponibile' : `Stato ${currentState}`);
+}
+
 export enum TourPage
 {
   dashboard = 1,

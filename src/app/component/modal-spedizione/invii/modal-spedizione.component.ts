@@ -4,7 +4,7 @@ import { FncUtils } from '../../../fncUtils/fncUtils';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RecipientService } from '../../../services/recipient.service';
-import { CurrentStateOptions, ProductTypeDescriptions, ProductTypes } from '../../../interfaces/EnumTypes';
+import { getCurrentStateLabel, ProductTypeDescriptions, ProductTypes } from '../../../interfaces/EnumTypes';
 
 @Component({
   selector: 'app-modal-spedizione',
@@ -48,9 +48,21 @@ export class ModalSpedizioneComponent  {
   }
 
   get currentStateLabel(): string {
-    return CurrentStateOptions.find(state => state.value === this.modalData.recipient.currentState)?.label
+    return getCurrentStateLabel(this.modalData.recipient.productType, this.modalData.recipient.currentState)
       || this.modalData.recipient.message
       || 'Stato non disponibile';
+  }
+
+  get posteOutcomeLabel(): string {
+    return this.modalData.recipient.message
+      || this.currentStateLabel
+      || 'In attesa di esito';
+  }
+
+  get automaticCheckLabel(): string {
+    if (this.modalData.recipient.inProcessStepStato) return 'Controllo in corso';
+    if (this.modalData.recipient.finalState) return 'Monitoraggio concluso';
+    return 'Controllo programmato';
   }
 
   get hasReturnReceipt(): boolean {

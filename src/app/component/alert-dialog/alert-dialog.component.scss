@@ -1,0 +1,230 @@
+:host {
+  display: block;
+  overflow: hidden;
+  border-radius: 0;
+  background: #fff;
+}
+
+.alert-dialog {
+  overflow: hidden;
+  background: #fff;
+}
+
+.alert-dialog__header {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 18px;
+  border-bottom: 3px solid #2c516b;
+  background: linear-gradient(105deg, #315daa 0%, #567fc5 100%);
+  color: #fff;
+}
+
+.alert-dialog__header-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 11%);
+  font-size: 1.25rem;
+}
+
+.alert-dialog__heading {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0;
+}
+
+.alert-dialog__heading > span {
+  display: block;
+  float: none !important;
+  margin: 0;
+  color: rgb(255 255 255 / 82%);
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  line-height: 1;
+}
+
+.alert-dialog__heading h2 {
+  margin: 8px 0 0 !important;
+  padding: 0;
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 500 !important;
+  letter-spacing: -.02em;
+  line-height: 1.05;
+}
+
+.alert-dialog__heading h2::before {
+  display: none;
+  content: none;
+}
+
+.alert-dialog__close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+  cursor: pointer;
+}
+
+.alert-dialog__close:hover {
+  background: rgb(255 255 255 / 17%);
+}
+
+.alert-dialog__close i {
+  font-size: 1.3rem;
+}
+
+.alert-dialog__content {
+  max-height: none;
+  padding: 24px !important;
+  background: #fff;
+}
+
+.alert-dialog__message {
+  max-width: 520px;
+  margin: 0;
+  color: #526170;
+  font-size: .92rem;
+  line-height: 1.65;
+}
+
+.alert-dialog__actions {
+  min-height: 0;
+  justify-content: flex-end;
+  padding: 15px 24px 20px !important;
+  border-top: 1px solid #e5ebf0;
+  background: #f8fafc;
+}
+
+.alert-dialog__confirm {
+  min-height: 42px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #1d5b91;
+  color: #fff;
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.alert-dialog__confirm:hover {
+  background: #174976;
+}
+
+.alert-dialog__contacts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.alert-dialog__contact {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 42px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 11px;
+  padding: 14px;
+  border: 1px solid #d9e4ec;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #fff, #f7fafc);
+  box-shadow: 0 4px 14px rgb(30 82 127 / 5%);
+  color: #24445e;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.alert-dialog__contact:hover {
+  border-color: #8fb4cf;
+  box-shadow: 0 8px 20px rgb(30 82 127 / 10%);
+  color: #183f5f;
+  transform: translateY(-1px);
+}
+
+.alert-dialog__contact-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 10px;
+  background: #eaf3f9;
+  color: #28628d;
+  font-size: 1.25rem;
+}
+
+.alert-dialog__contact-copy {
+  min-width: 0;
+}
+
+.alert-dialog__contact-copy small,
+.alert-dialog__contact-copy strong {
+  display: block;
+  float: none !important;
+}
+
+.alert-dialog__contact-copy small {
+  margin-bottom: 3px;
+  color: #718396;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.alert-dialog__contact-copy strong {
+  color: inherit;
+  font-size: .82rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.alert-dialog__contact-arrow {
+  color: #8195a5;
+  font-size: 1.15rem;
+}
+
+@media (max-width: 620px) {
+  .alert-dialog__header {
+    grid-template-columns: 38px minmax(0, 1fr) 32px;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .alert-dialog__header-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .alert-dialog__heading h2 {
+    font-size: 1rem;
+  }
+
+  .alert-dialog__content {
+    padding: 20px 18px !important;
+  }
+
+  .alert-dialog__contacts {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-dialog__actions {
+    padding: 14px 18px 18px !important;
+  }
+
+  .alert-dialog__confirm {
+    width: 100%;
+  }
+}

@@ -44,6 +44,34 @@
       </div>
     </section>
 
+    <section class="shipment-card status-monitoring" *ngIf="modalData.recipient.lastStatusCheckDate || modalData.recipient.statoMarker || modalData.recipient.inProcessStepStato">
+      <div class="status-monitoring__heading">
+        <div>
+          <h5>Monitoraggio Poste</h5>
+          <p>Ultimo aggiornamento ricevuto dai servizi di Poste Italiane</p>
+        </div>
+        <span class="status-monitoring__badge" [class.is-complete]="modalData.recipient.finalState">
+          {{ automaticCheckLabel }}
+        </span>
+      </div>
+      <div class="status-monitoring__grid">
+        <div class="status-monitoring__item">
+          <i class="bx bx-time-five" aria-hidden="true"></i>
+          <div>
+            <span>Ultimo controllo</span>
+            <strong>{{ modalData.recipient.lastStatusCheckDate ? getDate(modalData.recipient.lastStatusCheckDate) : 'Non ancora effettuato' }}</strong>
+          </div>
+        </div>
+        <div class="status-monitoring__item status-monitoring__item--outcome">
+          <i class="bx bx-check-shield" aria-hidden="true"></i>
+          <div>
+            <span>Ultimo esito</span>
+            <strong>{{ posteOutcomeLabel }}</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="shipment-card telegram-message" *ngIf="isTelegram()">
       <h5>Testo del telegramma</h5>
       <p>{{ modalData.recipient.telegramText || 'Messaggio non disponibile.' }}</p>

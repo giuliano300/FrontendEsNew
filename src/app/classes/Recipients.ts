@@ -37,6 +37,10 @@ export class Recipients {
   pathGEDUrl?: string | null = null;
   digitalReturnReceipt?: boolean | null = false;
   message?: string | null = null;
+  statoMarker?: string | null = null;
+  lastStatusCheckDate?: string | null = null;
+  inProcessStepStato?: boolean | null = null;
+  finalState?: boolean | null = null;
   tag1?: string | null = null;
   tag2?: string | null = null;
   tag3?: string | null = null;

@@ -1,7 +1,44 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
-<mat-dialog-content>
-   {{data.message}}
-</mat-dialog-content>
-<mat-dialog-actions>
-    <button mat-button class="btn annulla" (click)="onCancel()">Chiudi</button>
-</mat-dialog-actions>
+<div class="alert-dialog">
+   <header class="alert-dialog__header">
+      <div class="alert-dialog__header-icon" aria-hidden="true"><i class="bx bx-package"></i></div>
+      <div class="alert-dialog__heading">
+         <span>SERVIZIO SU RICHIESTA</span>
+         <h2 mat-dialog-title>{{data.title}}</h2>
+      </div>
+      <button type="button" class="alert-dialog__close" aria-label="Chiudi" (click)="onCancel()">
+         <i class="bx bx-x" aria-hidden="true"></i>
+      </button>
+   </header>
+
+   <mat-dialog-content class="alert-dialog__content">
+      <p class="alert-dialog__message">{{data.message}}</p>
+      @if (data.phone || data.email) {
+         <div class="alert-dialog__contacts">
+            @if (data.phone) {
+               <a class="alert-dialog__contact" [href]="'tel:' + data.phoneHref">
+                  <i class="bx bx-phone-call alert-dialog__contact-icon" aria-hidden="true"></i>
+                  <div class="alert-dialog__contact-copy">
+                     <small>Chiamaci</small>
+                     <strong>{{data.phone}}</strong>
+                  </div>
+                  <i class="bx bx-chevron-right alert-dialog__contact-arrow" aria-hidden="true"></i>
+               </a>
+            }
+            @if (data.email) {
+               <a class="alert-dialog__contact" [href]="'mailto:' + data.email">
+                  <i class="bx bx-envelope alert-dialog__contact-icon" aria-hidden="true"></i>
+                  <div class="alert-dialog__contact-copy">
+                     <small>Scrivici</small>
+                     <strong>{{data.email}}</strong>
+                  </div>
+                  <i class="bx bx-chevron-right alert-dialog__contact-arrow" aria-hidden="true"></i>
+               </a>
+            }
+         </div>
+      }
+   </mat-dialog-content>
+
+   <mat-dialog-actions class="alert-dialog__actions">
+      <button type="button" class="alert-dialog__confirm" (click)="onCancel()">Continua con A4</button>
+   </mat-dialog-actions>
+</div>

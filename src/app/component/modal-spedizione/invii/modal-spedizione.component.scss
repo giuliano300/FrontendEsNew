@@ -22,6 +22,20 @@
 .shipment-data__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid #e2eaf0; background: #e2eaf0; }
 .shipment-data__grid > div { padding: 10px 12px; background: #fff; }
 .shipment-data__grid strong { font-size: .82rem; }
+.status-monitoring { padding: 0; overflow: hidden; }
+.status-monitoring__heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px 19px; border-bottom: 1px solid #e2eaf0; background: #f8fbfd; }
+.status-monitoring__heading h5 { margin-bottom: 4px; }
+.status-monitoring__heading p { margin: 0; color: #718396; font-size: .76rem; }
+.status-monitoring__badge { display: inline-flex; width: auto !important; flex: 0 0 auto; align-items: center; margin: 0 !important; padding: 6px 10px; border-radius: 999px; background: #e9f2f8; color: #285c82 !important; font-size: .68rem !important; font-weight: 700; letter-spacing: 0 !important; line-height: 1.2; text-transform: none !important; }
+.status-monitoring__badge::before { width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #4b88b2; content: ''; }
+.status-monitoring__badge.is-complete { background: #e9f5ee; color: #2f7350 !important; }
+.status-monitoring__badge.is-complete::before { background: #429264; }
+.status-monitoring__grid { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.2fr); gap: 12px; padding: 16px 19px 19px; }
+.status-monitoring__item { display: grid; min-width: 0; grid-template-columns: 38px minmax(0, 1fr); align-items: start; gap: 12px; padding: 13px 14px; border: 1px solid #e0e8ef; border-radius: 8px; background: #fff; }
+.status-monitoring__item > i { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 8px; background: #edf4f9; color: #2d678f; font-size: 1.2rem; }
+.status-monitoring__item span { display: block; float: none !important; width: auto; margin: 1px 0 6px; color: #718396; font-size: .64rem; font-weight: 700; letter-spacing: .07em; line-height: 1.2; text-transform: uppercase; }
+.status-monitoring__item strong { display: block; overflow-wrap: anywhere; color: #26384b; font-size: .84rem; font-weight: 650; line-height: 1.45; }
+.status-monitoring__item--outcome > i { background: #edf6f1; color: #347657; }
 .telegram-message p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
 .document-list { display: grid; gap: 8px; }
 .document-list button { display: grid; grid-template-columns: 26px 1fr 24px; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; border: 1px solid #dce5ed; border-radius: 0; color: #26384b; background: #fff; text-align: left; cursor: pointer; }
@@ -44,4 +58,6 @@
   .shipment-detail__body { padding: 18px; }
   .shipment-summary, .shipment-detail__grid, .shipment-data__grid { grid-template-columns: 1fr; }
   .history-row { grid-template-columns: 1fr; row-gap: 4px; }
+  .status-monitoring__heading { align-items: flex-start; flex-direction: column; }
+  .status-monitoring__grid { grid-template-columns: 1fr; }
 }

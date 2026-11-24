@@ -150,8 +150,8 @@ private appStorage = inject(AppStorageService);
       this.ricevutaRitorno = datiDecriptati.tipoRicevuta;
       this.boolTipoColore = this.tipoColore == "BiancoNero" ? false : true;
       this.logoId = datiDecriptati.selLogo == "" ? 0 : parseInt(datiDecriptati.selLogo);
-      if(datiDecriptati.tipoFormato == "FormatoSpeciale")
-        this.format = 1;
+      // Il formato speciale non e piu disponibile: normalizza anche i dati gia salvati.
+      this.format = 0;
 
       this.tipoLettera = datiDecriptati.tipoLettera;
       this.tipoNotificante = datiDecriptati.tipoNotificante;
