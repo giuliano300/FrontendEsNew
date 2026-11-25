@@ -69,6 +69,39 @@ describe('CheckRecipient - congruenza CAP/comune/provincia', () => {
     expect(result.valido).toBeTrue();
   });
 
+  it('ammette l\'apostrofo in nominativo, indirizzo e relativi completamenti', () => {
+    const result = CheckRecipient(createRecipient({
+      businessName: "D'Angelo",
+      complementName: "All'attenzione dell'ufficio acquisti",
+      address: "Via dell'Industria 1",
+      complementAddress: "Palazzina D'Este"
+    }), comuni, false);
+
+    expect(result.valido).toBeTrue();
+  });
+
+  it('ammette anche le varianti tipografiche dell\'apostrofo', () => {
+    const result = CheckRecipient(createRecipient({
+      businessName: 'D’Angelo',
+      complementName: 'All‘attenzione',
+      address: 'Via dellʼIndustria 1',
+      complementAddress: 'Palazzina D´Este'
+    }), comuni, false);
+
+    expect(result.valido).toBeTrue();
+  });
+
+  it('ammette à ed è in nominativo, indirizzo e relativi completamenti', () => {
+    const result = CheckRecipient(createRecipient({
+      businessName: 'Società Caffè',
+      complementName: 'Unità qualità',
+      address: 'Via Città 1',
+      complementAddress: 'Località Santè'
+    }), comuni, false);
+
+    expect(result.valido).toBeTrue();
+  });
+
   it('rifiuta caratteri speciali nell\'indirizzo', () => {
     const result = CheckRecipient(createRecipient({ address: 'Via Roma <1>' }), comuni, false);
 

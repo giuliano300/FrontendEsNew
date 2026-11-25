@@ -15,9 +15,11 @@ export interface Crt {
   indirizzovalido?: boolean;
 }
 
-export const POSTAL_TEXT_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'’°\/-]*$/;
+// Accetta l'apostrofo semplice e le varianti tipografiche che possono arrivare
+// da tastiere mobili, copia/incolla o file CSV.
+export const POSTAL_TEXT_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'‘’ʼ´`°\/-]*$/;
 // Il simbolo & è ammesso nei nominativi (es. "Rossi & Bianchi"), non negli altri campi postali.
-export const POSTAL_NAME_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'’°\/&-]*$/;
+export const POSTAL_NAME_PATTERN = /^[A-Za-zÀÈÉÌÒÙàèéìòù0-9 .,'‘’ʼ´`°\/&-]*$/;
 const INVALID_ENCODING_PATTERN = /[�ÃÂ]/;
 
 export function hasOnlyAllowedPostalCharacters(value: string | null | undefined): boolean {
