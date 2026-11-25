@@ -59,7 +59,7 @@ constructor(
 
   startDate: string | null = null;
   endDate: string | null = null;
-  code: string | null = null;
+  bulletinCode: string | null = null;
   businessName: string | null = null;
   productType: number | null = 0;
   valid: string | null = null;
@@ -88,7 +88,7 @@ constructor(
     start_date: new FormControl(this.startDateInit),
     end_date: new FormControl(''),
     nominativo: new FormControl(''),
-    codice: new FormControl(''),
+    codice_bollettino: new FormControl(''),
     product: new FormControl<number | null>(null),    
     esito: new FormControl(''),
     sel_utente: new FormControl(''),
@@ -116,7 +116,7 @@ constructor(
 
   }
   
-  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'bulletinAmount', 'doc', 'finalDocument', 'code', 'state'];
+  displayedColumns: string[] = ['operationId','productName', 'senderName','businessName', 'esito', 'insertDate', 'price', 'bulletinAmount', 'bulletinCode', 'doc', 'finalDocument', 'code', 'state'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -153,13 +153,14 @@ constructor(
       pageSize,
       this.productType!,
       this.businessName,
-      this.code,
+      null,
       this.valid,
       this.totalCounts,
       this.paymentDataS,
       this.paymentDataE,
       this.paid,
-      this.currentState
+      this.currentState,
+      this.bulletinCode
     )
     .subscribe((response) => {
       this.totalRecords = response.totalCount;
@@ -183,7 +184,7 @@ constructor(
 
     this.startDate = this.form.value.start_date || null;
     this.endDate = this.form.value.end_date || null;
-    this.code = this.form.value.codice || null;
+    this.bulletinCode = this.form.value.codice_bollettino || null;
     this.businessName = this.form.value.nominativo || null;
     this.productType = this.form.value.product! || null;
     this.valid = this.form.value.esito || null;
@@ -205,7 +206,7 @@ constructor(
       start_date: this.startDateInit,
       end_date: '',
       nominativo: '',
-      codice: '',
+      codice_bollettino: '',
       product: null,
       esito: '',
       start_date_pay: '',
@@ -216,7 +217,7 @@ constructor(
     this.remove = true;
     this.startDate = null;
     this.endDate = null;
-    this.code = null;
+    this.bulletinCode = null;
     this.businessName = null;
     this.productType = null;
     this.valid = null;
@@ -243,12 +244,13 @@ constructor(
       this.endDate,
       this.productType,
       this.businessName,
-      this.code,
+      null,
       this.valid,
       this.currentState,
       this.paymentDataS,
       this.paymentDataE,
-      this.paid
+      this.paid,
+      this.bulletinCode
     ).subscribe({
       next: blob => {
         const url = window.URL.createObjectURL(blob);
@@ -314,7 +316,7 @@ constructor(
       const steps = [
         {
           id: 'reportspedizioni1',
-          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice, il nominativo, il prodotto, l'esito, lo stato corrente, la presenza del codice identificativo e lo stato dei pagamenti.",
+          text: "Personalizza il report delle spedizioni effettuate inserendo un intervallo di date, il codice bollettino, il nominativo, il prodotto, l'esito, lo stato corrente, la presenza del codice identificativo e lo stato dei pagamenti.",
           attachTo: {
             element: '.step-1',
             on: 'bottom' as PopperPlacement
@@ -329,7 +331,7 @@ constructor(
         },
         {
           id: 'reportspedizioniend',
-          text: "La tabella riporta i risultati del filtro e consente di visualizzare: l'ID lotto,  il tipo di prodotto, il mittente, il destinatario, l'accettazione, il costo, il codice e lo stato.",
+          text: "La tabella riporta i risultati del filtro e consente di visualizzare: l'ID lotto, il tipo di prodotto, il mittente, il destinatario, l'accettazione, il costo, il codice bollettino, il codice spedizione e lo stato.",
           attachTo: {
             element: '.step-end',
             on: 'bottom' as PopperPlacement

@@ -80,7 +80,8 @@ export class RecipientService {
         paymentDateS?: string | null,
         paymentDateE?: string | null,
         paid?: string | null,
-        currentState?: number | null
+        currentState?: number | null,
+        bulletinCode?: string | null
       ): Observable<GetReportSpedizioniResponse>
       {
         const params = new URLSearchParams({
@@ -98,6 +99,7 @@ export class RecipientService {
           paymentDateE: paymentDateE ?? '',
           paid: paid ?? '',
           currentState: currentState != null ? currentState.toString() : '',
+          bulletinCode: bulletinCode ?? '',
           totalCounts: totalCounts.toString() ?? '0'
         })
         return this.http.get<GetReportSpedizioniResponse>(`${this.apiUrl}/GetReportSpedizioni?${params.toString()}`);
@@ -115,7 +117,8 @@ export class RecipientService {
       currentState?: number | null,
       paymentDateS?: string | null,
       paymentDateE?: string | null,
-      paid?: string | null
+      paid?: string | null,
+      bulletinCode?: string | null
     ): Observable<Blob> {
       const params = new URLSearchParams({
         userId: userId.toString(),
@@ -129,7 +132,8 @@ export class RecipientService {
         currentState: currentState != null ? currentState.toString() : '',
         paymentDateS: paymentDateS ?? '',
         paymentDateE: paymentDateE ?? '',
-        paid: paid ?? ''
+        paid: paid ?? '',
+        bulletinCode: bulletinCode ?? ''
       });
 
       return this.http.getBlob(`${this.apiUrl}/GetReportSpedizioniCsv?${params.toString()}`);

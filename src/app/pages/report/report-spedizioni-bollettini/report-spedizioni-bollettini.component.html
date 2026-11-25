@@ -27,8 +27,8 @@
                     <input type="date" formControlName="end_date" />
                 </div>
                 <div class="col-md-2">
-                    <label>CODICE</label>
-                    <input type="text" formControlName="codice" />
+                    <label>CODICE BOLLETTINO</label>
+                    <input type="text" formControlName="codice_bollettino" />
                 </div>
                 <div class="col-md-2">
                     <label>NOMINATIVO</label>
@@ -160,6 +160,11 @@
                     <ng-container matColumnDef="bulletinAmount">
                         <th mat-header-cell *matHeaderCellDef> importo </th>
                         <td mat-cell *matCellDef="let element"> {{formatBulletinAmount(element.bulletinAmount)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="bulletinCode">
+                        <th mat-header-cell *matHeaderCellDef> CODICE BOLLETTINO </th>
+                        <td mat-cell *matCellDef="let element"> {{element.bulletinCode || '—'}} </td>
                     </ng-container>
 
                     <!-- Colonna File -->

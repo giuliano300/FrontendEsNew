@@ -9,6 +9,7 @@ export interface GetReportSpedizioni {
   insertDate: string; 
   price: number;
   bulletinAmount?: number | null;
+  bulletinCode: string;
   doc?: Uint8Array | null;
   code: string;
   state: string;
