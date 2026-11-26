@@ -95,7 +95,10 @@ private appStorage = inject(AppStorageService);
       let numeroPagineTotali: any[] = datiDecriptati.numeroPagineTotali;
       let tots: Prices = new Prices();
       for(let i = 0; i < numeroPagineTotali.length; i++){
-        let p = GetFilePrice(this.productType!, numeroPagineTotali[i], this.boolTipoColore, this.tipoLettera!);
+        const numeroFogli = this.fronteRetro === "SI"
+          ? Math.ceil(numeroPagineTotali[i] / 2)
+          : numeroPagineTotali[i];
+        let p = GetFilePrice(this.productType!, numeroFogli, this.boolTipoColore, this.tipoLettera!);
         tots.price += p.price;
         tots.vatPrice += p.vatPrice;
         tots.totalPrice += p.totalPrice;
