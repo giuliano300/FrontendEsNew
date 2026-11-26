@@ -41,6 +41,7 @@ export class Recipients {
   lastStatusCheckDate?: string | null = null;
   inProcessStepStato?: boolean | null = null;
   finalState?: boolean | null = null;
+  finalStateReason?: string | null = null;
   tag1?: string | null = null;
   tag2?: string | null = null;
   tag3?: string | null = null;

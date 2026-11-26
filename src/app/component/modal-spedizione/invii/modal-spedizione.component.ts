@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RecipientService } from '../../../services/recipient.service';
 import { getCurrentStateLabel, ProductTypeDescriptions, ProductTypes } from '../../../interfaces/EnumTypes';
+import { HistoricRecipientStatus } from '../../../interfaces/HistoricRecipientStatus';
 
 @Component({
   selector: 'app-modal-spedizione',
@@ -35,8 +36,15 @@ export class ModalSpedizioneComponent  {
   
   ngOnInit(): void {
     this.modalData.historicRecipientStatuses.sort((a, b) => {
-      return new Date(b.outcomeDate).getTime() - new Date(a.outcomeDate).getTime();
+      return Number(this.isFinalOutcome(b)) - Number(this.isFinalOutcome(a)) || new Date(b.outcomeDate || b.insertDate).getTime() - new Date(a.outcomeDate || a.insertDate).getTime();
     });
+  }
+
+  isFinalOutcome(item: HistoricRecipientStatus): boolean {
+    const recipient = this.modalData.recipient;
+    return recipient.finalState === true && recipient.finalStateReason !== 'expired_90_days'
+      && !!item.code && item.code === recipient.statoMarker && item.message === recipient.message
+      && (![6, 9].includes(recipient.productType) || item.objectType === 'AG');
   }
 
   isTelegram(): boolean {
@@ -61,6 +69,7 @@ export class ModalSpedizioneComponent  {
 
   get automaticCheckLabel(): string {
     if (this.modalData.recipient.inProcessStepStato) return 'Controllo in corso';
+    if (this.modalData.recipient.finalStateReason === 'expired_90_days') return 'Monitoraggio concluso dopo 90 giorni';
     if (this.modalData.recipient.finalState) return 'Monitoraggio concluso';
     return 'Controllo programmato';
   }

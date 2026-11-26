@@ -5,4 +5,6 @@ export interface HistoricRecipientStatus {
   outcomeDate: string; 
   message?: string | null;
   code?: string | null;
+  objectType?: string | null;
+  trackingCode?: string | null;
 }

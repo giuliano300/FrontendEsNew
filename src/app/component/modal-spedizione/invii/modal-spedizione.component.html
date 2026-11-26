@@ -99,7 +99,7 @@
     <section class="shipment-card shipment-history">
       <h5>Storico lavorazione</h5>
       <div class="history-row" *ngFor="let item of modalData.historicRecipientStatuses">
-        <strong>{{ getDate(item.outcomeDate) }}</strong><span>{{ item.message || 'Aggiornamento stato' }}</span>
+        <strong>{{ getDate(item.outcomeDate || item.insertDate) }}</strong><span [class.final-outcome]="isFinalOutcome(item)"><b *ngIf="isFinalOutcome(item)">Esito finale · </b>{{ item.message || 'Aggiornamento stato' }}<span *ngIf="item.objectType"> · {{ item.objectType }}</span></span>
       </div>
       <div class="history-row">
         <strong>{{ getDate(modalData.recipient.insertDate) }}</strong><span>Caricamento sul portale</span>
